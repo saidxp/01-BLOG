@@ -1,19 +1,26 @@
 package com.blog.backend.auth.mapper;
 
+import com.blog.backend.auth.dto.response.LoginResponse;
 import com.blog.backend.auth.dto.response.RegisterResponse;
-import com.blog.backend.user.dto.UserDto;
+import com.blog.backend.user.model.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AuthMapper {
-    // Recive UserDto And Return RegisterResponse <<==>> !!(.)
-    // make it simple now !!???  
-    public RegisterResponse toRegisterResponse(UserDto userDto) {
+    //  I Can More Opitimise This Mapper Later !! ()()
+    public RegisterResponse toRegisterResponse(User user) {
         return RegisterResponse.builder()
-                .username(userDto.getUsername())
-                .email(userDto.getEmail())
+                .username(user.getUsername())
+                .email(user.getEmail())
                 .build();
     }
-    // <<<===>>> \\((!!)) \\ 
+
+    // I CAN OPTIMISE THIS MAPPER LATER ((!!))
+    public LoginResponse toLoginResponse(User user, String accessToken) {
+        return LoginResponse.builder()
+                .accessToken(accessToken)
+                .build();
+    }
+
 }
 

@@ -9,8 +9,8 @@ import lombok.AllArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterResponse {
 
+public class RegisterResponse {
     @Builder.Default
     private String message = "Youuuuu Are Registered Successfully ";
     private String username;
