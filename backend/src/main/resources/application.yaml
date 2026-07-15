@@ -2,7 +2,7 @@ spring:
   application:
     name: backend
   datasource:
-    url: jdbc:postgresql://localhost:5432/blogdb
+    url: jdbc:postgresql://localhost:1337/blogdb
     username: bloguser
     password: 1234 
   jpa:

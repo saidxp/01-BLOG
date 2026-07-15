@@ -6,7 +6,7 @@ import com.blog.backend.user.model.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthMapper {
+public class AuthMapper { 
     //  I Can More Opitimise This Mapper Later !! ()()
     public RegisterResponse toRegisterResponse(User user) {
         return RegisterResponse.builder()
@@ -15,7 +15,7 @@ public class AuthMapper {
                 .build();
     }
 
-    // I CAN OPTIMISE THIS MAPPER LATER ((!!))
+    // I CAN OPTIMISE THIS MAPPER LATER     ((!!)) 
     public LoginResponse toLoginResponse(User user, String accessToken) {
         return LoginResponse.builder()
                 .accessToken(accessToken)

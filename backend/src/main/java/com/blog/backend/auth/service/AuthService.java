@@ -65,8 +65,8 @@ public class AuthService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new InvalidCredentialsException("Invalid username/email or password");
         }
-        // TODO :: Generate TokenLater ()
+        // TODO :: Generate TokenLater () \\
         String token = "Just For TesTing"; 
         return authMapper.toLoginResponse(user, token);
-    }   
+    }  
 }

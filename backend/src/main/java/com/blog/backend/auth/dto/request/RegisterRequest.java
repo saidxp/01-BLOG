@@ -23,7 +23,10 @@ public class RegisterRequest {
     )
     private String username;
     @NotBlank(message = "Email is required")
-    @Email(message = "Email must be a valid email address")
+    @Email(message = "Email must be a valid email address") 
+
+    // @Pattern !!
+    // handle email validation with regex if needed
     @Size(max = 100, message = "Email cannot exceed 100 characters")
     private String email;
 
