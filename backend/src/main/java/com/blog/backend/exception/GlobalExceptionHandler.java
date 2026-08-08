@@ -1,15 +1,16 @@
 package com.blog.backend.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -62,17 +63,34 @@ public class GlobalExceptionHandler {
                         .message("An unexpected error occurred: " + ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .build());
-    } 
-
+    }
+    // <<==>> \\ <<==>>>  
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ApiErrorResponse> handleInvalidCredentialsException(
-        InvalidCredentialsException ex) {
-         return ResponseEntity
-            .status(HttpStatus.UNAUTHORIZED)
-            .body(ApiErrorResponse.builder()
-                    .status(HttpStatus.UNAUTHORIZED.value())
-                    .message(ex.getMessage())
-                    .timestamp(LocalDateTime.now())
-                    .build());
+            InvalidCredentialsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ApiErrorResponse.builder()
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .message(ex.getMessage())
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
+    
+    // HER I HANDLE WHEN THERE IS MISS MATCH OF THE EXECT HTTP METHOD USED IN THE REQUEST AND THE ENDPOINT'S EXPECTED METHOD 
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiErrorResponse> handleMethodNotSupported(
+            HttpRequestMethodNotSupportedException ex
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(ApiErrorResponse.builder()
+                        .status(HttpStatus.METHOD_NOT_ALLOWED.value())
+                        .message(
+                                "HTTP method " + ex.getMethod()
+                                + " is not supported for this endpoint"
+                        )
+                        .timestamp(LocalDateTime.now())
+                        .build());
     }
 }

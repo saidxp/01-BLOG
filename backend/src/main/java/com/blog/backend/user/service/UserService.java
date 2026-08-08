@@ -1,9 +1,10 @@
 package com.blog.backend.user.service;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
+    // Add user-related business logic here 
 }

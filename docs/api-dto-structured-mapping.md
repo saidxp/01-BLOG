@@ -34,7 +34,7 @@ This file maps each API endpoint to the DTOs it uses in a structured format.
     - tokenType: string
     - userId: string
     - role: string
-
+      
 ### GET /api/auth/me
 - Purpose: Get the authenticated user
 - Response DTO:

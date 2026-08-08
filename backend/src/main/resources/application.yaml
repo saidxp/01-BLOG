@@ -1,17 +1,27 @@
 spring:
   application:
     name: backend
+
   datasource:
     url: jdbc:postgresql://localhost:1337/blogdb
     username: bloguser
-    password: 1234 
+    password: 1234
+
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: true
+
   flyway:
     enabled: true
-    locations: classpath:db/migration  
-  jwt:
-  secret: 8d4c7f0e2a9b6d1f5c8e3a7b9d2f6c1a4e8b7d9f3a6c5e2f1b8d4c7a9e6f3b1
-  access-token-expiration: 3600000
+    locations: classpath:db/migration
+
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: ${JWT_EXPIRATION:86400000}
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG
