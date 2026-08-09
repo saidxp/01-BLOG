@@ -20,7 +20,7 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter; 
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
@@ -42,7 +42,7 @@ public class SecurityConfig {
             AuthenticationConfiguration configuration)
             throws Exception {
         return configuration.getAuthenticationManager();
-    }
+        }
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -55,17 +55,23 @@ public class SecurityConfig {
                         -> session.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS
                 )
+                
                 )
-                .exceptionHandling(exception
-                        -> exception.authenticationEntryPoint(authenticationEntryPoint)
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(authenticationEntryPoint)
                 )
+              
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                        "/api/auth/**"
-                ).permitAll()
-                .anyRequest()
-                .authenticated()
+                    .requestMatchers(
+                            "/api/auth/**"
+                    ).permitAll()
+                    .requestMatchers(
+                            "/api/admin/**"
+                    ).hasRole("ADMIN")
+                    .anyRequest()
+                    .authenticated()
                 )
+                
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class

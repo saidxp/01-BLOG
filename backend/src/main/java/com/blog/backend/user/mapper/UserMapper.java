@@ -2,6 +2,7 @@ package com.blog.backend.user.mapper;
 
 import org.springframework.stereotype.Component; 
 
+import com.blog.backend.user.dto.PublicUserDto;
 import com.blog.backend.user.dto.UserDto;
 import com.blog.backend.user.model.User;
 
@@ -14,6 +15,13 @@ public class UserMapper {
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .createdAt(user.getCreatedAt())
+                .build();
+    }
+    
+    public PublicUserDto toPublicDto(User user) {
+        return PublicUserDto.builder()
+                .username(user.getUsername())
                 .createdAt(user.getCreatedAt())
                 .build();
     }

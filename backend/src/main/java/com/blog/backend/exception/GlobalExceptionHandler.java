@@ -37,6 +37,18 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    // <<< User Not Found Exception Handler >>> \\
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiErrorResponse.builder()
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .message(ex.getMessage())
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
         Map<String, String> fieldErrors = new HashMap<>();
@@ -64,6 +76,7 @@ public class GlobalExceptionHandler {
                         .timestamp(LocalDateTime.now())
                         .build());
     }
+
     // <<==>> \\ <<==>>>  
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ApiErrorResponse> handleInvalidCredentialsException(
@@ -76,7 +89,7 @@ public class GlobalExceptionHandler {
                         .timestamp(LocalDateTime.now())
                         .build());
     }
-    
+
     // HER I HANDLE WHEN THERE IS MISS MATCH OF THE EXECT HTTP METHOD USED IN THE REQUEST AND THE ENDPOINT'S EXPECTED METHOD 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiErrorResponse> handleMethodNotSupported(
