@@ -106,4 +106,38 @@ public class GlobalExceptionHandler {
                         .timestamp(LocalDateTime.now())
                         .build());
     }
+
+    // <<< Subscription Exeption >> !
+    @ExceptionHandler(SelfSubscriptionException.class)
+    public ResponseEntity<ApiErrorResponse> handleSelfSubscription(SelfSubscriptionException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiErrorResponse.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message(ex.getMessage())
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
+
+    @ExceptionHandler(AlreadySubscribedException.class)
+    public ResponseEntity<ApiErrorResponse> handleAlreadySubscribed(AlreadySubscribedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiErrorResponse.builder()
+                        .status(HttpStatus.CONFLICT.value())
+                        .message(ex.getMessage())
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
+
+    @ExceptionHandler(NotSubscribedException.class)
+    public ResponseEntity<ApiErrorResponse> handleNotSubscribed(NotSubscribedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiErrorResponse.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message(ex.getMessage())
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
 }

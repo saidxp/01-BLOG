@@ -21,7 +21,7 @@ public class UserController {
 
     private final UserMapper userMapper;
     private final UserService userService;
-    
+
     @GetMapping("/me")
     public UserDto getMyProfile(Authentication authentication) {
         CustomUserDetails userDetails
@@ -30,8 +30,9 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public PublicUserDto getPublicProfile(@PathVariable String username) {
-        return userService.getPublicProfile(username);
+    public PublicUserDto getPublicProfile(@PathVariable String username, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return userService.getPublicProfile(username, userDetails.getUser());
     }
-
+    
 }

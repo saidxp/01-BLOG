@@ -10,5 +10,7 @@ import lombok.Getter;
 public class PublicUserDto {
     private String username;
     private LocalDateTime createdAt;
-    // later: private List<PostDto> posts;  (added once Task 5 exists)
+    private long subscriberCount;
+    private long subscriptionCount;
+    private boolean isSubscribed;   // does the CURRENT viewer follow this profile?
 }

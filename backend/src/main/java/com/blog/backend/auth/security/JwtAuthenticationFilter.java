@@ -44,8 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username;
 
         try {
-            username = jwtService.extractUsername(token); 
-            
+            username = jwtService.extractUsername(token);
+
         } catch (JwtException e) {
 
             authenticationEntryPoint.commence(

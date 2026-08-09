@@ -18,11 +18,15 @@ public class UserMapper {
                 .createdAt(user.getCreatedAt())
                 .build();
     }
-    
-    public PublicUserDto toPublicDto(User user) {
+
+    public PublicUserDto toPublicDto(User user, long subscriberCount, long subscriptionCount, boolean isSubscribed) {
         return PublicUserDto.builder()
                 .username(user.getUsername())
                 .createdAt(user.getCreatedAt())
+                .subscriberCount(subscriberCount)
+                .subscriptionCount(subscriptionCount)
+                .isSubscribed(isSubscribed)
                 .build();
     }
+    
 }
