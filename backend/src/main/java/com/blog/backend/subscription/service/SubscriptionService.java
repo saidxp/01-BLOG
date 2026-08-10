@@ -11,8 +11,10 @@ import com.blog.backend.subscription.model.Subscription;
 import com.blog.backend.subscription.repository.SubscriptionRepository;
 import com.blog.backend.user.model.User;
 import com.blog.backend.user.repository.UserRepository;
-import com.blog.backend.subscription.dto.SubscriptionUserDto; 
-import java.util.*;
+import com.blog.backend.subscription.dto.SubscriptionStatusDto;
+import com.blog.backend.subscription.dto.SubscriptionUserDto;
+
+import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +26,7 @@ public class SubscriptionService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void subscribe(User currentUser, String targetUsername) {
+    public SubscriptionStatusDto subscribe(User currentUser, String targetUsername) {
         User targetUser = userRepository.findByUsername(targetUsername)
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + targetUsername));
 
@@ -42,10 +44,13 @@ public class SubscriptionService {
                 .build();
 
         subscriptionRepository.save(subscription);
+
+        long subscriberCount = subscriptionRepository.countBySubscribedTo(targetUser);
+        return new SubscriptionStatusDto(true, subscriberCount);
     }
 
     @Transactional
-    public void unsubscribe(User currentUser, String targetUsername) {
+    public SubscriptionStatusDto unsubscribe(User currentUser, String targetUsername) {
         User targetUser = userRepository.findByUsername(targetUsername)
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + targetUsername));
 
@@ -54,6 +59,9 @@ public class SubscriptionService {
                 .orElseThrow(() -> new NotSubscribedException("You are not subscribed to this user"));
 
         subscriptionRepository.delete(subscription);
+
+        long subscriberCount = subscriptionRepository.countBySubscribedTo(targetUser);
+        return new SubscriptionStatusDto(false, subscriberCount);
     }
 
     public List<SubscriptionUserDto> getSubscribers(String username) {
@@ -63,12 +71,12 @@ public class SubscriptionService {
         return subscriptionRepository.findBySubscribedTo(user)
                 .stream()
                 .map(sub -> new SubscriptionUserDto(
-                sub.getSubscriber().getUsername(),
-                sub.getCreatedAt()
-        ))
+                        sub.getSubscriber().getUsername(),
+                        sub.getCreatedAt()
+                ))
                 .toList();
     }
-    
+
     public List<SubscriptionUserDto> getSubscriptions(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + username));
@@ -76,9 +84,9 @@ public class SubscriptionService {
         return subscriptionRepository.findBySubscriber(user)
                 .stream()
                 .map(sub -> new SubscriptionUserDto(
-                sub.getSubscribedTo().getUsername(),
-                sub.getCreatedAt()
-        ))
+                        sub.getSubscribedTo().getUsername(),
+                        sub.getCreatedAt()
+                ))
                 .toList();
     }
 }

@@ -1,0 +1,16 @@
+CREATE TABLE posts (
+    id BIGSERIAL PRIMARY KEY,
+
+    user_id BIGINT NOT NULL,
+
+    description TEXT NOT NULL,
+
+    media_url VARCHAR(500),
+    media_type VARCHAR(20),
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_post_user
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
