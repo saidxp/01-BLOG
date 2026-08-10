@@ -35,7 +35,7 @@ public class PostController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Post post = postService.createPost(userDetails.getUser(), description, media);
         PostDto dto = postMapper.toDto(post);              
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto);           
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);                
     }
 
     @GetMapping("/api/posts/{id}")
