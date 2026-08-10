@@ -34,7 +34,7 @@ public class PostController {
             Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Post post = postService.createPost(userDetails.getUser(), description, media);
-        PostDto dto = postMapper.toDto(post);
+        PostDto dto = postMapper.toDto(post);  
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
