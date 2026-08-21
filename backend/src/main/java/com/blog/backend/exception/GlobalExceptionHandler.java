@@ -55,9 +55,9 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ApiErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
                 Map<String, String> fieldErrors = new HashMap<>();
                 for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-                        fieldErrors.put(error.getField(), error.getDefaultMessage()); 
+                        fieldErrors.put(error.getField(), error.getDefaultMessage());
                 }
-                
+
                 return ResponseEntity
                                 .status(HttpStatus.BAD_REQUEST)
                                 .body(ApiErrorResponse.builder()
@@ -223,6 +223,29 @@ public class GlobalExceptionHandler {
                                                 .status(HttpStatus.BAD_REQUEST.value())
                                                 .message("Invalid value for parameter '" + ex.getName() + "': "
                                                                 + ex.getValue())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        }
+
+        // Comment Exception :
+        @ExceptionHandler(CommentNotFoundException.class)
+        public ResponseEntity<ApiErrorResponse> handleCommentNotFound(CommentNotFoundException ex) {
+                return ResponseEntity
+                                .status(HttpStatus.NOT_FOUND)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.NOT_FOUND.value())
+                                                .message(ex.getMessage())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        }
+
+        @ExceptionHandler(NotCommentOwnerException.class)
+        public ResponseEntity<ApiErrorResponse> handleNotCommentOwner(NotCommentOwnerException ex) {
+                return ResponseEntity
+                                .status(HttpStatus.FORBIDDEN)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.FORBIDDEN.value())
+                                                .message(ex.getMessage())
                                                 .timestamp(LocalDateTime.now())
                                                 .build());
         }

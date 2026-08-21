@@ -36,7 +36,7 @@ public class CustomUserDetails implements UserDetails {
     public boolean isAccountNonExpired() {
         return true;
     }
-
+    
     @Override
     public boolean isAccountNonLocked() {
         return user.getStatus() != UserStatus.BANNED;
