@@ -1,5 +1,4 @@
-package com.blog.backend.like.model;
-
+package com.blog.backend.likes.model;
 import com.blog.backend.post.model.Post;
 import com.blog.backend.user.model.User;
 import jakarta.persistence.*;

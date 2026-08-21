@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -177,7 +178,8 @@ public class GlobalExceptionHandler {
         }
 
         // <<==>>> \\
-        // this eorror it's happning the seervlet matching paramtter entry point to restcontroller 
+        // This error it's happning the seervlet matching paramtter entry point to
+        // restcontroller
         @ExceptionHandler(MissingServletRequestParameterException.class)
         public ResponseEntity<ApiErrorResponse> handleMissingParameter(MissingServletRequestParameterException ex) {
                 return ResponseEntity
@@ -185,6 +187,42 @@ public class GlobalExceptionHandler {
                                 .body(ApiErrorResponse.builder()
                                                 .status(HttpStatus.BAD_REQUEST.value())
                                                 .message("Missing required parameter: " + ex.getParameterName())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        }
+
+        // <<likes exeption handler >>
+        @ExceptionHandler(AlreadyLikedException.class)
+        public ResponseEntity<ApiErrorResponse> handleAlreadyLiked(AlreadyLikedException ex) {
+                return ResponseEntity
+                                .status(HttpStatus.CONFLICT)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.CONFLICT.value())
+                                                .message(ex.getMessage())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        }
+
+        @ExceptionHandler(NotLikedException.class)
+        public ResponseEntity<ApiErrorResponse> handleNotLiked(NotLikedException ex) {
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.BAD_REQUEST.value())
+                                                .message(ex.getMessage())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        }
+        
+        // mismatching data type exception !
+        @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+        public ResponseEntity<ApiErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.BAD_REQUEST.value())
+                                                .message("Invalid value for parameter '" + ex.getName() + "': "
+                                                                + ex.getValue())
                                                 .timestamp(LocalDateTime.now())
                                                 .build());
         }
