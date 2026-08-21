@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ApiErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
                 Map<String, String> fieldErrors = new HashMap<>();
                 for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-                        fieldErrors.put(error.getField(), error.getDefaultMessage());
+                        fieldErrors.put(error.getField(), error.getDefaultMessage()); 
                 }
 
                 return ResponseEntity
@@ -213,7 +213,7 @@ public class GlobalExceptionHandler {
                                                 .timestamp(LocalDateTime.now())
                                                 .build());
         }
-        
+
         // mismatching data type exception !
         @ExceptionHandler(MethodArgumentTypeMismatchException.class)
         public ResponseEntity<ApiErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
