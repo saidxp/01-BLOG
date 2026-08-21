@@ -56,7 +56,6 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
 
-        if (!post.getUser().getId().equals(currentUser.getId())) {
             throw new NotPostOwnerException("You are not allowed to edit this post");
         }
 

@@ -53,7 +53,6 @@ public class CommentService {
         if (!isOwner && !isAdmin) {
             throw new NotCommentOwnerException("You are not allowed to delete this comment");
         }
-
         commentRepository.delete(comment);
     }
 }
