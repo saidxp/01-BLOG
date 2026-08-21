@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
                 for (FieldError error : ex.getBindingResult().getFieldErrors()) {
                         fieldErrors.put(error.getField(), error.getDefaultMessage()); 
                 }
-
+                
                 return ResponseEntity
                                 .status(HttpStatus.BAD_REQUEST)
                                 .body(ApiErrorResponse.builder()
