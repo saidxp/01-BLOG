@@ -36,7 +36,7 @@ public class CommentController {
     @GetMapping
     public ResponseEntity<Page<CommentDto>> getComments(
             @PathVariable Long postId,
-            @PageableDefault(size = 20) Pageable pageable
+            @PageableDefault(size = 10) Pageable pageable
     ) {
         Page<CommentDto> comments = commentService.getComments(postId, pageable).map(commentMapper::toDto);
         return ResponseEntity.ok(comments);
