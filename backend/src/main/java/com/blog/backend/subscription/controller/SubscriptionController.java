@@ -32,7 +32,7 @@ public class SubscriptionController {
     @DeleteMapping("/subscribe") 
     public ResponseEntity<SubscriptionStatusDto> unsubscribe(
             @PathVariable String username,
-            Authentication authentication
+            Authentication authentication 
     ) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         SubscriptionStatusDto result = subscriptionService.unsubscribe(userDetails.getUser(), username);
