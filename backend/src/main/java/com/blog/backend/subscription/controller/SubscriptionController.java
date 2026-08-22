@@ -28,7 +28,7 @@ public class SubscriptionController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         SubscriptionStatusDto result = subscriptionService.subscribe(userDetails.getUser(), username);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
-    }
+    } 
 
     @DeleteMapping("/subscribe")
     public ResponseEntity<SubscriptionStatusDto> unsubscribe(
