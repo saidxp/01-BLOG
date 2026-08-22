@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/users/{username}")
 @RequiredArgsConstructor
 public class SubscriptionController {
-
     private final SubscriptionService subscriptionService;
 
     @PostMapping("/subscribe")
