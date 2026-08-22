@@ -29,7 +29,7 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     } 
 
-    @DeleteMapping("/subscribe")
+    @DeleteMapping("/subscribe") 
     public ResponseEntity<SubscriptionStatusDto> unsubscribe(
             @PathVariable String username,
             Authentication authentication
