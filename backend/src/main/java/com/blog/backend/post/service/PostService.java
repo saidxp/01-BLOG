@@ -2,6 +2,7 @@ package com.blog.backend.post.service;
 
 import com.blog.backend.exception.NotPostOwnerException;
 import com.blog.backend.exception.PostNotFoundException;
+import com.blog.backend.notification.service.NotificationService;
 import com.blog.backend.post.dto.PostDeleteResponse;
 import com.blog.backend.post.enums.MediaType;
 import com.blog.backend.post.model.Post;
@@ -22,6 +23,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MediaStorageService mediaStorageService;
     private final Validator validator;
+    private final NotificationService notificationService;
 
     @Transactional
     public Post createPost(User owner, String description, MultipartFile mediaFile) {
@@ -35,8 +37,11 @@ public class PostService {
             String mediaUrl = mediaStorageService.store(mediaFile);
             postBuilder.mediaUrl(mediaUrl).mediaType(mediaType);
         }
+        // Her i add a notificaion i will add later realtime !!
+        Post savedPost = postRepository.save(postBuilder.build());
+        notificationService.notifySubscribersOfNewPost(savedPost);
+        return savedPost;
 
-        return postRepository.save(postBuilder.build());
     }
 
     public Post getPostById(Long id) {
@@ -64,7 +69,6 @@ public class PostService {
         return postRepository.save(post);
     }
 
-     
     @Transactional
     public PostDeleteResponse deletePost(User currentUser, Long postId) {
         Post post = postRepository.findById(postId)

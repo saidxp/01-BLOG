@@ -248,5 +248,18 @@ public class GlobalExceptionHandler {
                                                 .message(ex.getMessage())
                                                 .timestamp(LocalDateTime.now())
                                                 .build());
-        }
+        } 
+
+        // notification  <<==>>> \\
+        @ExceptionHandler(NotificationNotFoundException.class)
+        public ResponseEntity<ApiErrorResponse> handleNotificaionNotFound(NotificationNotFoundException ex) {
+                return ResponseEntity
+                                .status(HttpStatus.NOT_FOUND)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.NOT_FOUND.value())
+                                                .message(ex.getMessage())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        } 
+
 }
