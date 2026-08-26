@@ -248,9 +248,9 @@ public class GlobalExceptionHandler {
                                                 .message(ex.getMessage())
                                                 .timestamp(LocalDateTime.now())
                                                 .build());
-        } 
+        }
 
-        // notification  <<==>>> \\
+        // notification <<==>>> \\
         @ExceptionHandler(NotificationNotFoundException.class)
         public ResponseEntity<ApiErrorResponse> handleNotificaionNotFound(NotificationNotFoundException ex) {
                 return ResponseEntity
@@ -260,6 +260,18 @@ public class GlobalExceptionHandler {
                                                 .message(ex.getMessage())
                                                 .timestamp(LocalDateTime.now())
                                                 .build());
-        } 
+        }
+
+        // Report Exception !
+        @ExceptionHandler(SelfReportException.class)
+        public ResponseEntity<ApiErrorResponse> handleSelfReport(SelfReportException ex) {
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.BAD_REQUEST.value())
+                                                .message(ex.getMessage())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        }
 
 }

@@ -12,5 +12,5 @@ public class PublicUserDto {
     private LocalDateTime createdAt;
     private long subscriberCount;
     private long subscriptionCount;
-    private boolean isSubscribed;   // does the CURRENT viewer follow this profile?
+    private boolean isSubscribed;   // does the CURRENT viewer follow this profile ?
 }
