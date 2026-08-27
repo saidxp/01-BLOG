@@ -47,5 +47,4 @@ public class AdminController {
     public void deleteUser(@PathVariable Long id) {
         adminService.deleteUser(id);
     }
-
 }

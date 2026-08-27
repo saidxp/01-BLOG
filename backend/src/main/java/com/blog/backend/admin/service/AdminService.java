@@ -4,14 +4,19 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.blog.backend.exception.UserNotFoundException;
+import com.blog.backend.*;
+import com.blog.backend.post.mapper.PostMapper;
+import com.blog.backend.post.repository.PostRepository;
 import com.blog.backend.user.dto.UserDto;
 import com.blog.backend.user.enums.UserStatus;
 import com.blog.backend.user.mapper.UserMapper;
 import com.blog.backend.user.model.User;
 import com.blog.backend.user.repository.UserRepository;
-
+import com.blog.backend.post.dto.*;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,6 +25,8 @@ public class AdminService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PostRepository postRepository;
+    private final PostMapper postMapper;
 
     public List<UserDto> getAllUsers() {
         return userRepository.findAll()
@@ -52,9 +59,15 @@ public class AdminService {
         User user = findUserOrThrow(id);
         userRepository.delete(user);
     }
-    
+
     private User findUserOrThrow(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    } 
+
+    // Posts Managment !! 
+    public Page<PostDto> getAllPosts(Pageable pageable) {
+    return postRepository.findAllByOrderByCreatedAtDesc(pageable)
+            .map(postMapper::toDto);
     }
 }
