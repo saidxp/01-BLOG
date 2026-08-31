@@ -9,6 +9,7 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.css'
 })
 
-export class AppComponent {
-  title = 'front';
+export class AppComponent { 
+  Title = "said"
+  // Her it' my own app component this it's will Demende (!) 
 }
