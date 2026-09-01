@@ -6,21 +6,21 @@ import { toUserEntity } from './mappers/user.mapper';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, map, catchError, throwError } from 'rxjs';
 import { InvalidCredentialsError, AuthServerError } from '../../domain/auth/errors/auth.errors';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable()
 export class AuthRepositoryImpl extends AuthRepository {
-
+    
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = '/api/auth'; // Temporary : later add env !
-  
- override login(email: string, password: string): Observable<User> {
+  private readonly baseUrl = `${environment.apiUrl}/api/auth`; 
+  // <<==>> \\ <<==>> \\ 
+  override login(identifier: string, password: string): Observable<User> {
   return this.http
-    .post<UserDto>(`${this.baseUrl}/login`, { email, password }, { withCredentials: true })
+    .post<UserDto>(`${this.baseUrl}/login`, { identifier, password }, { withCredentials: true })
     .pipe(
       map(toUserEntity),
       catchError((err: HttpErrorResponse) => {
         const backendMessage = err.error?.message;
-
         if (err.status === 401) {
           return throwError(() => new InvalidCredentialsError(backendMessage));
         }

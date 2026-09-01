@@ -64,6 +64,13 @@
     <version>0.12.7</version>
     </dependency> 
 
+	<!-- it's about using tuple who it's not in java -->
+	<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.18.0</version>
+	</dependency>
+
  	<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>

@@ -30,7 +30,7 @@ export class LoginComponent {
       this.form.markAllAsTouched();
       return;
     }
-
+    
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
@@ -40,6 +40,7 @@ export class LoginComponent {
       next: (user) => {
         this.isLoading.set(false);
         // Debug Later Her (!!). User (!)
+        console.log(user);
         this.router.navigateByUrl('/');
       },
       error: (err) => {

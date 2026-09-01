@@ -16,12 +16,15 @@ public class AuthMapper {
                 .email(user.getEmail())
                 .build();
     }
-    
-    // I CAN OPTIMISE THIS MAPPER LATER (!!)
-    public LoginResponse toLoginResponse(String accessToken) {
+
+    // I CAN OPTIMISE This MAPPER LATER (!!)
+  
+    public LoginResponse toLoginResponse(User user) {
         return LoginResponse.builder()
-                .accessToken(accessToken)
-                .build();
+            .id(user.getId())
+            .email(user.getEmail())
+            .username(user.getUsername())
+            .build();
     }
 
 }

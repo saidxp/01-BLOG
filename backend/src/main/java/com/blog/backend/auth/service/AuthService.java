@@ -18,7 +18,9 @@ import com.blog.backend.auth.security.JwtService;
 import com.blog.backend.exception.InvalidCredentialsException;
 import com.blog.backend.exception.UserAlreadyExistsException;
 import com.blog.backend.user.model.User;
-import com.blog.backend.user.repository.UserRepository;
+import com.blog.backend.user.repository.UserRepository; 
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import lombok.RequiredArgsConstructor;
 
@@ -62,7 +64,7 @@ public class AuthService {
     }
 
     @Transactional
-    public LoginResponse login(LoginRequest request) {
+    public  Pair<LoginResponse, String> login(LoginRequest request) {
 
         String identifier = normalizer.normalizeUsername(request.getIdentifier());
 
@@ -87,7 +89,11 @@ public class AuthService {
                 = (CustomUserDetails) authenticated.getPrincipal();
 
         String token = jwtService.generateAccessToken(principal);
+        // Her I Will Set HttpOnly Cookie For The Access Token (!!) 
 
-        return authMapper.toLoginResponse(token);
+        // It's Make Sense Will Return in User (!!) \\  
+        User user = principal.getUser();  
+        return Pair.of(authMapper.toLoginResponse(user), token);
+
     }
 }

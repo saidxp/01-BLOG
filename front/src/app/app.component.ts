@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +8,11 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
+export class AppComponent {
+  
+  private router = inject(Router);
 
-export class AppComponent { 
-  Title = "said"
-  // Her it' my own app component this it's will Demende (!) 
+  login() {
+    this.router.navigate(['/login']);
+  }
 }

@@ -8,10 +8,12 @@ import { AuthRepository } from './domain/auth/repositories/auth.repository';
 import { AuthRepositoryImpl } from './infrastructure/auth/auth-repository.impl';
 
 export const appConfig: ApplicationConfig = {
+
   providers: [
     provideRouter(routes),
     provideClientHydration(),
     provideHttpClient(withFetch()),
     { provide: AuthRepository, useClass: AuthRepositoryImpl },
   ],
+
 };
