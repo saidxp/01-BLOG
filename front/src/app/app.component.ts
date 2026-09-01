@@ -9,10 +9,13 @@ import { Router, RouterOutlet } from '@angular/router';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  
+
   private router = inject(Router);
 
   login() {
     this.router.navigate(['/login']);
+  } 
+  register() {
+    this.router.navigate(['/register']);
   }
 }

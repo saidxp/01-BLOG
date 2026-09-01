@@ -9,22 +9,35 @@ import { InvalidCredentialsError, AuthServerError } from '../../domain/auth/erro
 import { environment } from '../../../environments/environment.development';
 
 @Injectable()
+
 export class AuthRepositoryImpl extends AuthRepository {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/api/auth`; 
+  private readonly baseUrl = `${environment.apiUrl}/api/auth`;
   // <<==>> \\ <<==>> \\ 
   override login(identifier: string, password: string): Observable<User> {
-  return this.http
-    .post<UserDto>(`${this.baseUrl}/login`, { identifier, password }, { withCredentials: true })
-    .pipe(
-      map(toUserEntity),
-      catchError((err: HttpErrorResponse) => {   
-        const backendMessage = err.error?.message;  
-        if (err.status === 401) {
-          return throwError(() => new InvalidCredentialsError(backendMessage));
-        }
-        return throwError(() => new AuthServerError(backendMessage));    
-      })
-    );
-    }
+    return this.http
+      .post<UserDto>(`${this.baseUrl}/login`, { identifier, password }, { withCredentials: true })
+      .pipe(
+        map(toUserEntity),
+        catchError((err: HttpErrorResponse) => {
+          const backendMessage = err.error?.message;
+          if (err.status === 401) {
+            return throwError(() => new InvalidCredentialsError(backendMessage));
+          }
+          return throwError(() => new AuthServerError(backendMessage));
+        })
+      );
+  }
+  // register method implementation (!!) 
+  override register(name: string, email: string, password: string): Observable<User> {
+    return this.http
+      .post<UserDto>(`${this.baseUrl}/register`, { name, email, password }, { withCredentials: true })
+      .pipe(
+        map(toUserEntity),
+        catchError((err: HttpErrorResponse) => {
+          const backendMessage = err.error?.message;
+          return throwError(() => new AuthServerError(backendMessage));
+        })
+      );
+  }
 }
