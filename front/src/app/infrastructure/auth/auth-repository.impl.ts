@@ -23,7 +23,7 @@ export class AuthRepositoryImpl extends AuthRepository {
         if (err.status === 401) {
           return throwError(() => new InvalidCredentialsError(backendMessage));
         }
-        return throwError(() => new AuthServerError(backendMessage));
+        return throwError(() => new AuthServerError(backendMessage));    
       })
     );
     }
