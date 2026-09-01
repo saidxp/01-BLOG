@@ -20,7 +20,7 @@ export class AuthRepositoryImpl extends AuthRepository {
     .pipe(
       map(toUserEntity),
       catchError((err: HttpErrorResponse) => {   
-        const backendMessage = err.error?.message;
+        const backendMessage = err.error?.message;  
         if (err.status === 401) {
           return throwError(() => new InvalidCredentialsError(backendMessage));
         }
