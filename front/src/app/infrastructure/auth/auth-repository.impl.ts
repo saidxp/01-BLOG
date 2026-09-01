@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment.development';
 
 @Injectable()
 export class AuthRepositoryImpl extends AuthRepository {
-    
+
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/api/auth`; 
   // <<==>> \\ <<==>> \\ 
@@ -19,7 +19,7 @@ export class AuthRepositoryImpl extends AuthRepository {
     .post<UserDto>(`${this.baseUrl}/login`, { identifier, password }, { withCredentials: true })
     .pipe(
       map(toUserEntity),
-      catchError((err: HttpErrorResponse) => {
+      catchError((err: HttpErrorResponse) => {   
         const backendMessage = err.error?.message;
         if (err.status === 401) {
           return throwError(() => new InvalidCredentialsError(backendMessage));
