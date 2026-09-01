@@ -35,7 +35,6 @@ export class RegisterComponent {
     },
     { validators: passwordsMatchValidator }
   );
-
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -46,7 +45,7 @@ export class RegisterComponent {
     this.errorMessage.set(null);
 
     const { name, email, password } = this.form.getRawValue();
-    
+
     this.registerUseCase.execute(name, email, password).subscribe({
       next: () => {
         this.isLoading.set(false);
