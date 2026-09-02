@@ -12,13 +12,13 @@ public class AuthMapper {
     //  I Can More Opitimise This Mapper Later (!!)
     public RegisterResponse toRegisterResponse(User user) {
         return RegisterResponse.builder()
-                .username(user.getUsername())
+                .id(user.getId())
                 .email(user.getEmail())
+                .username(user.getUsername())
                 .build();
     }
-
+    
     // I CAN OPTIMISE This MAPPER LATER (!!)
-  
     public LoginResponse toLoginResponse(User user) {
         return LoginResponse.builder()
             .id(user.getId())

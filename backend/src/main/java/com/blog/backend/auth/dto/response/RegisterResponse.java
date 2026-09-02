@@ -11,8 +11,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 
 public class RegisterResponse {
-    @Builder.Default
-    private String message = "Youuuuu Are Registered Successfully ";
-    private String username;
+    private long id;
     private String email;
+    private String username;
 }

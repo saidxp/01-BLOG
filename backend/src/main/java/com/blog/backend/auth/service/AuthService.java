@@ -37,7 +37,7 @@ public class AuthService {
     private final Normalizer normalizer;
 
     @Transactional
-    public RegisterResponse register(RegisterRequest request) {
+    public Pair<RegisterResponse, String> register(RegisterRequest request) {
 
         String normalizedUsername = normalizer.normalizeUsername(request.getUsername());
         String normalizedEmail = normalizer.normalizeEmail(request.getEmail());
@@ -59,8 +59,8 @@ public class AuthService {
                 .build();
 
         User savedUser = userRepository.save(user);
-
-        return authMapper.toRegisterResponse(savedUser);
+        
+        return Pair.of(authMapper.toRegisterResponse(savedUser), jwtService.generateAccessToken(new CustomUserDetails(savedUser)));
     }
 
     @Transactional
@@ -87,7 +87,6 @@ public class AuthService {
 
         CustomUserDetails principal
                 = (CustomUserDetails) authenticated.getPrincipal();
-
         String token = jwtService.generateAccessToken(principal);
         // Her I Will Set HttpOnly Cookie For The Access Token (!!) 
 

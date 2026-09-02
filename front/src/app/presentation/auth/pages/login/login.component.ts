@@ -30,7 +30,7 @@ export class LoginComponent {
       this.form.markAllAsTouched();
       return;
     }
-    
+
     this.isLoading.set(true);
     this.errorMessage.set(null);
 

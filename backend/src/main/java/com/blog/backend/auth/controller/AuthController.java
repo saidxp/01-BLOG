@@ -20,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import com.blog.backend.auth.cookie.AuthCookieService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,32 +28,22 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final AuthService authService;
-
+    private final AuthCookieService authCookieService;
+    
     // <<<===>>> \\
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequest request) {
-        RegisterResponse response = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequest request, HttpServletResponse res) {
+        Pair<RegisterResponse, String> result = authService.register(request); 
+        authCookieService.setAccessTokenCookie(res, result.getRight());
+        return ResponseEntity.status(HttpStatus.CREATED).body(result.getLeft());
     }
-    
+
     // <<<===>>> \\ 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginRequest request ,  HttpServletResponse res) {
-        // Will be implemented later in AuthService (!!) (!!) \\ 
         Pair<LoginResponse, String> result = authService.login(request); 
-        LoginResponse response = result.getLeft();
-        String accessToken = result.getRight();
-
-        ResponseCookie cookie = ResponseCookie.from("access_token", accessToken)
-            .httpOnly(true)
-            .secure(false)    // for now i will use http only, but in production, it should be true
-            .sameSite("Lax")
-            .path("/")
-            .maxAge(Duration.ofHours(1))
-            .build();
-
-        res.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        authCookieService.setAccessTokenCookie(res, result.getRight());
+        return ResponseEntity.status(HttpStatus.OK).body(result.getLeft());
     }
 }
 
