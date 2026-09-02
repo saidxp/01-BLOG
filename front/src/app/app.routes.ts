@@ -8,7 +8,7 @@ export const routes: Routes = [
             import('./presentation/auth/pages/login/login.component').then(
                 (m) => m.LoginComponent
             ),
-    }, 
+    },
     {
         path: 'register',
         loadComponent: () =>
@@ -16,4 +16,10 @@ export const routes: Routes = [
                 (m) => m.RegisterComponent
             ),
     },
+    {
+        path: '',
+        loadComponent: () =>
+            import('./presentation/home/pages/home/home.component').then((m) => m.HomeComponent),
+    },
+
 ];

@@ -1,0 +1,24 @@
+@if (!currentUser()) {
+  <div class="guest-banner">
+    <span>Log in to like, comment, and post.</span>
+    <a routerLink="/login">Log in</a>
+  </div>
+}
+
+@if (isLoading()) {
+  <p>Loading feed…</p>
+} @else if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+} @else {
+  <div class="feed">
+    @for (post of posts(); track post.id) {
+      <article class="post-card">
+        @if (post.mediaUrl) {
+          <img [src]="post.mediaUrl" [alt]="post.description" />
+        }
+        <p class="author">{{ post.authorUsername }}</p>
+        <p class="description">{{ post.description }}</p>
+      </article>
+    }
+  </div>
+}

@@ -1,2 +1,2 @@
-application logic use case for caling it's service from the presentation layer 
+Application Logic Use Case For caling it's service from the presentation layer 
 

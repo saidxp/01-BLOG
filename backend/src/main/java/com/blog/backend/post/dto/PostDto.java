@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
+@Builder 
 public class PostDto {
     private Long id;
     private String authorUsername;

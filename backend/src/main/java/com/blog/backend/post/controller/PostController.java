@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @RestController
@@ -38,6 +38,16 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);                
     }
 
+    // Get Posts // <<==>> \\ (!!)
+    @GetMapping("/api/posts")
+    public ResponseEntity<List<PostDto>> getAllPosts(Pageable pageable) {
+        List<PostDto> posts = postService.getAllPosts(pageable)
+                .stream()
+                .map(postMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(posts);
+    }
+    
     @GetMapping("/api/posts/{id}")
     public ResponseEntity<PostDto> getPost(@PathVariable Long id) {
         PostDto dto = postMapper.toDto(postService.getPostById(id));

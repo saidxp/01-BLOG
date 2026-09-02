@@ -4,6 +4,7 @@ import com.blog.backend.exception.NotPostOwnerException;
 import com.blog.backend.exception.PostNotFoundException;
 import com.blog.backend.notification.service.NotificationService;
 import com.blog.backend.post.dto.PostDeleteResponse;
+import com.blog.backend.post.dto.PostDto;
 import com.blog.backend.post.enums.MediaType;
 import com.blog.backend.post.model.Post;
 import com.blog.backend.post.repository.PostRepository;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import com.blog.backend.user.enums.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Service
@@ -49,10 +52,15 @@ public class PostService {
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
     }
 
-    // Fetch All Posts !!!!!
+    // Fetch All Posts BY USER <!!!!>
     public List<Post> getPostsByUser(User user) {
         return postRepository.findByUserOrderByCreatedAtDesc(user);
     }
+
+    // Fetch All Posts with Pagination
+    public Page<Post> getAllPosts(Pageable pageable) {
+    return postRepository.findAllByOrderByCreatedAtDesc(pageable);
+    } 
 
     // <<>> delete and update
 

@@ -11,9 +11,20 @@ import { environment } from '../../../environments/environment.development';
 @Injectable()
 
 export class AuthRepositoryImpl extends AuthRepository {
+
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/api/auth`;
-  // <<==>> \\ <<==>> \\ 
+  // <<==>> \\ <<==>> \\ (!!)  
+  override me(): Observable<User> {
+    return this.http.get<UserDto>(`${this.baseUrl}/me`, { withCredentials: true }).pipe(
+      map(toUserEntity),
+      catchError((err: HttpErrorResponse) => {
+        const backendMessage = err.error?.message;
+        return throwError(() => new AuthServerError(backendMessage));
+      })
+    );
+  }
+  
   override login(identifier: string, password: string): Observable<User> {
     return this.http
       .post<UserDto>(`${this.baseUrl}/login`, { identifier, password }, { withCredentials: true })
@@ -29,13 +40,15 @@ export class AuthRepositoryImpl extends AuthRepository {
       );
   }
   // register method implementation (!!) 
-  override register(name: string, email: string, password: string): Observable<User> {
+  override register(username: string, email: string, password: string): Observable<User> {
     return this.http
-      .post<UserDto>(`${this.baseUrl}/register`, { name, email, password }, { withCredentials: true })
+      .post<UserDto>(`${this.baseUrl}/register`, { username, email, password }, { withCredentials: true })
       .pipe(
         map(toUserEntity),
         catchError((err: HttpErrorResponse) => {
           const backendMessage = err.error?.message;
+          
+          console.error('Register error:', backendMessage);
           return throwError(() => new AuthServerError(backendMessage));
         })
       );

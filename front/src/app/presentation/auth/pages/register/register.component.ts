@@ -47,8 +47,9 @@ export class RegisterComponent {
     const { name, email, password } = this.form.getRawValue();
 
     this.registerUseCase.execute(name, email, password).subscribe({
-      next: () => {
+      next: (user) => {
         this.isLoading.set(false);
+        console.log(user); //
         this.router.navigateByUrl('/');
       },
       error: (err) => {

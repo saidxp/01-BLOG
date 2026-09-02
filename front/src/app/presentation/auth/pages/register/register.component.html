@@ -28,8 +28,8 @@
   @if (errorMessage()) {
     <p class="form-error">{{ errorMessage() }}</p>
   }
-  
+
   <button type="submit" [disabled]="isLoading()">
     {{ isLoading() ? 'Creating account…' : 'Create account' }}
-  </button>
+  </button> 
 </form>
