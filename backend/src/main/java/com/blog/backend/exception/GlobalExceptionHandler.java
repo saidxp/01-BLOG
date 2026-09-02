@@ -2,8 +2,7 @@ package com.blog.backend.exception;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Map;
-
+import java.util.Map; 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-@RestControllerAdvice
+@RestControllerAdvice 
 public class GlobalExceptionHandler {
 
         @ExceptionHandler(IllegalArgumentException.class)
@@ -62,7 +61,7 @@ public class GlobalExceptionHandler {
                                 .status(HttpStatus.BAD_REQUEST)
                                 .body(ApiErrorResponse.builder()
                                                 .status(HttpStatus.BAD_REQUEST.value())
-                                                .message("Validation failed")
+                                                .message("Some information is invalid. Please check the fields and try again.")
                                                 .errors(fieldErrors)
                                                 .timestamp(LocalDateTime.now())
                                                 .build());
