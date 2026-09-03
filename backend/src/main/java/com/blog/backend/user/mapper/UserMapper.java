@@ -10,15 +10,13 @@ import com.blog.backend.user.model.User;
 public class UserMapper {
 
     public UserDto toDto(User user) {
-
         return UserDto.builder()
                 .id(user.getId())
-                .username(user.getUsername())
                 .email(user.getEmail())
-                .createdAt(user.getCreatedAt())
+                .username(user.getUsername())
                 .build();
     }
-
+    
     public PublicUserDto toPublicDto(User user, long subscriberCount, long subscriptionCount, boolean isSubscribed) {
         return PublicUserDto.builder()
                 .username(user.getUsername())

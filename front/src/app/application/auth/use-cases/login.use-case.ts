@@ -14,9 +14,4 @@ export class LoginUseCase {
       tap((user) => this.authState.setUser(user))
     );
   }
-  executeMe(): Observable<User> {
-    return this.authRepository.me().pipe(
-      tap((user) => this.authState.setUser(user))
-    );
-  }
 }

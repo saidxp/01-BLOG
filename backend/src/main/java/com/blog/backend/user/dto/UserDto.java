@@ -15,8 +15,7 @@ import lombok.Setter;
 @Builder
 public class UserDto {
     private Long id;
-    private String username;
     private String email;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String username;
 }
+ 

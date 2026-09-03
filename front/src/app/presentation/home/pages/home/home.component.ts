@@ -13,7 +13,7 @@ import { RouterLink } from '@angular/router';
 import { GetFeedUseCase } from '../../../../application/home/use-cases/get-feed.use-case';
 import { AuthState } from '../../../../application/auth/state/auth-state.service';
 import { Post } from '../../../../domain/home/entity/post.entity';
-
+ 
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -21,6 +21,7 @@ import { Post } from '../../../../domain/home/entity/post.entity';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
+
 export class HomeComponent implements OnInit {
 
   private readonly getFeedUseCase = inject(GetFeedUseCase);
@@ -32,7 +33,7 @@ export class HomeComponent implements OnInit {
   readonly errorMessage = signal<string | null>(null);
 
   // The it's to fetch the feed when the component is initialized it's still not optimized for performance but it's a good start
-  ngOnInit(): void {
+  ngOnInit(): void { 
     this.getFeedUseCase.execute().subscribe({
       next: (posts) => {
         this.posts.set(posts);

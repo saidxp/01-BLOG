@@ -15,13 +15,14 @@ import com.blog.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserMapper userMapper;
     private final UserService userService;
 
+    // This Protected So It's will not hit This !! 
     @GetMapping("/me")
     public UserDto getMyProfile(Authentication authentication) {
         CustomUserDetails userDetails
@@ -29,7 +30,7 @@ public class UserController {
         return userMapper.toDto(userDetails.getUser());
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/users/{username}")
     public PublicUserDto getPublicProfile(@PathVariable String username, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         return userService.getPublicProfile(username, userDetails.getUser());

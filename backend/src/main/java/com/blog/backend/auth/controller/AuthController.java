@@ -1,21 +1,16 @@
 package com.blog.backend.auth.controller;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.blog.backend.auth.dto.request.LoginRequest;
 import com.blog.backend.auth.dto.request.RegisterRequest;
 import com.blog.backend.auth.dto.response.LoginResponse;
 import com.blog.backend.auth.dto.response.RegisterResponse;
 import com.blog.backend.auth.service.AuthService;
 import org.apache.commons.lang3.tuple.Pair;
-import  java.time.Duration;
-import org.springframework.http.HttpHeaders;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
