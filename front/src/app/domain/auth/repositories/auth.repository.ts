@@ -7,7 +7,7 @@ export abstract class AuthRepository {
    */
   abstract login(identifier: string, password: string): Observable<User>;
   // Her i wll use a methoud me to check source of truth (!!)<=>(!!)
-  abstract me(): Observable<User>;
+  abstract getCurrentUser(): Observable<User | null>;
   // <<==>>> (!!) <<==>> (!!) 
   abstract register(name: string, email: string, password: string): Observable<User>;
 
