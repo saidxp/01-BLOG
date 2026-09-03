@@ -16,7 +16,7 @@ import { Post } from '../../../../domain/home/entity/post.entity';
  
 @Component({
   selector: 'app-home',
-  standalone: true,
+  standalone: true,    
   imports: [RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
