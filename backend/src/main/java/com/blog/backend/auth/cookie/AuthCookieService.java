@@ -14,7 +14,7 @@ public class AuthCookieService {
             HttpServletResponse response,
             String accessToken) {
 
-        ResponseCookie cookie = ResponseCookie.from("access_token", accessToken)
+        ResponseCookie cookie = ResponseCookie.from("jwt", accessToken)
                 .httpOnly(true)
                 .secure(false)
                 .sameSite("Lax")

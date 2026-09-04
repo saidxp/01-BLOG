@@ -28,18 +28,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
-
-        // No token
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        String token = jwtService.extractTokenFromCookie(request);
+        if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
-
-        String token = authHeader.substring(7);
 
         String username;
 
@@ -52,25 +47,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     request,
                     response,
                     new AuthenticationException("Invalid authentication token") {
-            }
-            );
+                    });
             return;
         }
 
-        // User is not authenticated yet  !! Her I Will Put The User In The Security Context (!!)
+        // User is not authenticated yet !! Her I Will Put The User In The Security
+        // Context (!!)
         if (username != null
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails
-                    = userDetailsService.loadUserByUsername(username);
-            // <<===>> \\ <<==>> \\ (!<->!).... 
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            // <<===>> \\ <<==>> \\ (!<->!)....
             if (jwtService.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication
-                        = new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
                 SecurityContextHolder
                         .getContext()
                         .setAuthentication(authentication);
@@ -78,4 +70,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+
 }
