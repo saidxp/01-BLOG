@@ -13,9 +13,6 @@
   <div class="feed">
     @for (post of posts(); track post.id) {
       <article class="post-card">
-        @if (post.mediaUrl) {
-          <img [src]="post.mediaUrl" [alt]="post.description" />
-        }
         <p class="author">{{ post.authorUsername }}</p>
         <p class="description">{{ post.description }}</p>
       </article>
