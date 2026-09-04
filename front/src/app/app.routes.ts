@@ -13,7 +13,7 @@ export const routes: Routes = [
         path: 'register',
         loadComponent: () =>
             import('./presentation/auth/pages/register/register.component').then(
-                (m) => m.RegisterComponent
+               (m) => m.RegisterComponent
             ),
     },
     {
