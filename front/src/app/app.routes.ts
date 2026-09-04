@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-// Routes .. Im .. Using .. Lazy .. Load .. By Pages (!!)
+// Routes .. Im .. Using .. Lazy .. Load .. By Pages (!!) /...\ (!!) \\ (<!<->!>)
 export const routes: Routes = [
     {
         path: 'login',
