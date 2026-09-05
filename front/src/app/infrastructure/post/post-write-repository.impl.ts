@@ -13,7 +13,6 @@ export class PostWriteRepositoryImpl extends PostWriteRepository {
 
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/api/posts`;
-
   override createPost(title: string, content: string, media: File | null): Observable<number> { 
     const formData = new FormData();
     formData.append('title', title);
