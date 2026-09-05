@@ -6,4 +6,4 @@ export abstract class PostRepository {
 }
 // add layout home and auth 
 // dquote> - add new post-card 
-// dquote> - add shared componet           
+// dquote> - add shared componet             git sta
