@@ -13,11 +13,12 @@ import { RouterLink } from '@angular/router';
 import { GetFeedUseCase } from '../../../../application/home/use-cases/get-feed.use-case';
 import { AuthState } from '../../../../application/auth/state/auth-state.service';
 import { Post } from '../../../../domain/home/entity/post.entity';
+import { PostCardComponent } from '../../../shared/components/post-card/post-card.component';
  
 @Component({
   selector: 'app-home',
   standalone: true,    
-  imports: [RouterLink],
+  imports: [RouterLink, PostCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
@@ -45,4 +46,5 @@ export class HomeComponent implements OnInit {
       },
     });
   }
+  
 }

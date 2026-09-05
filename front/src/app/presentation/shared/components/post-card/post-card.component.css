@@ -1,0 +1,15 @@
+.post-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+.post-card .author {
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.post-card .description {
+  color: #333;
+  margin: 0;
+}

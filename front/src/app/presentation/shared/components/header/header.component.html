@@ -1,0 +1,13 @@
+<header class="app-header">
+  <a routerLink="/" class="logo">MyBlog</a>
+
+  <nav>
+    @if (currentUser(); as user) {
+      <span class="username">{{ user.username }}</span>
+      <!-- logout button will go here in the next step -->
+    } @else {
+      <a routerLink="/login">Log in</a>
+      <a routerLink="/register">Sign up</a>
+    }
+  </nav>
+</header>
