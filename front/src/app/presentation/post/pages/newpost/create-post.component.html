@@ -1,0 +1,26 @@
+<form class="create-post-form" [formGroup]="form" (ngSubmit)="submit()">
+  <h1>Write a post</h1>
+
+  <label for="title">Title</label>
+  <input id="title" type="text" formControlName="title" />
+  @if (form.controls.title.touched && form.controls.title.invalid) {
+    <p class="field-error">Title must be at least 3 characters.</p>
+  }
+
+  <label for="content">Content (Markdown)</label>
+  <textarea id="content" rows="12" formControlName="content"></textarea>
+  @if (form.controls.content.touched && form.controls.content.invalid) {
+    <p class="field-error">Content must be at least 10 characters.</p>
+  }
+
+  <label for="media">Image or video (optional)</label>
+  <input id="media" type="file" accept="image/*,video/*" (change)="onFileSelected($event)" />
+
+  @if (errorMessage()) {
+    <p class="form-error">{{ errorMessage() }}</p>
+  }
+
+  <button type="submit" [disabled]="isSubmitting()">
+    {{ isSubmitting() ? 'Publishing…' : 'Publish' }}
+  </button>
+</form>

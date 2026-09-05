@@ -5,10 +5,9 @@ export function toPostEntity(dto: PostDto): Post {
   return new Post(
     dto.id,
     dto.authorUsername,
-    dto.description,
+    dto.title,
     dto.mediaUrl,
     dto.mediaType,
-    new Date(dto.createdAt),
-    new Date(dto.updatedAt)
+    new Date(dto.createdAt)
   );
 }

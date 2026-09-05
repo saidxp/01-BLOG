@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, map, catchError, throwError } from 'rxjs';
+import { Observable, map, catchError, throwError, tap} from 'rxjs';
 import { PostRepository } from '../../domain/home/repository/post.repository';
 import { Post } from '../../domain/home/entity/post.entity';
 import { PostDto } from './dto/post.dto';
@@ -20,6 +20,7 @@ export class PostRepositoryImpl extends PostRepository {
 
     return this.http.get<PostDto[]>(this.baseUrl, { params }).pipe(
       map((dtos) => dtos.map(toPostEntity)),
+      tap((post)=> console.log('posts shape', post)),
       catchError((err: HttpErrorResponse) => {
         return throwError(() => new Error('Failed to load feed.'));
       })

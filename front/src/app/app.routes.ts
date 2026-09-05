@@ -12,6 +12,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./presentation/home/pages/home/home.component').then((m) => m.HomeComponent),
       },
+      {
+        path: 'new',
+        loadComponent: () =>
+          import('./presentation/post/pages/newpost/create-post.component').then((m) => m.CreatePostComponent),
+      }
     ],
   },
   {
