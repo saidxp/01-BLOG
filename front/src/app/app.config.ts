@@ -10,6 +10,8 @@ import { AuthRepositoryImpl } from './infrastructure/auth/auth-repository.impl';
 import { PostRepository } from './domain/home/repository/post.repository';
 import { PostRepositoryImpl } from './infrastructure/home/post-repository.impl';
 import { cookieForwardingInterceptor } from './infrastructure/auth/interceptors/cookie-forwarding.interceptor';
+import { PostWriteRepository } from './domain/post/repositories/post-write.repository'; 
+import { PostWriteRepositoryImpl } from './infrastructure/post/post-write-repository.impl';
 
 export const appConfig: ApplicationConfig = {
   // <<>> \\ (<!>)
@@ -18,7 +20,8 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideHttpClient(withFetch(), withInterceptors([cookieForwardingInterceptor])),
     { provide: AuthRepository, useClass: AuthRepositoryImpl },
-    { provide: PostRepository, useClass: PostRepositoryImpl },
+    { provide: PostRepository, useClass: PostRepositoryImpl }, 
+    { provide: PostWriteRepository, useClass: PostWriteRepositoryImpl },
     {
       provide: APP_INITIALIZER,
       useFactory: (useCase: GetCurrentUserUseCase) => () =>
