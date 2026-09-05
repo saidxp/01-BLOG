@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {    
 
     @Override
     public void commence(
