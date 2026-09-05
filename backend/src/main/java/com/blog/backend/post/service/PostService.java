@@ -29,22 +29,21 @@ public class PostService {
     private final NotificationService notificationService;
 
     @Transactional
-    public Post createPost(User owner, String description, MultipartFile mediaFile) {
+    public Post createPost(User owner, String title, String content, MultipartFile mediaFile) {
         Post.PostBuilder postBuilder = Post.builder()
                 .user(owner)
-                .description(description);
+                .title(title)
+                .content(content);
 
         if (mediaFile != null && !mediaFile.isEmpty()) {
-
             MediaType mediaType = validator.validateAndDetectType(mediaFile);
             String mediaUrl = mediaStorageService.store(mediaFile);
             postBuilder.mediaUrl(mediaUrl).mediaType(mediaType);
         }
-        // Her i add a notificaion i will add later realtime !!
+
         Post savedPost = postRepository.save(postBuilder.build());
         notificationService.notifySubscribersOfNewPost(savedPost);
         return savedPost;
-
     }
 
     public Post getPostById(Long id) {
@@ -59,8 +58,8 @@ public class PostService {
 
     // Fetch All Posts with Pagination
     public Page<Post> getAllPosts(Pageable pageable) {
-    return postRepository.findAllByOrderByCreatedAtDesc(pageable);
-    } 
+        return postRepository.findAllByOrderByCreatedAtDesc(pageable);
+    }
 
     // <<>> delete and update
 
@@ -72,8 +71,8 @@ public class PostService {
         if (!post.getUser().getId().equals(currentUser.getId())) {
             throw new NotPostOwnerException("You are not allowed to edit this post");
         }
-
-        post.setDescription(newDescription);
+        // << I Will Handle It Later This Update Content 
+        //post.setDescription(newDescription);
         return postRepository.save(post);
     }
 
