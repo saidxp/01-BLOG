@@ -2,7 +2,7 @@ package com.blog.backend.media.service;
 
 import com.blog.backend.media.model.MediaUpload;
 import com.blog.backend.media.repository.MediaUploadRepository;
-import com.blog.backend.post.storage.MediaStorageService;
+import com.blog.backend.storage.MediaStorageService;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,6 +24,7 @@ public class MediaCleanupJob {
 
     @Scheduled(cron = "0 0 3 * * *") // runs every day at 3:00 AM
     public void deleteOrphanedUploads() {
+        // <<==>> \\ 
         LocalDateTime cutoff = LocalDateTime.now().minusHours(24);
         List<MediaUpload> orphaned = mediaUploadRepository.findByConfirmedFalseAndCreatedAtBefore(cutoff);
 
@@ -33,7 +34,7 @@ public class MediaCleanupJob {
         }
 
         for (MediaUpload upload : orphaned) {
-            mediaStorageService.delete(upload.getUrl()); // assumes a delete method exists; see note below
+            mediaStorageService.delete(upload.getUrl()); // \\ (<!!>)
         }
 
         mediaUploadRepository.deleteAll(orphaned);

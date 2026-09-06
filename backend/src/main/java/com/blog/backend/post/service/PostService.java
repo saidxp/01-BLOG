@@ -2,15 +2,15 @@ package com.blog.backend.post.service;
 
 import com.blog.backend.exception.NotPostOwnerException;
 import com.blog.backend.exception.PostNotFoundException;
-import com.blog.backend.media.model.MediaUpload;
+ 
 import com.blog.backend.media.service.MediaUploadService;
 import com.blog.backend.notification.service.NotificationService;
 import com.blog.backend.post.dto.PostDeleteResponse;
-import com.blog.backend.post.dto.PostDto;
+ 
 import com.blog.backend.post.enums.MediaType;
 import com.blog.backend.post.model.Post;
 import com.blog.backend.post.repository.PostRepository;
-import com.blog.backend.post.storage.MediaStorageService;
+import com.blog.backend.storage.MediaStorageService;
 import com.blog.backend.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

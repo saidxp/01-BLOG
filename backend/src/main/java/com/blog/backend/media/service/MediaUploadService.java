@@ -1,12 +1,13 @@
 package com.blog.backend.media.service;
 import com.blog.backend.media.model.MediaUpload;
 import com.blog.backend.media.repository.MediaUploadRepository;
+import com.blog.backend.storage.*;
 import com.blog.backend.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;  
-import com.blog.backend.post.storage.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @Service
@@ -24,7 +25,7 @@ public class MediaUploadService {
                 .uploadedBy(uploader)
                 .confirmed(false)
                 .build();
-
+    
         mediaUploadRepository.save(upload);
         return url;
     }
@@ -34,7 +35,7 @@ public class MediaUploadService {
         List<String> urlsInContent = extractImageUrls(content);
         if (urlsInContent.isEmpty()) {
             return;
-        }
+        } 
         List<MediaUpload> matchingUploads = mediaUploadRepository.findByUrlIn(urlsInContent);
         matchingUploads.forEach(upload -> upload.setConfirmed(true));
         mediaUploadRepository.saveAll(matchingUploads);
@@ -48,5 +49,5 @@ public class MediaUploadService {
                 .map(match -> match.group(1))
                 .toList();
     }
-    
+
 }
