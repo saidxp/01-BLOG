@@ -3,6 +3,7 @@ package com.blog.backend.post.controller;
 import com.blog.backend.auth.security.CustomUserDetails;
 import com.blog.backend.post.dto.PostDeleteResponse;
 import com.blog.backend.post.dto.PostDto;
+import com.blog.backend.post.dto.PostId;
 import com.blog.backend.post.mapper.PostMapper;
 import com.blog.backend.post.model.Post;
 import com.blog.backend.post.service.PostService;
@@ -28,17 +29,17 @@ public class PostController {
     private final UserRepository userRepository;
 
     @PostMapping(value = "/api/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<PostDto> createPost(
+    public ResponseEntity<PostId> createPost(
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam(value = "media", required = false) MultipartFile media,
             Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Post post = postService.createPost(userDetails.getUser(), title, content, media);
-        PostDto dto = postMapper.toDto(post);
+        PostId dto = postMapper.reDto(post);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
-
+    
     // Get Posts // <<==>> \\ (!!)
     @GetMapping("/api/posts")
     public ResponseEntity<List<PostDto>> getAllPosts(Pageable pageable) {
@@ -47,8 +48,9 @@ public class PostController {
                 .map(postMapper::toDto)
                 .toList();
         return ResponseEntity.ok(posts);
-    }
+    } 
 
+    // <<==>> \\ (<!!>)
     @GetMapping("/api/posts/{id}")
     public ResponseEntity<PostDto> getPost(@PathVariable Long id) {
         PostDto dto = postMapper.toDto(postService.getPostById(id));
@@ -68,6 +70,7 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    // THIS WILL BE CHANGE LATER AT UPDATE (!!)
     @PutMapping("/api/posts/{id}")
     public ResponseEntity<PostDto> updatePost(
             @PathVariable Long id,

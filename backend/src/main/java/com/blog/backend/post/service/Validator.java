@@ -9,12 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Validator {
 
-    private static final long MAX_FILE_SIZE = 20 * 1024 * 1024;
-
     public MediaType validateAndDetectType(MultipartFile file) {
-        if (file.getSize() > MAX_FILE_SIZE) {
-            throw new InvalidMediaException("File exceeds maximum allowed size of 20MB");
-        }
         
         byte[] header;
         try {

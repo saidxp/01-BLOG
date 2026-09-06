@@ -2,7 +2,7 @@ package com.blog.backend.exception;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Map; 
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,8 +12,9 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-@RestControllerAdvice 
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
         @ExceptionHandler(IllegalArgumentException.class)
@@ -269,6 +270,19 @@ public class GlobalExceptionHandler {
                                 .body(ApiErrorResponse.builder()
                                                 .status(HttpStatus.BAD_REQUEST.value())
                                                 .message(ex.getMessage())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        }
+
+        //
+        // Max Upload Size Exceeded !
+        @ExceptionHandler(MaxUploadSizeExceededException.class)
+        public ResponseEntity<ApiErrorResponse> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex) {
+                return ResponseEntity
+                                .status(HttpStatus.CONTENT_TOO_LARGE)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.CONTENT_TOO_LARGE.value())
+                                                .message("The uploaded file is too large.")
                                                 .timestamp(LocalDateTime.now())
                                                 .build());
         }

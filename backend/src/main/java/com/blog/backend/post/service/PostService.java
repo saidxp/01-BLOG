@@ -2,6 +2,8 @@ package com.blog.backend.post.service;
 
 import com.blog.backend.exception.NotPostOwnerException;
 import com.blog.backend.exception.PostNotFoundException;
+import com.blog.backend.media.model.MediaUpload;
+import com.blog.backend.media.service.MediaUploadService;
 import com.blog.backend.notification.service.NotificationService;
 import com.blog.backend.post.dto.PostDeleteResponse;
 import com.blog.backend.post.dto.PostDto;
@@ -27,7 +29,7 @@ public class PostService {
     private final MediaStorageService mediaStorageService;
     private final Validator validator;
     private final NotificationService notificationService;
-
+    private final MediaUploadService mediaUploadService;
     @Transactional
     public Post createPost(User owner, String title, String content, MultipartFile mediaFile) {
         Post.PostBuilder postBuilder = Post.builder()
@@ -41,7 +43,9 @@ public class PostService {
             postBuilder.mediaUrl(mediaUrl).mediaType(mediaType);
         }
 
-        Post savedPost = postRepository.save(postBuilder.build());
+        Post savedPost = postRepository.save(postBuilder.build()); 
+        // Check The media file it's in content to valid it  
+        mediaUploadService.confirmUploadsUsedIn(content);
         notificationService.notifySubscribersOfNewPost(savedPost);
         return savedPost;
     }
