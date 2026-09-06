@@ -48,5 +48,5 @@ public class MediaUploadService {
                 .map(match -> match.group(1))
                 .toList();
     }
-
+    
 }
