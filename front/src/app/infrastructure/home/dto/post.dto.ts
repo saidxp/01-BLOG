@@ -7,4 +7,5 @@ export interface PostDto {
   mediaUrl: string;
   mediaType: MediaType;
   createdAt: string;
+  updatedAt : string;
 }

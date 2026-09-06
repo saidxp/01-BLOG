@@ -8,7 +8,21 @@
   }
 
   <label for="content">Content (Markdown)</label>
-  <textarea id="content" rows="12" formControlName="content"></textarea>
+
+  <div class="markdown-toolbar">
+    <button type="button" (click)="wrapSelection('**')" title="Bold"><strong>B</strong></button>
+    <button type="button" (click)="wrapSelection('*')" title="Italic"><em>I</em></button>
+    <button type="button" (click)="insertAtCursor('\n## ')" title="Heading">H</button>
+    <button type="button" (click)="wrapSelection('[', '](url)')" title="Link">🔗</button>
+    <button type="button" (click)="insertAtCursor('\n- ')" title="List">•</button>
+  </div>
+
+  <textarea
+    #contentTextarea
+    id="content"
+    rows="12"
+    formControlName="content"
+  ></textarea>
   @if (form.controls.content.touched && form.controls.content.invalid) {
     <p class="field-error">Content must be at least 10 characters.</p>
   }
@@ -22,5 +36,5 @@
 
   <button type="submit" [disabled]="isSubmitting()">
     {{ isSubmitting() ? 'Publishing…' : 'Publish' }}
-  </button>
+  </button> 
 </form>

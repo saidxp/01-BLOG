@@ -8,6 +8,7 @@ export function toPostEntity(dto: PostDto): Post {
     dto.title,
     dto.mediaUrl,
     dto.mediaType,
-    new Date(dto.createdAt)
+    new Date(dto.createdAt),
+    new Date(dto.updatedAt)
   );
 }

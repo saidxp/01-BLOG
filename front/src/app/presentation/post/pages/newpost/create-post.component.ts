@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, viewChild, ElementRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CreatePostUseCase } from '../../../../application/post/use-cases/create.post.use-case';
@@ -10,10 +10,15 @@ import { CreatePostUseCase } from '../../../../application/post/use-cases/create
   templateUrl: './create-post.component.html',
   styleUrl: './create-post.component.css',
 })
-export class CreatePostComponent {
+
+
+export class CreatePostComponent { 
+
   private readonly fb = inject(FormBuilder);
   private readonly createPostUseCase = inject(CreatePostUseCase);
   private readonly router = inject(Router);
+
+  readonly contentTextarea = viewChild.required<ElementRef<HTMLTextAreaElement>>('contentTextarea');
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
@@ -23,10 +28,47 @@ export class CreatePostComponent {
     title: ['', [Validators.required, Validators.minLength(3)]],
     content: ['', [Validators.required, Validators.minLength(10)]],
   });
-
+  
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.selectedFile = input.files?.[0] ?? null;
+  }
+
+  /**
+   * Wraps the currently selected text in the textarea with markdown symbols.
+   * e.g. wrapSelection('**') turns "hello" into "**hello**"
+   */
+  wrapSelection(before: string, after: string = before): void {
+    const textarea = this.contentTextarea().nativeElement;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const currentValue = textarea.value;
+
+    const selectedText = currentValue.slice(start, end);
+    const newValue =
+      currentValue.slice(0, start) + before + selectedText + after + currentValue.slice(end);
+
+    this.form.controls.content.setValue(newValue);
+
+    // restore focus and selection after the inserted symbols, so typing continues naturally
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + before.length, end + before.length);
+    });
+  }
+
+  insertAtCursor(text: string): void {
+    const textarea = this.contentTextarea().nativeElement;
+    const start = textarea.selectionStart;
+    const currentValue = textarea.value;
+
+    const newValue = currentValue.slice(0, start) + text + currentValue.slice(start);
+    this.form.controls.content.setValue(newValue);
+
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + text.length, start + text.length);
+    });
   }
 
   submit(): void {

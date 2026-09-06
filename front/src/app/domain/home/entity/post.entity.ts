@@ -8,7 +8,8 @@ export class Post {
     public readonly title: string,
     public readonly mediaUrl: string,
     public readonly mediaType: MediaType,
-    public readonly createdAt: Date
+    public readonly createdAt: Date,
+    public readonly updateAt : Date
   ) {}
 }
 // <<==>> \\ (!!)

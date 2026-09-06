@@ -27,12 +27,12 @@ export class HomeComponent implements OnInit {
 
   private readonly getFeedUseCase = inject(GetFeedUseCase);
   private readonly authState = inject(AuthState);
-
+   
   readonly currentUser = this.authState.currentUser; // FOR CHECK STATE (!)
   readonly posts = signal<Post[]>([]);
   readonly isLoading = signal(true);
-  readonly errorMessage = signal<string | null>(null);
-
+  readonly errorMessage = signal<string | null>(null); 
+   
   // The it's to fetch the feed when the component is initialized it's still not optimized for performance but it's a good start
   ngOnInit(): void { 
     this.getFeedUseCase.execute().subscribe({

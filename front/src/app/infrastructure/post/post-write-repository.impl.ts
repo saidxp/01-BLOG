@@ -13,20 +13,19 @@ export class PostWriteRepositoryImpl extends PostWriteRepository {
 
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/api/posts`; // <<==>> \\ (!)
-  override createPost(title: string, content: string, media: File | null): Observable<number> { 
+  override createPost(title: string, content: string, media: File | null): Observable<number> {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
     if (media) {
       formData.append('media', media);
     }
-
     return this.http.post<CreatePostResponseDto>(this.baseUrl, formData, { withCredentials: true }).pipe(
       map((response) => response.id),
       catchError((err: HttpErrorResponse) => {
         const backendMessage = err.error?.message; 
-        console.log('error at atuhenticated', err);
-        return throwError(() => new Error(backendMessage ?? 'Failed to create post.'));
+        console.log('Error At Atuhenticated', err);
+        return throwError(() => new Error(backendMessage ?? 'Failed To Create Post.'));
       })
     ); 
   }
