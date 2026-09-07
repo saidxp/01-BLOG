@@ -4,7 +4,9 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import com.blog.backend.auth.config.JwtProperties;
+
+import com.blog.backend.config.JwtProperties;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,5 +1,6 @@
 package com.blog.backend.media.model;
 
+import com.blog.backend.post.enums.MediaType;
 import com.blog.backend.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,6 +27,10 @@ public class MediaUpload {
     @JoinColumn(name = "uploaded_by", nullable = false)
     private User uploadedBy;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "media_type", length = 20, nullable = false)
+    private MediaType mediaType;
+
     @Column(name = "is_confirmed", nullable = false)
     @Builder.Default
     private boolean confirmed = false;
@@ -37,4 +42,5 @@ public class MediaUpload {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
 }

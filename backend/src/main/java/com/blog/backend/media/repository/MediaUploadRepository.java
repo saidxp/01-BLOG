@@ -9,6 +9,5 @@ import java.util.List;
 public interface MediaUploadRepository extends JpaRepository<MediaUpload, Long> {
 
     List<MediaUpload> findByUrlIn(List<String> urls);
-
-    List<MediaUpload> findByConfirmedFalseAndCreatedAtBefore(LocalDateTime cutoff);
+    List<MediaUpload> findByConfirmedFalseAndCreatedAtBefore(LocalDateTime cutoff); // <<==>> \\ (<!<->!>)
 }

@@ -2,6 +2,7 @@ package com.blog.backend.storage;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +14,9 @@ public class LocalMediaStorageService implements MediaStorageService {
 
     private static final String UPLOAD_DIR = "uploads/media/";
 
+    @Value("${app.base-url}")
+    private String baseUrl;
+
     @Override
     public String store(MultipartFile file) {
         try {
@@ -21,7 +25,7 @@ public class LocalMediaStorageService implements MediaStorageService {
             String filename = UUID.randomUUID() + extension;
             Path target = Path.of(UPLOAD_DIR, filename);
             Files.copy(file.getInputStream(), target);
-            return "/media/" + filename;
+            return baseUrl + "/media/" + filename; 
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file", e);
         }
@@ -29,7 +33,8 @@ public class LocalMediaStorageService implements MediaStorageService {
 
     @Override
     public void delete(String mediaUrl) {
-        if (mediaUrl == null) return;
+        if (mediaUrl == null)
+            return;
         String filename = mediaUrl.substring(mediaUrl.lastIndexOf("/") + 1);
         try {
             Files.deleteIfExists(Path.of(UPLOAD_DIR, filename));
@@ -39,7 +44,8 @@ public class LocalMediaStorageService implements MediaStorageService {
     }
 
     private String getExtension(String filename) {
-        if (filename == null || !filename.contains(".")) return "";
+        if (filename == null || !filename.contains("."))
+            return "";
         return filename.substring(filename.lastIndexOf("."));
     }
 }

@@ -1,0 +1,5 @@
+ALTER TABLE media_uploads
+  ADD COLUMN media_type VARCHAR(20) NOT NULL DEFAULT 'IMAGE';
+
+ALTER TABLE media_uploads
+  ALTER COLUMN media_type DROP DEFAULT;

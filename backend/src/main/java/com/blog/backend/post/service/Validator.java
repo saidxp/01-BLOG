@@ -5,12 +5,12 @@ import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 import com.blog.backend.post.enums.MediaType;
 import org.springframework.stereotype.Component;
-
+ 
 @Component
 public class Validator {
 
     public MediaType validateAndDetectType(MultipartFile file) {
-        
+
         byte[] header;
         try {
             header = file.getInputStream().readNBytes(12);

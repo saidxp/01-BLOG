@@ -1,4 +1,4 @@
-package com.blog.backend.auth.security;
+package com.blog.backend.config;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

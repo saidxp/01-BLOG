@@ -2,6 +2,7 @@ package com.blog.backend.post.controller;
 
 import com.blog.backend.auth.security.CustomUserDetails;
 import com.blog.backend.post.dto.PostDeleteResponse;
+import com.blog.backend.post.dto.PostDetailDto;
 import com.blog.backend.post.dto.PostDto;
 import com.blog.backend.post.dto.PostId;
 import com.blog.backend.post.mapper.PostMapper;
@@ -39,7 +40,7 @@ public class PostController {
         PostId dto = postMapper.reDto(post);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
-    
+
     // Get Posts // <<==>> \\ (!!)
     @GetMapping("/api/posts")
     public ResponseEntity<List<PostDto>> getAllPosts(Pageable pageable) {
@@ -48,12 +49,19 @@ public class PostController {
                 .map(postMapper::toDto)
                 .toList();
         return ResponseEntity.ok(posts);
-    } 
+    }
 
     // <<==>> \\ (<!!>)
     @GetMapping("/api/posts/{id}")
-    public ResponseEntity<PostDto> getPost(@PathVariable Long id) {
-        PostDto dto = postMapper.toDto(postService.getPostById(id));
+    public ResponseEntity<PostDetailDto> getPost(
+            @PathVariable Long id,
+            Authentication authentication) {
+        Post post = postService.getPostById(id); // <<==>> \\ (!!)
+        Long currentUserId = null;
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+            currentUserId = userDetails.getUser().getId();
+        }
+        PostDetailDto dto = postMapper.toDetailDto(post, currentUserId);
         return ResponseEntity.ok(dto);
     }
 

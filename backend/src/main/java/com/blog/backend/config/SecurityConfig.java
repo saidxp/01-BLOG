@@ -1,4 +1,4 @@
-package com.blog.backend.auth.security;
+package com.blog.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +12,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.blog.backend.auth.security.JwtAccessDeniedHandler;
+import com.blog.backend.auth.security.JwtAuthenticationEntryPoint;
+import com.blog.backend.auth.security.JwtAuthenticationFilter;
+import com.blog.backend.auth.security.UserDetailsServiceImpl;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.Customizer;
 
