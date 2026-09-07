@@ -1,0 +1,33 @@
+.post-detail {
+  max-width: 42rem;
+  margin: 2rem auto;
+}
+
+.cover-media {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.meta {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.content {
+  line-height: 1.7;
+  margin-top: 1.5rem;
+}
+
+.content img,
+.content video {
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 1rem 0;
+}
+
+.owner-actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 0.5rem;
+}

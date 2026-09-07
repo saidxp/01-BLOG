@@ -7,12 +7,14 @@ import { firstValueFrom } from 'rxjs';
 import { routes } from './app.routes';
 import { AuthRepository } from './domain/auth/repositories/auth.repository';
 import { AuthRepositoryImpl } from './infrastructure/auth/auth-repository.impl';
-import { PostRepository } from './domain/home/repository/post.repository';
-import { PostRepositoryImpl } from './infrastructure/home/post-repository.impl';
+import { PostRepository } from './domain/post/repositories/post.repository';
+import { PostRepositoryImpl } from './infrastructure/post/post-repository.impl';
 import { cookieForwardingInterceptor } from './infrastructure/auth/interceptors/cookie-forwarding.interceptor';
 import { PostWriteRepository } from './domain/post/repositories/post-write.repository'; 
 import { PostWriteRepositoryImpl } from './infrastructure/post/post-write-repository.impl';
-
+import { PostReadRepository } from './domain/post/repositories/post-read.repository';
+import { PostReadRepositoryImpl } from './infrastructure/post/post-read-repository.impl';
+ 
 export const appConfig: ApplicationConfig = {
   // <<>> \\ (<!>)
   providers: [
@@ -22,6 +24,7 @@ export const appConfig: ApplicationConfig = {
     { provide: AuthRepository, useClass: AuthRepositoryImpl },
     { provide: PostRepository, useClass: PostRepositoryImpl }, 
     { provide: PostWriteRepository, useClass: PostWriteRepositoryImpl },
+    { provide: PostReadRepository, useClass: PostReadRepositoryImpl },
     {
       provide: APP_INITIALIZER,
       useFactory: (useCase: GetCurrentUserUseCase) => () =>

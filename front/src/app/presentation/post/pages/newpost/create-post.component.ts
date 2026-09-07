@@ -12,7 +12,7 @@ import { CreatePostUseCase } from '../../../../application/post/use-cases/create
 })
 
 
-export class CreatePostComponent { 
+export class CreatePostComponent {
 
   private readonly fb = inject(FormBuilder);
   private readonly createPostUseCase = inject(CreatePostUseCase);
@@ -28,7 +28,7 @@ export class CreatePostComponent {
     title: ['', [Validators.required, Validators.minLength(3)]],
     content: ['', [Validators.required, Validators.minLength(10)]],
   });
-  
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.selectedFile = input.files?.[0] ?? null;
@@ -71,6 +71,38 @@ export class CreatePostComponent {
     });
   }
 
+  /// <<<<<<<<<<<<<<<<<<<<<<<<<<<<Media file input >>>>>>>>>>>>>>>>>>>>>>>>>>> \\ 
+  triggerImageUpload(): void {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*,video/*'
+    input.onchange = () => {
+      const file = input.files?.[0];
+      if (file) {
+        this.uploadAndInsertImage(file);
+      }
+    };
+    input.click();
+  }
+
+  private uploadAndInsertImage(file: File): void {
+    this.createPostUseCase.executeuploadInlineImage(file).subscribe({
+      
+      next: (url) => {
+        const isVideo = file.type.startsWith('video/');
+        const snippet = isVideo
+          ? `\n\n<video controls src="${url}"></video>\n\n`
+          : `\n\n![${file.name}](${url})\n\n`;
+        this.insertAtCursor(snippet); // <<==>> 
+      },
+
+      error: (err) => {
+        this.errorMessage.set(err.message);
+      },
+
+    });
+  } 
+  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<Medua file input >>>>>>>>>>>>>>>>>>>>>>>>>>>
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();

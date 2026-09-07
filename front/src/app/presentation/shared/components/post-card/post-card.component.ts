@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { Post } from '../../../../domain/home/entity/post.entity';
+import { Post } from '../../../../domain/post/entity/post.entity';
 
 @Component({
   selector: 'app-post-card',

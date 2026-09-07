@@ -10,9 +10,9 @@
 // <<==>> \\  
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { GetFeedUseCase } from '../../../../application/home/use-cases/get-feed.use-case';
+import { GetFeedUseCase } from '../../../../application/post/use-cases/get-feed.use-case';
 import { AuthState } from '../../../../application/auth/state/auth-state.service';
-import { Post } from '../../../../domain/home/entity/post.entity';
+import { Post } from '../../../../domain/post/entity/post.entity';
 import { PostCardComponent } from '../../../shared/components/post-card/post-card.component';
  
 @Component({

@@ -1,4 +1,4 @@
-export type MediaType = 'IMAGE' | 'VIDEO' | 'NONE'; // <<==>> \\ 
+import { MediaType } from "../../../enum/MediaType"; 
 
 export interface PostDto {
   id: number;

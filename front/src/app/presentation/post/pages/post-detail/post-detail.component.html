@@ -1,0 +1,23 @@
+@if (isLoading()) {
+  <p>Loading post…</p>
+} @else if (errorMessage()) { 
+  <p class="error">{{ errorMessage() }}</p>
+
+} @else {
+  @if (post(); as p) {
+    <article class="post-detail">
+      @if (p.mediaUrl) {
+        <img [src]="p.mediaUrl" [alt]="p.title" class="cover-media" />
+      }
+      <h1>{{ p.title }}</h1>
+      <p class="meta">By {{ p.authorUsername }}</p>
+      <div class="content" [innerHTML]="renderedContent()"></div>
+      @if (p.owner) {
+        <div class="owner-actions">
+          <button>Edit</button>
+          <button>Delete</button>
+        </div>
+      }
+    </article>
+  }
+}

@@ -1,5 +1,5 @@
  
-export type MediaType = 'IMAGE' | 'VIDEO' | 'NONE';
+import { MediaType } from "../../../enum/MediaType";
 
 export class Post {
   constructor(

@@ -1,5 +1,5 @@
-import { Post } from '../../../domain/home/entity/post.entity';
-import { PostDto } from '../dto/post.dto';
+import { Post } from '../../../domain/post/entity/post.entity';
+import { PostDto } from '../../post/dto/post.dto';
 
 export function toPostEntity(dto: PostDto): Post {
   return new Post(

@@ -9,24 +9,46 @@ interface CreatePostResponseDto {
 }
 
 @Injectable()
-export class PostWriteRepositoryImpl extends PostWriteRepository { 
+export class PostWriteRepositoryImpl extends PostWriteRepository {
 
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/api/posts`; // <<==>> \\ (!)
-  override createPost(title: string, content: string, media: File | null): Observable<number> {
-    const formData = new FormData();
+  private readonly baseUrl = `${environment.apiUrl}/api/posts`;
+  private readonly uploadurl =   `${environment.apiUrl}/api/media/upload`;
+  // <<==>> \\ (!) 
+
+  override createPost(title: string, content: string, media: File | null): Observable<number> { 
+
+    const formData = new FormData(); 
     formData.append('title', title);
     formData.append('content', content);
     if (media) {
       formData.append('media', media);
     }
+
     return this.http.post<CreatePostResponseDto>(this.baseUrl, formData, { withCredentials: true }).pipe(
       map((response) => response.id),
       catchError((err: HttpErrorResponse) => {
-        const backendMessage = err.error?.message; 
+        const backendMessage = err.error?.message;
         console.log('Error At Atuhenticated', err);
         return throwError(() => new Error(backendMessage ?? 'Failed To Create Post.'));
       })
-    ); 
+    );
+    
   }
+
+  override uploadInlineImage(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http
+      .post<{ url: string }>(this.uploadurl, formData, { withCredentials: true })
+      .pipe(
+        map((response) => response.url),
+        catchError((err: HttpErrorResponse) => {
+          const backendMessage = err.error?.message;
+          return throwError(() => new Error(backendMessage ?? 'Failed to upload image.'));
+        })
+      );
+  } 
+  // <<==>> \\ (<!!>) \\ (<=>) (!).  
 }
