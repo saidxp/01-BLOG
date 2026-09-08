@@ -79,17 +79,20 @@ public class PostController {
     }
 
     // THIS WILL BE CHANGE LATER AT UPDATE (!!)
-    @PutMapping("/api/posts/{id}")
-    public ResponseEntity<PostDto> updatePost(
+
+    @PutMapping(value = "/api/posts/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PostId> updatePost(
             @PathVariable Long id,
-            @RequestParam("description") String description,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam(value = "media", required = false) MultipartFile media,
             Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Post post = postService.updatePost(userDetails.getUser(), id, description);
-        PostDto dto = postMapper.toDto(post);
+        Post post = postService.updatePost(userDetails.getUser(), id, title, content, media);
+        PostId dto = postMapper.reDto(post);
         return ResponseEntity.ok(dto);
     }
-
+    
     @DeleteMapping("/api/posts/{id}")
     public ResponseEntity<PostDeleteResponse> deletePost(@PathVariable Long id, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
