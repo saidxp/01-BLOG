@@ -2,11 +2,12 @@ package com.blog.backend.post.service;
 
 import com.blog.backend.exception.NotPostOwnerException;
 import com.blog.backend.exception.PostNotFoundException;
- 
+
 import com.blog.backend.media.service.MediaUploadService;
 import com.blog.backend.notification.service.NotificationService;
 import com.blog.backend.post.dto.PostDeleteResponse;
- 
+import com.blog.backend.media.repository.MediaUploadRepository;
+
 import com.blog.backend.post.enums.MediaType;
 import com.blog.backend.post.model.Post;
 import com.blog.backend.post.repository.PostRepository;
@@ -19,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.blog.backend.user.enums.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.blog.backend.exception.InvalidMediaTypeException;
+import com.blog.backend.media.model.MediaUpload;
 import java.util.List;
 
 @Service
@@ -30,26 +33,32 @@ public class PostService {
     private final Validator validator;
     private final NotificationService notificationService;
     private final MediaUploadService mediaUploadService;
+    private final MediaUploadRepository mediaUploadRepository;
+
     @Transactional
     public Post createPost(User owner, String title, String content, MultipartFile mediaFile) {
         Post.PostBuilder postBuilder = Post.builder()
                 .user(owner)
                 .title(title)
                 .content(content);
-
         if (mediaFile != null && !mediaFile.isEmpty()) {
             MediaType mediaType = validator.validateAndDetectType(mediaFile);
+
+            if (mediaType != MediaType.IMAGE) {
+                throw new InvalidMediaTypeException("Cover media must be an image.");
+            }
+
             String mediaUrl = mediaStorageService.store(mediaFile);
             postBuilder.mediaUrl(mediaUrl).mediaType(mediaType);
         }
-
-        Post savedPost = postRepository.save(postBuilder.build()); 
-        // Check The media file it's in content to valid it  
-        mediaUploadService.confirmUploadsUsedIn(content);
-        notificationService.notifySubscribersOfNewPost(savedPost);
+        Post savedPost = postRepository.save(postBuilder.build());
+        //// <<<===>>> \\\\
+        mediaUploadService.confirmUploadsUsedIn(savedPost, content);
+        // I Need To Get All This Url And Based on Them i Put to Them In Post Id
+        notificationService.notifySubscribersOfNewPost(savedPost); // <<==>> \\ (<!!>)
         return savedPost;
     }
-
+    
     public Post getPostById(Long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
@@ -65,19 +74,34 @@ public class PostService {
         return postRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
 
-    // <<>> delete and update
-
+    // <<>> delete And Update (!!)
     @Transactional
-    public Post updatePost(User currentUser, Long postId, String newDescription) {
+    public Post updatePost(User currentUser, Long postId, String newTitle, String newContent, MultipartFile mediaFile) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
 
         if (!post.getUser().getId().equals(currentUser.getId())) {
             throw new NotPostOwnerException("You are not allowed to edit this post");
         }
-        // << I Will Handle It Later This Update Content 
-        //post.setDescription(newDescription);
-        return postRepository.save(post);
+        post.setTitle(newTitle);
+        post.setContent(newContent);
+        if (mediaFile != null && !mediaFile.isEmpty()) {
+            if (post.getMediaUrl() != null) {
+                mediaStorageService.delete(post.getMediaUrl());
+            }
+            MediaType mediaType = validator.validateAndDetectType(mediaFile);
+
+            if (mediaType != MediaType.IMAGE) {
+                throw new InvalidMediaTypeException("Cover media must be an image.");
+            }
+
+            String mediaUrl = mediaStorageService.store(mediaFile);
+            post.setMediaUrl(mediaUrl);
+            post.setMediaType(mediaType);
+        } 
+        Post updatedPost = postRepository.save(post);
+        mediaUploadService.confirmUploadsUsedIn(updatedPost, newContent);
+        return updatedPost; 
     }
 
     @Transactional
@@ -91,6 +115,12 @@ public class PostService {
         if (!isOwner && !isAdmin) {
             throw new NotPostOwnerException("You are not allowed to delete this post");
         }
+
+        List<MediaUpload> attachedMedia = mediaUploadRepository.findByPost(post);
+        for (MediaUpload media : attachedMedia) {
+            mediaStorageService.delete(media.getUrl());
+        }
+        mediaUploadRepository.deleteAll(attachedMedia);
 
         if (post.getMediaUrl() != null) {
             mediaStorageService.delete(post.getMediaUrl());

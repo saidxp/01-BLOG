@@ -25,7 +25,7 @@ export class PostDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id')); 
     this.getPostByIdUseCase.execute(id).subscribe({
-      next: (post) => {
+      next: (post) => {    // <<==>> \\ (<!<->!>)
         this.post.set(post);
         // Make Break Inside This One (!!) ...   
         marked.setOptions({ breaks: true });
