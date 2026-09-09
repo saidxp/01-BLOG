@@ -1,0 +1,26 @@
+<form (ngSubmit)="submit()">
+
+  <textarea
+    [ngModel]="content()"
+    (ngModelChange)="content.set($event)"
+    name="content"
+    placeholder="Write a comment..."
+    [disabled]="isSubmitting()"
+  ></textarea>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+  
+  <button
+    type="submit"
+    [disabled]="isSubmitting() || !content().trim()"
+  >
+    @if (isSubmitting()) {
+      Posting...
+    } @else {
+      Comment
+    }
+  </button>
+
+</form>

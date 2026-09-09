@@ -10,6 +10,9 @@ export class PostDetail {
     public readonly mediaType: MediaType,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-    public readonly owner : boolean
+    public readonly owner : boolean,
+    public readonly likes : boolean,
+    public readonly likedCount : number, 
   ) {}
 }
+

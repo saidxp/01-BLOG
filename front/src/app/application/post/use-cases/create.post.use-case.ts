@@ -8,10 +8,10 @@ export class CreatePostUseCase {
 
   execute(title: string, content: string, media: File | null): Observable<number> {
     return this.postWriteRepository.createPost(title, content, media);
-  } 
+  }
 
   executeuploadInlineImage(file: File): Observable<string> {
     return this.postWriteRepository.uploadInlineImage(file)
   }
-     
+  // <<==>> \\ This Where I Can Upload Image or Video (!!)
 }

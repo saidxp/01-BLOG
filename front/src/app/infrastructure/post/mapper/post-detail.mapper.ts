@@ -11,7 +11,9 @@ export function toPostDetailEntity(dto: PostDetailDto): PostDetail {
     dto.mediaType,
     new Date(dto.createdAt),
     new Date(dto.updatedAt),
-    dto.owner
+    dto.owner,
+    dto.likes,
+    dto.likedCount,
   );
 } // <<==>> 
  

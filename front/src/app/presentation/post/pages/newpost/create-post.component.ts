@@ -11,7 +11,6 @@ import { CreatePostUseCase } from '../../../../application/post/use-cases/create
   styleUrl: './create-post.component.css',
 })
 
-
 export class CreatePostComponent {
 
   private readonly fb = inject(FormBuilder);
@@ -34,10 +33,7 @@ export class CreatePostComponent {
     this.selectedFile = input.files?.[0] ?? null;
   }
 
-  /**
-   * Wraps the currently selected text in the textarea with markdown symbols.
-   * e.g. wrapSelection('**') turns "hello" into "**hello**"
-   */
+  // <<============================= Howa (/??\) ===================================>
   wrapSelection(before: string, after: string = before): void {
     const textarea = this.contentTextarea().nativeElement;
     const start = textarea.selectionStart;
@@ -85,9 +81,53 @@ export class CreatePostComponent {
     input.click();
   }
 
+  insertYoutube(): void {
+    const textarea = this.contentTextarea().nativeElement;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const currentValue = textarea.value;
+
+    const selectedText = currentValue.slice(start, end).trim();
+
+    const match = selectedText.match(
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/
+    );
+
+    if (!match) {
+      this.errorMessage.set('Please select a valid YouTube URL.');
+      return;
+    }
+
+    const videoId = match[1];
+    const iframe = `<iframe src="https://www.youtube-nocookie.com/embed/${videoId}" allowfullscreen></iframe>`;
+    const newValue =
+      currentValue.slice(0, start) +
+      iframe +
+      currentValue.slice(end);
+
+    this.form.controls.content.setValue(newValue);
+    this.errorMessage.set(null);
+
+    setTimeout(() => { 
+      textarea.focus();
+
+      const newCursorPosition = start + iframe.length;
+
+      textarea.setSelectionRange(
+        newCursorPosition,
+        newCursorPosition
+      ); 
+
+    });
+  } 
+
+  // <<==>> \\
+  // <<==>> \\ 
+  // <<==>> \\ (<!!>) 
   private uploadAndInsertImage(file: File): void {
     this.createPostUseCase.executeuploadInlineImage(file).subscribe({
-      
+
       next: (url) => {
         const isVideo = file.type.startsWith('video/');
         const snippet = isVideo
@@ -101,19 +141,17 @@ export class CreatePostComponent {
       },
 
     });
-  } 
-  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<Medua file input >>>>>>>>>>>>>>>>>>>>>>>>>>>
+  }
+
   submit(): void {
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
-
     const { title, content } = this.form.getRawValue();
-
     this.createPostUseCase.execute(title, content, this.selectedFile).subscribe({
       next: (id) => {
         this.isSubmitting.set(false);
@@ -123,6 +161,8 @@ export class CreatePostComponent {
         this.isSubmitting.set(false);
         this.errorMessage.set(err.message);
       },
-    });
+    }); // <<==>>> \\
+    // <<==>> \\ (<!>)... 
+    // <<===>> \\ (<!>) (!!)
   }
 }

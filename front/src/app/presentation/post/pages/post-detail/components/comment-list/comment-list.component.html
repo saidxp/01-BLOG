@@ -1,0 +1,19 @@
+@if (isLoading()) {
+  <p>Loading comments…</p>
+} @else if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+} @else if (comments().length === 0) {
+  <p class="empty">No comments yet.</p>
+} @else {
+  <ul class="comment-list">
+    @for (comment of comments(); track comment.id) {
+      <li class="comment-item">
+        <p class="author">{{ comment.authorUsername }}</p>
+        <p class="content">{{ comment.content }}</p>
+      </li>
+    }
+  </ul>
+  @if (hasMore) {
+  <button (click)="loadMore()">Load more comments</button>
+    }
+}

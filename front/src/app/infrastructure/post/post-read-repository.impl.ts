@@ -9,12 +9,12 @@ import { environment } from '../../../environments/environment.development';
 
 @Injectable()
 export class PostReadRepositoryImpl extends PostReadRepository {
+  
   private readonly http = inject(HttpClient);
- 
-  private readonly baseUrl = `${environment.apiUrl}/api/posts`;
 
-  override getPostById(id: number): Observable<PostDetail> {
-    return this.http.get<PostDetailDto>(`${this.baseUrl}/${id}`).pipe(
+  private readonly baseUrl = `${environment.apiUrl}/api/posts`;
+  override getPostById(id: number): Observable<PostDetail> { 
+    return this.http.get<PostDetailDto>(`${this.baseUrl}/${id}`, { withCredentials: true }).pipe(
       map(toPostDetailEntity),
       catchError((err: HttpErrorResponse) => {
         if (err.status === 404) {

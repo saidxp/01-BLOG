@@ -4,7 +4,7 @@
   <label for="title">Title</label>
   <input id="title" type="text" formControlName="title" />
   @if (form.controls.title.touched && form.controls.title.invalid) {
-    <p class="field-error">Title must be at least 3 characters.</p>
+  <p class="field-error">Title must be at least 3 characters.</p>
   }
 
   <label for="content">Content (Markdown)</label>
@@ -16,26 +16,20 @@
     <button type="button" (click)="wrapSelection('[', '](url)')" title="Link">🔗</button>
     <button type="button" (click)="insertAtCursor('\n- ')" title="List">•</button>
     <button type="button" (click)="triggerImageUpload()" title="Insert Image">🖼️</button>
+    <button type="button" (click)="insertYoutube()" title="Insert YouTube"> ▶️ </button>
+
   </div>
 
-  <textarea
-    #contentTextarea
-    id="content"
-    rows="12"
-    formControlName="content"
-  ></textarea>
+  <textarea #contentTextarea id="content" rows="12" formControlName="content"></textarea>
   @if (form.controls.content.touched && form.controls.content.invalid) {
-    <p class="field-error">Content must be at least 10 characters.</p>
+  <p class="field-error">Content must be at least 10 characters.</p>
   }
-
-  <label for="media">Image or video (optional)</label>
-  <input id="media" type="file" accept="image/*,video/*" (change)="onFileSelected($event)" />
-
+  <label for="media">Image Cover </label>
+  <input id="media" type="file" accept="image/*" (change)="onFileSelected($event)" />
   @if (errorMessage()) {
-    <p class="form-error">{{ errorMessage() }}</p>
+  <p class="form-error">{{ errorMessage() }}</p>
   }
-
   <button type="submit" [disabled]="isSubmitting()">
     {{ isSubmitting() ? 'Publishing…' : 'Publish' }}
-  </button> 
+  </button>
 </form>

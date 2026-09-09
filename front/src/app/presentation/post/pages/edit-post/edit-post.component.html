@@ -1,0 +1,43 @@
+@if (isLoading()) {
+<p>Loading post…</p>
+} @else if (errorMessage() && !form.dirty) {
+<p class="error">{{ errorMessage() }}</p>
+} @else {
+<form class="edit-post-form" [formGroup]="form" (ngSubmit)="submit()">
+  <h1>Edit post</h1>
+
+  <label for="title">Title</label>
+  <input id="title" type="text" formControlName="title" />
+  @if (form.controls.title.touched && form.controls.title.invalid) {
+  <p class="field-error">Title must be at least 3 characters.</p>
+  }
+
+  <label for="content">Content (Markdown)</label>
+  
+  <div class="markdown-toolbar">
+    <button type="button" (click)="wrapSelection('**')" title="Bold"><strong>B</strong></button>
+    <button type="button" (click)="wrapSelection('*')" title="Italic"><em>I</em></button>
+    <button type="button" (click)="insertAtCursor('\n## ')" title="Heading">H</button>
+    <button type="button" (click)="wrapSelection('[', '](url)')" title="Link">🔗</button>
+    <button type="button" (click)="insertAtCursor('\n- ')" title="List">•</button>
+    <button type="button" (click)="triggerImageUpload()" title="Insert Image">🖼️</button>
+     <button type="button" (click)="insertYoutube()" title="Insert YouTube"> ▶️ </button>
+  </div> 
+
+  <textarea #contentTextarea id="content" rows="12" formControlName="content"></textarea>
+  @if (form.controls.content.touched && form.controls.content.invalid) {
+  <p class="field-error">Content must be at least 10 characters.</p>
+  }
+
+  @if (errorMessage()) {
+  <p class="form-error">{{ errorMessage() }}</p>
+  } 
+
+  <label for="media">Replace cover image/video (optional)</label>
+  <input id="media" type="file" accept="image/*" (change)="onFileSelected($event)" /> 
+
+  <button type="submit" [disabled]="isSubmitting()">
+    {{ isSubmitting() ? 'Saving…' : 'Save' }}
+  </button> 
+</form>
+}

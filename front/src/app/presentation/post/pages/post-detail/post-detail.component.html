@@ -1,20 +1,21 @@
 @if (isLoading()) {
   <p>Loading post…</p>
-} @else if (errorMessage()) { 
+} @else if (errorMessage()) {
   <p class="error">{{ errorMessage() }}</p>
-
 } @else {
-  @if (post(); as p) {
+  @if (post(); as p) { 
     <article class="post-detail">
       @if (p.mediaUrl) {
         <img [src]="p.mediaUrl" [alt]="p.title" class="cover-media" />
-      }
+      } 
       <h1>{{ p.title }}</h1>
       <p class="meta">By {{ p.authorUsername }}</p>
-      <div class="content" [innerHTML]="renderedContent()"></div>
+      <div class="content" [innerHTML]="renderedContent()"></div> 
+      <app-submit-comment [postId]= "p.id" (commentAdded)="onCommentAdded()"></app-submit-comment>  
+      <app-comment-list [postId] = "p.id"></app-comment-list>
       @if (p.owner) {
         <div class="owner-actions">
-          <button>Edit</button>
+          <a routerLink="/post/{{ p.id }}/edit">Edit</a>
           <button>Delete</button>
         </div>
       }

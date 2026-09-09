@@ -39,7 +39,7 @@ export class PostWriteRepositoryImpl extends PostWriteRepository {
   override uploadInlineImage(file: File): Observable<string> {
     const formData = new FormData();
     formData.append('file', file);
-
+    // <<==>> \\ 
     return this.http
       .post<{ url: string }>(this.uploadurl, formData, { withCredentials: true })
       .pipe(
@@ -49,6 +49,6 @@ export class PostWriteRepositoryImpl extends PostWriteRepository {
           return throwError(() => new Error(backendMessage ?? 'Failed to upload image.'));
         })
       );
-  } 
-  // <<==>> \\ (<!!>) \\ (<=>) (!).  
+  }
+ 
 }
