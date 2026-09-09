@@ -26,7 +26,7 @@ public class PostMapper {
         return PostId.builder().id(post.getId()).build();
     }
 
-    public PostDetailDto toDetailDto(Post post, Long currentUserId) {
+    public PostDetailDto toDetailDto(Post post, Long currentUserId, boolean liked, long likedCount) {
         boolean isOwner = currentUserId != null && post.getUser().getId().equals(currentUserId);
         return PostDetailDto.builder()
                 .id(post.getId())
@@ -38,6 +38,8 @@ public class PostMapper {
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .owner(isOwner)
+                .liked(liked)
+                .likedCount(likedCount)
                 .build();
-    } // <<==>> \\ (<!!>) (!) <(!)> ()
+    }
 }

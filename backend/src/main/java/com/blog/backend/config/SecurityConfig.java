@@ -69,6 +69,7 @@ public class SecurityConfig {
                                                 .permitAll()
                                                 .requestMatchers("/error").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll() 
+                                                .requestMatchers("/media/**").permitAll() 
                                                 .requestMatchers(
                                                                 "/api/admin/**")
                                                 .hasRole("ADMIN")

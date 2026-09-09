@@ -2,11 +2,10 @@ package com.blog.backend.media.model;
 
 import com.blog.backend.post.enums.MediaType;
 import com.blog.backend.user.model.User;
+import com.blog.backend.post.model.Post;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "media_uploads")
 @Getter
@@ -14,8 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MediaUpload {
 
+public class MediaUpload {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,6 +25,10 @@ public class MediaUpload {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uploaded_by", nullable = false)
     private User uploadedBy;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id") // <-- NULLABLE. Optional link. 
+    private Post post;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "media_type", length = 20, nullable = false)
@@ -42,5 +45,4 @@ public class MediaUpload {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
-
 }

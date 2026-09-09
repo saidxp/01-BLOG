@@ -11,6 +11,8 @@ import com.blog.backend.post.service.PostService;
 import com.blog.backend.user.model.User;
 import com.blog.backend.user.repository.UserRepository;
 import com.blog.backend.exception.UserNotFoundException;
+import com.blog.backend.likes.repository.LikeRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +30,7 @@ public class PostController {
     private final PostService postService;
     private final PostMapper postMapper;
     private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
 
     @PostMapping(value = "/api/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostId> createPost(
@@ -52,16 +55,24 @@ public class PostController {
     }
 
     // <<==>> \\ (<!!>)
+
     @GetMapping("/api/posts/{id}")
     public ResponseEntity<PostDetailDto> getPost(
             @PathVariable Long id,
             Authentication authentication) {
-        Post post = postService.getPostById(id); // <<==>> \\ (!!)
+        Post post = postService.getPostById(id);
         Long currentUserId = null;
+        User currentUser = null;
+
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             currentUserId = userDetails.getUser().getId();
+            currentUser = userDetails.getUser();
         }
-        PostDetailDto dto = postMapper.toDetailDto(post, currentUserId);
+
+        boolean liked = currentUser != null && likeRepository.existsByUserAndPost(currentUser, post);
+        long likeCount = likeRepository.countByPost(post);
+
+        PostDetailDto dto = postMapper.toDetailDto(post, currentUserId, liked, likeCount);
         return ResponseEntity.ok(dto);
     }
 
@@ -92,7 +103,7 @@ public class PostController {
         PostId dto = postMapper.reDto(post);
         return ResponseEntity.ok(dto);
     }
-    
+
     @DeleteMapping("/api/posts/{id}")
     public ResponseEntity<PostDeleteResponse> deletePost(@PathVariable Long id, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();

@@ -18,4 +18,6 @@ public class PostDetailDto {
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private boolean owner;
+  private boolean liked;
+  private long likedCount; 
 }

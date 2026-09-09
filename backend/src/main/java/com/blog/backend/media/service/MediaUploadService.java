@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import com.blog.backend.post.enums.*;
+import com.blog.backend.post.model.Post;
+import java.util.regex.Pattern;
 import java.util.List;
+
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor 
 public class MediaUploadService {
 
     private final MediaUploadRepository mediaUploadRepository;
@@ -20,38 +23,54 @@ public class MediaUploadService {
 
     @Transactional
     public String uploadImage(User uploader, MultipartFile file) {
-        
         MediaType type = validator.validateAndDetectType(file);
         String url = mediaStorageService.store(file);
-
         MediaUpload upload = MediaUpload.builder()
                 .url(url)
                 .uploadedBy(uploader)
                 .mediaType(type)
                 .confirmed(false)
                 .build();
-        mediaUploadRepository.save(upload);
-        return url;
-    }
-
+        mediaUploadRepository.save(upload); // <<==>> \\ (<!!>)
+         return url;
+    } // <<===>> \\ (!!>)
+    // <<==>> <<==>> \\ (())
     @Transactional
-    public void confirmUploadsUsedIn(String content) {
-        List<String> urlsInContent = extractImageUrls(content);
-        if (urlsInContent.isEmpty()) {
-            return;
+    public void confirmUploadsUsedIn(Post post, String content) { 
+        // Her i Get New Url From Content (!!) ... () 
+        // let's say this the first time the post it's created ok !
+        // and we are submiting it like that :
+        // with there content and there id 
+        // no  i inned to put the id in mediaupoad 
+        // why ?
+        // becuse there is a case where i iwll need to check to compore the new with old and pased on this id i 
+        // I will get the old one !!
+        List<String> newUrls = extractImageUrls(content); 
+        List<MediaUpload> oldUploads = mediaUploadRepository.findByPost(post);
+        for (MediaUpload upload : oldUploads) {
+            if (!newUrls.contains(upload.getUrl())) {
+                upload.setConfirmed(false);
+                upload.setPost(null);
+            }
         }
-        List<MediaUpload> matchingUploads = mediaUploadRepository.findByUrlIn(urlsInContent);
-        matchingUploads.forEach(upload -> upload.setConfirmed(true));
-        mediaUploadRepository.saveAll(matchingUploads);
+            mediaUploadRepository.saveAll(oldUploads);
+        if (!newUrls.isEmpty()) { 
+            List<MediaUpload> currentUploads = mediaUploadRepository.findByUrlIn(newUrls);
+        for (MediaUpload upload : currentUploads) {
+            upload.setConfirmed(true);
+            upload.setPost(post);
+            }
+            mediaUploadRepository.saveAll(currentUploads);
+        }
     }
-
+ 
     private List<String> extractImageUrls(String content) {
         List<String> urls = new java.util.ArrayList<>();
         // This For Image (!!)
-        var imagePattern = java.util.regex.Pattern.compile("!\\[[^\\]]*\\]\\(([^)]+)\\)");
+        var imagePattern = Pattern.compile("!\\[[^\\]]*\\]\\(([^)]+)\\)");
         imagePattern.matcher(content).results().forEach(m -> urls.add(m.group(1)));
         // This Tags About Video (!!)
-        var videoPattern = java.util.regex.Pattern.compile("<video[^>]*src=\"([^\"]+)\"");
+        var videoPattern = Pattern.compile("<video[^>]*src=\"([^\"]+)\"");
         videoPattern.matcher(content).results().forEach(m -> urls.add(m.group(1))); // <<==>> \\ (<!!>)
         return urls;
     }

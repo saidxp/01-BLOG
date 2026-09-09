@@ -287,4 +287,15 @@ public class GlobalExceptionHandler {
                                                 .build());
         }
 
+        // Invalid Media Type !
+        @ExceptionHandler(InvalidMediaTypeException.class)
+        public ResponseEntity<ApiErrorResponse> handleInvalidMediaType(InvalidMediaTypeException ex) {
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.BAD_REQUEST.value())
+                                                .message(ex.getMessage())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        }
 }

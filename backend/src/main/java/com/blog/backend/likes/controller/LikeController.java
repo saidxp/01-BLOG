@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
 
     private final LikeService likeService;
-
     @PostMapping
     public ResponseEntity<LikeStatusDto> like(@PathVariable Long postId, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
@@ -28,5 +27,5 @@ public class LikeController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         LikeStatusDto result = likeService.unlikePost(userDetails.getUser(), postId);
         return ResponseEntity.ok(result);
-    }
+    }  
 }
