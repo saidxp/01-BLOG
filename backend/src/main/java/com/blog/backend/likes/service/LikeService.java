@@ -8,9 +8,9 @@ import com.blog.backend.likes.model.Like;
 import com.blog.backend.likes.repository.LikeRepository;
 import com.blog.backend.post.model.Post;
 import com.blog.backend.post.repository.PostRepository;
-import com.blog.backend.user.model.User;
+import com.blog.backend.user.model.User; 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service;  
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
