@@ -2,7 +2,7 @@ package com.blog.backend.likes.service;
 
 import com.blog.backend.exception.AlreadyLikedException;
 import com.blog.backend.exception.NotLikedException;
-import com.blog.backend.exception.PostNotFoundException;
+import com.blog.backend.exception.PostNotFoundException;   
 import com.blog.backend.likes.dto.LikeStatusDto;
 import com.blog.backend.likes.model.Like;
 import com.blog.backend.likes.repository.LikeRepository;
