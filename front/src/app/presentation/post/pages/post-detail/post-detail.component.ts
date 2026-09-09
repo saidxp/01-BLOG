@@ -7,18 +7,19 @@ import { GetPostByIdUseCase } from '../../../../application/post/use-cases/get-p
 import { PostDetail } from '../../../../domain/post/entity/PostDetail';
 import { SubmitCommentComponent } from './components/submit-comment/submit-comment.component' 
 import { CommentListComponent } from './components/comment-list/comment-list.component';
+import { LikeButtonComponent } from './components/like-button/like-button.component';
 import { viewChild } from '@angular/core'
 
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [RouterLink, SubmitCommentComponent, CommentListComponent],
+  imports: [RouterLink, SubmitCommentComponent, CommentListComponent, LikeButtonComponent],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css',
 })
 
 export class PostDetailComponent implements OnInit {
-
+  
   // <<==>> \\ (<!!>) <...> \\  
   private readonly route = inject(ActivatedRoute);
   private readonly getPostByIdUseCase = inject(GetPostByIdUseCase);

@@ -17,6 +17,7 @@ export class PostReadRepositoryImpl extends PostReadRepository {
     return this.http.get<PostDetailDto>(`${this.baseUrl}/${id}`, { withCredentials: true }).pipe(
       map(toPostDetailEntity),
       catchError((err: HttpErrorResponse) => {
+        // <=> \\ (<!!>)
         if (err.status === 404) {
           return throwError(() => new Error('Post not found.'));
         }

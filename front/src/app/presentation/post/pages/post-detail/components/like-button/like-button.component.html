@@ -1,0 +1,3 @@
+<button class="like-button" [class.liked]="liked()" (click)="toggle()" [disabled]="isSubmitting()">
+  {{ liked() ? '❤️' : '🤍' }} {{ likeCount() }}
+</button>

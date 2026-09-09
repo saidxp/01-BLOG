@@ -11,7 +11,7 @@ export class PostDetail {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public readonly owner : boolean,
-    public readonly likes : boolean,
+    public readonly liked : boolean,
     public readonly likedCount : number, 
   ) {}
 }

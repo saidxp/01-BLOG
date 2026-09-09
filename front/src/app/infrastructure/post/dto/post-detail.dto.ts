@@ -11,7 +11,7 @@ export interface PostDetailDto {
   createdAt: string;
   updatedAt: string; 
   owner : boolean; 
-  likes : boolean;
+  liked : boolean;
   likedCount : number;
 
 }

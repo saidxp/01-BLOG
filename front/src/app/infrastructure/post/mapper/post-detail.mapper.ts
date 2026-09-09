@@ -12,7 +12,7 @@ export function toPostDetailEntity(dto: PostDetailDto): PostDetail {
     new Date(dto.createdAt),
     new Date(dto.updatedAt),
     dto.owner,
-    dto.likes,
+    dto.liked,
     dto.likedCount,
   );
 } // <<==>> 
