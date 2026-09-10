@@ -38,10 +38,10 @@ public class CommentService {
     public Page<Comment> getComments(Long postId, Pageable pageable) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
-
         return commentRepository.findByPostOrderByCreatedAtDesc(post, pageable);
     }
 
+    // <<==>> \\
     @Transactional
     public void deleteComment(User currentUser, Long commentId) {
         Comment comment = commentRepository.findById(commentId)

@@ -26,30 +26,35 @@ public class CommentController {
     public ResponseEntity<CommentDto> addComment(
             @PathVariable Long postId,
             @RequestParam("content") String content,
-            Authentication authentication
-    ) {
+            Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Comment comment = commentService.addComment(userDetails.getUser(), postId, content);
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentMapper.toDto(comment));
+        Comment com = commentService.addComment(userDetails.getUser(), postId, content);
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentMapper.toDto(com, userDetails.getUser().getId()));
     }
 
     @GetMapping
     public ResponseEntity<Page<CommentDto>> getComments(
             @PathVariable Long postId,
-            @PageableDefault(size = 10) Pageable pageable
-    ) {
-        Page<CommentDto> comments = commentService.getComments(postId, pageable).map(commentMapper::toDto);
+            @PageableDefault(size = 10) Pageable pageable,
+            Authentication authentication) {
+        Long currentUserId = null;
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+            currentUserId = userDetails.getUser().getId();
+        }
+        Long finalCurrentUserId = currentUserId; // <==>> \\ ()
+        Page<CommentDto> comments = commentService.getComments(postId, pageable)
+                .map(comment -> commentMapper.toDto(comment, finalCurrentUserId));
         return ResponseEntity.ok(comments);
     }
-    
+
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
-            Authentication authentication
-    ) {
+            Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         commentService.deleteComment(userDetails.getUser(), commentId);
         return ResponseEntity.noContent().build();
     }
+    // <<==>> \\ (<!!>)
 }
