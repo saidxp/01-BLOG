@@ -7,8 +7,10 @@ export interface PagedComments {
   currentPage: number;
 }
 
-export abstract class CommentReadRepository { 
-  abstract getComments(postId: number, page: number): Observable<PagedComments>;
+export abstract class CommentReadRepository {
+
+  abstract getComments(postId: number, page: number): Observable<PagedComments>; // <<==>> \\
+  abstract deleteComment(postId: number, commentId: number): Observable<void>; // <<==>> \\ 
 }
 
 // <<==>> \\  (<!!>).

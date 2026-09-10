@@ -1,6 +1,7 @@
 import { Component, inject, input, signal , output} from '@angular/core'; // <<==>> \\ (<!!>)
 import { FormsModule } from '@angular/forms';
 import { AddCommentUseCase } from '../../../../../../application/comments/use-cases/add-comment.use-case';
+import { Comment } from '../../../../../../domain/comment/entity/comment.entity';
 
 @Component({
   selector: 'app-submit-comment',
@@ -9,11 +10,12 @@ import { AddCommentUseCase } from '../../../../../../application/comments/use-ca
   templateUrl: './submit-comment.component.html',
   styleUrl: './submit-comment.component.css',
 })
+
 export class SubmitCommentComponent {
 
   private readonly addCommentUseCase = inject(AddCommentUseCase); // <<==>> \\ 
-  
-  readonly commentAdded = output<void>();
+
+  readonly commentAdded = output<Comment>();
   readonly postId = input.required<number>();
 
   readonly content = signal('');
@@ -35,10 +37,10 @@ export class SubmitCommentComponent {
       this.postId(),
       content
     ).subscribe({
-      next: () => {
+      next: (comment) => {
         this.content.set('');
         console.log("it's gooo ..."); 
-        this.commentAdded.emit();
+        this.commentAdded.emit(comment);
         this.isSubmitting.set(false);
       },
 

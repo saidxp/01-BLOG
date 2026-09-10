@@ -3,6 +3,7 @@ export interface CommentDto {
   authorUsername: string;
   content: string;
   createdAt: string;
+  canDelete : boolean;
 }
 
 // generitic type for generate Page who it's come from springboot mvc ! 

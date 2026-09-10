@@ -19,7 +19,7 @@
         </div>
       }
     </article>
-     <app-submit-comment [postId]= "p.id" (commentAdded)="onCommentAdded()"></app-submit-comment>
+     <app-submit-comment [postId]="p.id" (commentAdded)="onCommentAdded($event)" />
      <app-comment-list [postId] = "p.id"></app-comment-list>
      <app-like-button [postId]="p.id" [initialLiked]="p.liked" [initialLikeCount]="p.likedCount" />  
   }

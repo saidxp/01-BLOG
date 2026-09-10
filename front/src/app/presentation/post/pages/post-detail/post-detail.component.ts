@@ -9,6 +9,7 @@ import { SubmitCommentComponent } from './components/submit-comment/submit-comme
 import { CommentListComponent } from './components/comment-list/comment-list.component';
 import { LikeButtonComponent } from './components/like-button/like-button.component';
 import { viewChild } from '@angular/core'
+import { Comment } from '../../../../domain/comment/entity/comment.entity';
 
 @Component({
   selector: 'app-post-detail',
@@ -19,7 +20,7 @@ import { viewChild } from '@angular/core'
 })
 
 export class PostDetailComponent implements OnInit {
-  
+
   // <<==>> \\ (<!!>) <...> \\  
   private readonly route = inject(ActivatedRoute);
   private readonly getPostByIdUseCase = inject(GetPostByIdUseCase);
@@ -74,10 +75,9 @@ export class PostDetailComponent implements OnInit {
         this.isLoading.set(false);
       },
     });
-  } // <<==>> \\ 
-
+  } // <<==>> \\ //(<!<->!>)\\ 
   // I Will Pass This To Submit For Treger In Event (!) \\ ()
-  onCommentAdded(): void {
-    this.commentListRef()?.reload();
-  }
+  onCommentAdded(comment: Comment): void {
+  this.commentListRef()?.addCommentLocally(comment);
+}
 }
