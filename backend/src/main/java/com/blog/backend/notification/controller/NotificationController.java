@@ -21,7 +21,6 @@ public class NotificationController {
 
     private final NotificationService notificationService;
     private final NotificationMapper notificationMapper;
-       private final NotificationWebSocketPublisher publisher;
 
     @GetMapping
     public ResponseEntity<Page<NotificationDto>> getMyNotifications(
@@ -32,10 +31,7 @@ public class NotificationController {
         Page<NotificationDto> result = notificationService
                 .getMyNotifications(userDetails.getUser(), pageable)
                 .map(notificationMapper::toDto);
-            // 
-        publisher.sendTestMessage(userDetails.getUsername());
-        // <<===>>> 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(result); // <<==>> \\ {<!!>} 
     }
 
     @GetMapping("/unread-count")
