@@ -10,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
+import java.security.Principal;
+
 
 @Component
 @RequiredArgsConstructor
@@ -18,25 +20,19 @@ public class WebSocketAuthChannelInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
 
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        StompHeaderAccessor accessor =
+                StompHeaderAccessor.wrap(message);
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
 
             System.out.println("===== STOMP CONNECT =====");
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Principal user = accessor.getUser();
 
-            System.out.println("Authentication: " + authentication);
+            System.out.println("WebSocket USER: " + user);
 
-            if (authentication != null) {
-                System.out.println("Authenticated: " + authentication.isAuthenticated());
-                System.out.println("Username: " + authentication.getName());
-            }
-
-            if (authentication != null && authentication.isAuthenticated()) {
-                accessor.setUser(authentication);
-
-                System.out.println("WebSocket USER SET: " + authentication.getName());
+            if (user != null) {
+                System.out.println("Username: " + user.getName());
             }
         }
 

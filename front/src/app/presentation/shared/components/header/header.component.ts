@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { AuthState } from '../../../../application/auth/state/auth-state.service';
 import { GetUnreadCountUseCase } from '../../../../application/notification/use-cases/get-unread-count.use-case';
 import { NotificationState } from '../../../../application/notification/state/notification-state.service';
-import {WebSocketNotificationService} from '../../../../infrastructure/notification/websocket-notification.service';
+import { WebSocketNotificationService } from '../../../../infrastructure/notification/websocket-notification.service';
 
 @Component({
   selector: 'app-header',
@@ -13,12 +13,12 @@ import {WebSocketNotificationService} from '../../../../infrastructure/notificat
   styleUrl: './header.component.css',
 })
 
-export class HeaderComponent implements OnInit { 
+export class HeaderComponent implements OnInit {
 
   // <<==>> \\ {<!!>} // <<==>> \\ {<!!>} \\ 
   private readonly authState = inject(AuthState);
-  private readonly getUnreadCountUseCase = inject(GetUnreadCountUseCase); 
-  private readonly notificationState = inject(NotificationState); 
+  private readonly getUnreadCountUseCase = inject(GetUnreadCountUseCase);
+  private readonly notificationState = inject(NotificationState);
   private readonly webSocketNotificationService = inject(WebSocketNotificationService);
 
   isUserMenuOpen = signal(false);
@@ -27,17 +27,17 @@ export class HeaderComponent implements OnInit {
   readonly unreadCount = this.notificationState.unreadCount;
 
   ngOnInit(): void {
-    this.getUnreadCountUseCase.execute().subscribe({
-      next: (count) => this.notificationState.setUnreadCount(count),
-    });
-
     if (this.currentUser()) {
+      this.getUnreadCountUseCase.execute().subscribe({
+        next: (count) => this.notificationState.setUnreadCount(count),
+      });
+      console.log()
       this.webSocketNotificationService.connect(); // connection it's ping 
     }
   }
-
   toggleUserMenu(): void {
     this.isUserMenuOpen.update(open => !open);
   } 
+  
   // <<==>> \\ {} {} {} \\ {<!!>} \\{}//
 }

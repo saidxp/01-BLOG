@@ -1,26 +1,33 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject} from '@angular/core';
 import { Client } from '@stomp/stompjs';
 import { NotificationState } from '../../application/notification/state/notification-state.service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment.development'; 
+import {toNotificationEntity} from '../notification/mapper/notification.mapper';
+
 
 @Injectable({ providedIn: 'root' })
 export class WebSocketNotificationService {
 
-  private client: Client | null = null;
+  private client: Client | null = null; // <<===>> \\   
+  // last check ! soubaaiss 
+  // The Notificaion State \\  {<!<->!>} \\ {<!!>} \\ 
+  private  notificationState = inject(NotificationState); // <<==>> \\ 
 
   async connect(): Promise<void> {
 
-    // Don't execute WebSocket/SockJS during Angular SSR
     if (typeof window === 'undefined') {
+      console.log('SRR WebSocket skipped');
       return;
     }
 
+    console.log(' WebSocket executing');
     if (this.client?.active) {
       return;
     }
 
+    console.log("it's Excute In The Server Side Rendring That's The Big Problme  i can see it i can catch it to the end !!");
     // Load SockJS only in the browser
-    const { default: SockJS } = await import('sockjs-client');
+    const { default: SockJS } = await import('sockjs-client/dist/sockjs');
 
     this.client = new Client({
       webSocketFactory: () =>
@@ -31,22 +38,36 @@ export class WebSocketNotificationService {
         ),
 
       onConnect: () => {
-        console.log('STOMP CONNECTED');
+        console.log('===== CONNECTED =====');
 
-        this.client!.subscribe(
-          '/user/queue/notifications',
+        const destination = '/user/queue/notifications';
+
+        console.log('Subscribing to:', destination);
+
+        const subscription = this.client!.subscribe(
+          destination,
           (message) => {
-            const dto = JSON.parse(message.body);
 
-            console.log(
-              "Hello, it's a message from backend:",
-              dto
-            );
+            console.log('===== MESSAGE RECEIVED =====');
+            console.log('Raw message:', message);
+            console.log('Message body:', message.body);
 
-            // const notification = toNotificationEntity(dto);
-            // this.notificationState.addNotification(notification);
+            try {
+              const dto = JSON.parse(message.body);
+
+              console.log('Parsed notification:', dto);
+
+              const notification = toNotificationEntity(dto);
+              this.notificationState.addNotification(notification);
+              
+            } catch (error) {
+              console.error('Failed to parse WebSocket message:', error);
+            }
           }
         );
+
+        console.log('===== SUBSCRIPTION CREATED =====');
+        console.log('Subscription id:', subscription.id);
       },
 
       onStompError: (frame) => {

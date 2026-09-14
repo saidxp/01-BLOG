@@ -10,13 +10,22 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class NotificationWebSocketPublisher {
 
-    private final SimpMessagingTemplate messagingTemplate;
+     private final SimpMessagingTemplate messagingTemplate;
 
     public void sendTestMessage(String username) {
+
+        System.out.println("===== WS PUBLISHER =====");
+        System.out.println("Sending to username: " + username);
+
         messagingTemplate.convertAndSendToUser(
             username,
             "/queue/notifications",
-            Map.of("message", "Test message: WebSocket connected successfully!")
+            Map.of(
+                "message",
+                "Test message: WebSocket connected successfully!"
+            )
         );
+
+        System.out.println("===== WS MESSAGE SENT TO BROKER =====");
     }
 }

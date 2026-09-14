@@ -32,3 +32,5 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.flywaydb: DEBUG
+    org.springframework.messaging.simp.user: TRACE
+    org.springframework.messaging.simp.broker: TRACE

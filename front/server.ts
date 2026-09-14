@@ -1,8 +1,8 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { CommonEngine } from '@angular/ssr';
+import { CommonEngine } from '@angular/ssr/node';
 import express from 'express';
 import { fileURLToPath } from 'node:url';
-import { dirname, join, resolve } from 'node:path';   
+import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 import { SERVER_REQUEST } from './src/app/infrastructure/ssr/request.token';
 
@@ -13,7 +13,10 @@ export function app(): express.Express {
   const browserDistFolder = resolve(serverDistFolder, '../browser');
   const indexHtml = join(serverDistFolder, 'index.server.html');
 
-  const commonEngine = new CommonEngine();
+
+  const commonEngine = new CommonEngine({
+    allowedHosts: ['localhost'],
+  });
 
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
@@ -27,7 +30,7 @@ export function app(): express.Express {
 
   // All regular routes use the Angular engine
   server.get('*', (req, res, next) => {
-      console.log('🔵 SSR RENDER TRIGGERED for:', req.originalUrl);
+    console.log('🔵 SSR RENDER TRIGGERED for:', req.originalUrl);
     const { protocol, originalUrl, baseUrl, headers } = req;
 
     commonEngine
@@ -36,8 +39,8 @@ export function app(): express.Express {
         documentFilePath: indexHtml,
         url: `${protocol}://${headers.host}${originalUrl}`,
         publicPath: browserDistFolder,
-        providers: [{ provide: APP_BASE_HREF, useValue: baseUrl } , {provide: SERVER_REQUEST, useValue: req }],
-      
+        providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }, { provide: SERVER_REQUEST, useValue: req }],
+
       })
       .then((html) => res.send(html))
       .catch((err) => next(err));
@@ -49,7 +52,7 @@ export function app(): express.Express {
 function run(): void {
 
   const port = process.env['PORT'] || 4000;
-  
+
   // Start up the Node server
   const server = app();
   server.listen(port, () => {
