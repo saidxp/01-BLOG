@@ -47,11 +47,12 @@ export class WebSocketNotificationService {
         const subscription = this.client!.subscribe(
           destination,
           (message) => {
-                                
+                          
+            /// server backend it's send direcly to subscribe
             console.log('===== MESSAGE RECEIVED =====');
             console.log('Raw message:', message);
             console.log('Message body:', message.body);
-
+       
             try {
               const dto = JSON.parse(message.body);
 
