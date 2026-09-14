@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
     if (this.currentUser()) {
       this.getUnreadCountUseCase.execute().subscribe({
         next: (count) => this.notificationState.setUnreadCount(count),
-      });
+      });  
       console.log()
       this.webSocketNotificationService.connect(); // connection it's ping 
     }
@@ -38,6 +38,6 @@ export class HeaderComponent implements OnInit {
   toggleUserMenu(): void {
     this.isUserMenuOpen.update(open => !open);
   } 
-  
+
   // <<==>> \\ {} {} {} \\ {<!!>} \\{}//
 }
