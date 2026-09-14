@@ -47,7 +47,7 @@ export class WebSocketNotificationService {
         const subscription = this.client!.subscribe(
           destination,
           (message) => {
-
+                                
             console.log('===== MESSAGE RECEIVED =====');
             console.log('Raw message:', message);
             console.log('Message body:', message.body);
@@ -59,7 +59,7 @@ export class WebSocketNotificationService {
 
               const notification = toNotificationEntity(dto);
               this.notificationState.addNotification(notification);
-              
+
             } catch (error) {
               console.error('Failed to parse WebSocket message:', error);
             }
