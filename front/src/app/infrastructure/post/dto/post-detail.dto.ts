@@ -1,7 +1,6 @@
 import { MediaType } from '../../../enum/MediaType';
 
 export interface PostDetailDto {
-
   id: number;
   authorUsername: string;
   title: string;
@@ -13,6 +12,5 @@ export interface PostDetailDto {
   owner : boolean; 
   liked : boolean;
   likedCount : number;
-
 }
 

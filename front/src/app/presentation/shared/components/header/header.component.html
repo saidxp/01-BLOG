@@ -3,11 +3,50 @@
 
   <nav>
     @if (currentUser(); as user) {
-      <span class="username">{{ user.username }}</span>
-      <!-- logout button will go here in the next step -->
+
+    <a routerLink="/notifications" class="bell-link">
+      🔔
+      @if (unreadCount() > 0) {
+      <span class="badge">{{ unreadCount() }}</span>
+      }
+    </a>
+
+    <div class="user-menu">
+      <button class="user-menu-button" type="button" (click)="toggleUserMenu()"> 
+        <img class="user-avatar" [src]="user.avatarUrl" [alt]="user.username" />
+
+        <span class="username">
+          {{ user.username }}
+        </span>
+
+        <span>▾</span>
+      </button>
+
+      @if (isUserMenuOpen()) {
+      <div class="user-dropdown  click= toggleUserMenu() ">
+
+        <a [routerLink]="['/profile', user.username]">
+          Profile
+        </a>
+
+        @if (user.role === 'ADMIN') {
+        <a routerLink="/admin">
+          Admin panel
+        </a>
+        }
+
+        <button type="button">
+          Log out
+        </button>
+
+      </div>
+      }
+    </div>
+
     } @else {
-      <a routerLink="/login">Log in</a>
-      <a routerLink="/register">Sign up</a>
+
+    <a routerLink="/login">Log in</a>
+    <a routerLink="/register">Sign up</a>
     }
   </nav>
 </header>

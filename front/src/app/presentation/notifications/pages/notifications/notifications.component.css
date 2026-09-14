@@ -1,0 +1,42 @@
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  max-width: 32rem;
+  margin: 1rem auto;
+}
+
+.notification-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.notification-item.unread {
+  background: #f0f7ff;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.message {
+  margin: 0;
+}
+
+.timestamp {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.empty,
+.error {
+  text-align: center;
+  color: #888;
+  padding: 1rem;
+}

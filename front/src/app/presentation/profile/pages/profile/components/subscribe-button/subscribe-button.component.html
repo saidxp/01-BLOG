@@ -1,0 +1,3 @@
+<button class="subscribe-button" [class.subscribed]="subscribed()" (click)="toggle()" [disabled]="isSubmitting()">
+  {{ subscribed() ? 'Unsubscribe' : 'Subscribe' }}
+</button>

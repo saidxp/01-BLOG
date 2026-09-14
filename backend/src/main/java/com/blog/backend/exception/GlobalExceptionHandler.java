@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -297,5 +298,22 @@ public class GlobalExceptionHandler {
                                                 .message(ex.getMessage())
                                                 .timestamp(LocalDateTime.now())
                                                 .build());
+        }
+
+        // <<<== Database overflow or norm not respect !!
+        @ExceptionHandler(DataIntegrityViolationException.class)
+        public ResponseEntity<ApiErrorResponse> handleDataIntegrityViolation(
+                        DataIntegrityViolationException ex) {
+
+                ApiErrorResponse response = ApiErrorResponse.builder()
+                                .status(HttpStatus.BAD_REQUEST.value())
+                                .message("Please Respect The Limit Of Title Or Content")
+                                .errors(null)
+                                .timestamp(LocalDateTime.now())
+                                .build();
+
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(response);
         }
 }

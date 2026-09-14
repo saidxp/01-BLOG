@@ -1,13 +1,9 @@
-@if (isLoading()) {
-  <p>Loading feed…</p>
-} @else if (errorMessage()) {
-  <p class="error">{{ errorMessage() }}</p>
-} @else if (posts().length === 0) {
-  <p class="empty-state">No posts yet.</p>
-} @else {
-  <div class="feed">
-    @for (post of posts(); track post.id) {
-      <app-post-card [post]="post" />
-    }
+<!-- home.component.html -->
+
+@if (!currentUser()) {
+  <div class="guest-banner">
+    <span>Log in to like, comment, and post.</span>
   </div>
 }
+
+<app-public-posts-feed />

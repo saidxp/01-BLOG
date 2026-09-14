@@ -4,6 +4,8 @@ import com.blog.backend.auth.security.CustomUserDetails;
 import com.blog.backend.notification.dto.NotificationDto;
 import com.blog.backend.notification.mapper.NotificationMapper;
 import com.blog.backend.notification.service.NotificationService;
+import com.blog.backend.notification.service.NotificationWebSocketPublisher;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
     private final NotificationMapper notificationMapper;
+       private final NotificationWebSocketPublisher publisher;
 
     @GetMapping
     public ResponseEntity<Page<NotificationDto>> getMyNotifications(
@@ -29,6 +32,9 @@ public class NotificationController {
         Page<NotificationDto> result = notificationService
                 .getMyNotifications(userDetails.getUser(), pageable)
                 .map(notificationMapper::toDto);
+            // 
+        publisher.sendTestMessage(userDetails.getUsername());
+        // <<===>>> 
         return ResponseEntity.ok(result);
     }
 

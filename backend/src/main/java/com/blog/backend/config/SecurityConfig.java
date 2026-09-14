@@ -49,7 +49,7 @@ public class SecurityConfig {
                         throws Exception {
                 return configuration.getAuthenticationManager();
         }
-
+        
         @Bean
         public SecurityFilterChain securityFilterChain( 
                         HttpSecurity http) throws Exception {
@@ -62,14 +62,15 @@ public class SecurityConfig {
                                 .exceptionHandling(exception -> exception
                                                 .authenticationEntryPoint(authenticationEntryPoint)
                                                 .accessDeniedHandler(accessDeniedHandler))
-
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers(
                                                                 "/api/auth/**")
                                                 .permitAll()
                                                 .requestMatchers("/error").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll() 
+                                                .requestMatchers(HttpMethod.GET,"/api/users/**").permitAll()
                                                 .requestMatchers("/media/**").permitAll() 
+                                                 .requestMatchers("/ws/**").permitAll() 
                                                 .requestMatchers(
                                                                 "/api/admin/**")
                                                 .hasRole("ADMIN")

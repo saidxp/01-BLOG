@@ -2,7 +2,7 @@ package com.blog.backend.user.service;
 
 import com.blog.backend.exception.UserNotFoundException;
 import com.blog.backend.subscription.repository.SubscriptionRepository;
-import com.blog.backend.user.dto.PublicUserDto;
+import com.blog.backend.user.dto.UserProfileDto;
 import com.blog.backend.user.mapper.UserMapper;
 import com.blog.backend.user.model.User;
 import com.blog.backend.user.repository.UserRepository;
@@ -17,16 +17,27 @@ public class UserService {
     private final UserMapper userMapper;
     private final SubscriptionRepository subscriptionRepository;
 
-    public PublicUserDto getPublicProfile(String username, User currentUser) {
+    // <<==>> \\ (<!!>)
+    public UserProfileDto getPublicProfile(String username, User currentUser) {
         User targetUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + username));
-
-        long subscriberCount = subscriptionRepository.countBySubscribedTo(targetUser);
-        long subscriptionCount = subscriptionRepository.countBySubscriber(targetUser);
-
-        boolean isSubscribed = currentUser != null
-                && subscriptionRepository.existsBySubscriberAndSubscribedTo(currentUser, targetUser);
-
-        return userMapper.toPublicDto(targetUser, subscriberCount, subscriptionCount, isSubscribed);
+        boolean isOwner = isOwner(currentUser, targetUser);
+        boolean isSubscribed = isSubscribed(currentUser, targetUser, isOwner);
+        return userMapper.toPublicDto(targetUser, isSubscribed, isOwner);
     }
+    
+    private boolean isOwner(User currentUser, User targetUser) {
+        if (currentUser == null) {
+            return false;
+        }
+            System.out.println("currentUser id: " + currentUser.getId() + ", targetUser id: " + targetUser.getId());
+        return currentUser.getId().equals(targetUser.getId());
+    }
+
+    private boolean isSubscribed(User currentUser, User targetUser, boolean isOwner) {
+        if (currentUser == null || isOwner) {
+            return false;
+        }
+        return subscriptionRepository.existsBySubscriberAndSubscribedTo(currentUser, targetUser);
+    } // <<==>> \\ <<==>> \\  
 }

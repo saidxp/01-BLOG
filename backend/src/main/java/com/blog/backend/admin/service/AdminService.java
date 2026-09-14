@@ -1,16 +1,15 @@
 package com.blog.backend.admin.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.blog.backend.exception.UserNotFoundException;
-import com.blog.backend.*;
-import com.blog.backend.post.mapper.PostMapper;
 import com.blog.backend.post.repository.PostRepository;
+import com.blog.backend.report.repository.ReportRepository;
+import com.blog.backend.report.dto.AdminReportDto;
+import com.blog.backend.user.dto.AdminUserDto;
 import com.blog.backend.user.dto.UserDto;
 import com.blog.backend.user.enums.UserStatus;
 import com.blog.backend.user.mapper.UserMapper;
@@ -26,13 +25,11 @@ public class AdminService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PostRepository postRepository;
-    private final PostMapper postMapper;
+    private final ReportRepository reportRepository;
 
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(userMapper::toDto)
-                .toList();
+    public Page<AdminUserDto> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map((user) -> userMapper.toAdminUserDto(user));
     }
 
     public UserDto getUserById(Long id) {
@@ -41,17 +38,17 @@ public class AdminService {
     }
 
     @Transactional
-    public UserDto banUser(Long id) {
+    public AdminUserDto banUser(Long id) {
         User user = findUserOrThrow(id);
         user.setStatus(UserStatus.BANNED);
-        return userMapper.toDto(user);
+        return userMapper.toAdminUserDto(user);
     }
 
     @Transactional
-    public UserDto unbanUser(Long id) {
+    public AdminUserDto unbanUser(Long id) {
         User user = findUserOrThrow(id);
         user.setStatus(UserStatus.ACTIVE);
-        return userMapper.toDto(user);
+        return userMapper.toAdminUserDto(user);
     }
 
     @Transactional
@@ -63,11 +60,28 @@ public class AdminService {
     private User findUserOrThrow(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-    } 
-
-    // Posts Managment !! 
-    public Page<PostDto> getAllPosts(Pageable pageable) {
-    return postRepository.findAllByOrderByCreatedAtDesc(pageable)
-            .map(postMapper::toDto);
     }
+
+    // <<===>>> \\ (<!!>) // \\ {<!!>}
+    public Page<AdminPostDto> getAllPosts(Pageable pageable) {
+        Page<AdminPostDto> posts = postRepository.findAll(pageable)
+                .map(post -> new AdminPostDto(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getUser().getUsername(),
+                        post.getCreatedAt()));
+        return posts;
+    }
+
+    // Reports ===>> <<====
+    public Page<AdminReportDto> getAllReports(Pageable pageable) {
+        return reportRepository.findAll(pageable)
+                .map(report -> new AdminReportDto(
+                        report.getId(),
+                        report.getReporter().getUsername(),
+                        report.getReportedUser().getUsername(),
+                        report.getReason(),
+                        report.getCreatedAt()));
+    }
+    // <<==>> \\
 }

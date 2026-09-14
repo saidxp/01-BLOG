@@ -1,0 +1,37 @@
+<h1>Posts</h1>
+
+@if (isLoading()) {
+  <p>Loading posts…</p>
+} @else if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (post of posts(); track post.id) {
+        <tr>
+          <td>{{ post.id }}</td>
+          <td>{{ post.title }}</td>
+          <td>{{ post.authorUsername }}</td>
+          <td>{{ post.createdAt | date: 'MMM d, y' }}</td>
+          <td>
+            <button (click)="deletePost(post)">Delete</button>
+             <a [routerLink]="['/post', post.id]">View</a>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (hasMore) {
+    <button (click)="loadMore()">Load more</button>
+  }
+}

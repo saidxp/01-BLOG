@@ -1,0 +1,22 @@
+.profile-header {
+  max-width: 32rem;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.bio {
+  color: #444;
+  margin: 0.5rem 0;
+}
+
+.joined {
+  color: #888;
+  font-size: 0.85rem;
+}

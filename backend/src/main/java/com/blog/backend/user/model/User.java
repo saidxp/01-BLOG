@@ -27,9 +27,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class User {
+@Builder 
 
+public class User {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,6 +43,12 @@ public class User {
 
     @Column(nullable = false, length = 255)
     private String passwordHash;
+
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
+    @Column(name = "avatar_url", length = 500)
+    private String avatarUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)

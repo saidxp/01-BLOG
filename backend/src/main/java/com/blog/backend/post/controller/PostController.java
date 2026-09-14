@@ -21,7 +21,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Pageable;
-import java.util.List;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Page;
+ 
 
 @RestController
 @RequiredArgsConstructor
@@ -44,19 +46,26 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
-    // Get Posts // <<==>> \\ (!!)
-    @GetMapping("/api/posts")
-    public ResponseEntity<List<PostDto>> getAllPosts(Pageable pageable) {
-        List<PostDto> posts = postService.getAllPosts(pageable)
-                .stream()
-                .map(postMapper::toDto)
-                .toList();
+    // <<======================POSTS FETCHING OPTIMIZED QUERY <!!> =========================>> 
+    @GetMapping("/api/posts") // <<==>> \\
+    public ResponseEntity<Page<PostDto>> getAllPosts(Pageable pageable) {
+        Page<PostDto> posts = postService.getAllPosts(pageable);
+        return ResponseEntity.ok(posts);
+    } 
+    
+    @GetMapping("/api/users/{username}/posts") // Posts By User <!> 
+    public ResponseEntity<Page<PostDto>> getUserPosts(
+            @PathVariable String username,
+            @PageableDefault(size = 10) Pageable pageable) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + username));
+        Page<PostDto> posts = postService.getPostsByUser(user, pageable);
         return ResponseEntity.ok(posts);
     }
-
-    // <<==>> \\ (<!!>)
-
-    @GetMapping("/api/posts/{id}")
+    // <<====================================================================================>
+    // <<====================================================================================>
+    @GetMapping("/api/posts/{id}") // Single Post 
     public ResponseEntity<PostDetailDto> getPost(
             @PathVariable Long id,
             Authentication authentication) {
@@ -68,29 +77,15 @@ public class PostController {
             currentUserId = userDetails.getUser().getId();
             currentUser = userDetails.getUser();
         }
-
         boolean liked = currentUser != null && likeRepository.existsByUserAndPost(currentUser, post);
         long likeCount = likeRepository.countByPost(post);
-
         PostDetailDto dto = postMapper.toDetailDto(post, currentUserId, liked, likeCount);
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/api/users/{username}/posts")
-    public ResponseEntity<List<PostDto>> getUserPosts(@PathVariable String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found: " + username));
+    
 
-        List<PostDto> posts = postService.getPostsByUser(user)
-                .stream()
-                .map(postMapper::toDto)
-                .toList();
-
-        return ResponseEntity.ok(posts);
-    }
-
-    // THIS WILL BE CHANGE LATER AT UPDATE (!!)
-
+    // Edit post
     @PutMapping(value = "/api/posts/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostId> updatePost(
             @PathVariable Long id,
@@ -104,6 +99,7 @@ public class PostController {
         return ResponseEntity.ok(dto);
     }
 
+    // Delete Still Not Work
     @DeleteMapping("/api/posts/{id}")
     public ResponseEntity<PostDeleteResponse> deletePost(@PathVariable Long id, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();

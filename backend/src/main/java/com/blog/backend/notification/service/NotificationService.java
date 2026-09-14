@@ -41,16 +41,15 @@ public class NotificationService {
         return notificationRepository.countByRecipientAndReadFalse(currentUser);
     }
 
+    // <<==>> \\ 
     @Transactional
     public void markAsRead(User currentUser, Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new NotificationNotFoundException("Notification not found with id: " + notificationId));
-
         if (!notification.getRecipient().getId().equals(currentUser.getId())) {
             throw new NotificationNotFoundException("Notification not found with id: " + notificationId);
         }
-
         notification.setRead(true);
-        notificationRepository.save(notification);
-    }
+        notificationRepository.save(notification); 
+    } // <<==>> \\ // <<==>> \\ (<!!>) (!!)....
 }

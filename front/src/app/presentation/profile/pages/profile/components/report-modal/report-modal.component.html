@@ -1,0 +1,46 @@
+<button (click)="open()">Report user</button>
+
+@if (isOpen()) {
+  <div class="modal-backdrop" (click)="close()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+      @if (step() === 'form') {
+        <h3>Report {{ username() }}</h3>
+        <textarea
+          [ngModel]="reason()"
+          (ngModelChange)="reason.set($event)"
+          rows="4"
+          placeholder="Why are you reporting this user?"
+        ></textarea>
+        <div class="modal-actions">
+          <button (click)="close()">Cancel</button>
+          <button (click)="goToConfirm()" [disabled]="!reason().trim()">Next</button>
+        </div>
+      }
+
+      @if (step() === 'confirm') {
+        <h3>Confirm report</h3>
+        <p>Are you sure you want to report <strong>{{ username() }}</strong>?</p>
+        <p class="reason-preview">"{{ reason() }}"</p>
+        @if (errorMessage()) {
+          <p class="error">{{ errorMessage() }}</p>
+        }
+        <div class="modal-actions">
+          <button (click)="goBackToForm()" [disabled]="isSubmitting()">Back</button>
+          <button (click)="confirmSubmit()" [disabled]="isSubmitting()">
+            {{ isSubmitting() ? 'Submitting…' : 'Confirm Report' }}
+          </button>
+        </div>
+      }
+
+      @if (step() === 'success') {
+        <h3>Report submitted</h3>
+        <p>Thank you — our team will review this report.</p>
+        <div class="modal-actions">
+          <button (click)="close()">Close</button>
+        </div>
+      }
+
+    </div>
+  </div>
+}

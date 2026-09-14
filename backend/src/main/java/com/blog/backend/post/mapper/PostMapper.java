@@ -9,15 +9,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class PostMapper {
 
-    public PostDto toDto(Post post) {
+    public PostDto toDto(Post post, long like, long comment) { 
         return PostDto.builder()
                 .id(post.getId())
                 .authorUsername(post.getUser().getUsername())
+                .avatarUrl(post.getUser().getAvatarUrl())
                 .title(post.getTitle())
                 .mediaUrl(post.getMediaUrl())
                 .mediaType(post.getMediaType())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
+                .likesCount(like)
+                .commentsCount(comment)
                 .build();
     }
 
@@ -41,5 +44,5 @@ public class PostMapper {
                 .liked(liked)
                 .likedCount(likedCount)
                 .build();
-    } // <<==>> \\ (<!!>) (!) <(!)> ()
+    }  // <<==>> \\ (<!!>) (!) <(!)> () \\ (<!!>)
 }

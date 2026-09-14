@@ -1,0 +1,21 @@
+@if (isLoading()) {
+  <p>Loading posts…</p>
+} @else if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+} @else if (posts().length === 0) {
+  <p class="empty">No posts yet.</p>
+} @else {
+  <div class="posts-list">
+    @for (post of posts(); track post.id) {
+      <app-post-card [post]="post" />
+    }
+  </div>
+
+  @if (isLoadingMore()) {
+    <p>Loading more…</p>
+  }
+
+  @if (hasMore) {
+    <button (click)="loadMore()">Load more posts</button>
+  }
+}

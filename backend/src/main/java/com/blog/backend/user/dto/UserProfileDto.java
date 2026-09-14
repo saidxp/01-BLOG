@@ -7,10 +7,12 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PublicUserDto {
+public class UserProfileDto {
+    private Long id;
     private String username;
+    private String bio;
+    private String avatarUrl;
     private LocalDateTime createdAt;
-    private long subscriberCount;
-    private long subscriptionCount;
-    private boolean isSubscribed;   // does the CURRENT viewer follow this profile ?
+    private boolean owner;
+    private boolean subscribed;
 }

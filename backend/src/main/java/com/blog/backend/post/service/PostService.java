@@ -1,28 +1,34 @@
 package com.blog.backend.post.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.blog.backend.comment.repository.CommentRepository;
+import com.blog.backend.exception.InvalidMediaTypeException;
 import com.blog.backend.exception.NotPostOwnerException;
 import com.blog.backend.exception.PostNotFoundException;
-
+import com.blog.backend.likes.repository.LikeRepository;
+import com.blog.backend.media.model.MediaUpload;
+import com.blog.backend.media.repository.MediaUploadRepository;
 import com.blog.backend.media.service.MediaUploadService;
 import com.blog.backend.notification.service.NotificationService;
 import com.blog.backend.post.dto.PostDeleteResponse;
-import com.blog.backend.media.repository.MediaUploadRepository;
-
+import com.blog.backend.post.dto.PostDto;
 import com.blog.backend.post.enums.MediaType;
 import com.blog.backend.post.model.Post;
 import com.blog.backend.post.repository.PostRepository;
 import com.blog.backend.storage.MediaStorageService;
+import com.blog.backend.user.enums.Role;
 import com.blog.backend.user.model.User;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import com.blog.backend.user.enums.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import com.blog.backend.exception.InvalidMediaTypeException;
-import com.blog.backend.media.model.MediaUpload;
-import java.util.List;
+import com.blog.backend.post.mapper.PostMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +40,9 @@ public class PostService {
     private final NotificationService notificationService;
     private final MediaUploadService mediaUploadService;
     private final MediaUploadRepository mediaUploadRepository;
+    private final  LikeRepository likeRepository;
+    private final CommentRepository commentRepository ;
+    private final PostMapper postMapper;
 
     @Transactional
     public Post createPost(User owner, String title, String content, MultipartFile mediaFile) {
@@ -58,20 +67,44 @@ public class PostService {
         notificationService.notifySubscribersOfNewPost(savedPost); // <<==>> \\ (<!!>)
         return savedPost;
     }
-    
+
     public Post getPostById(Long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
     }
 
     // Fetch All Posts BY USER <!!!!>
-    public List<Post> getPostsByUser(User user) {
-        return postRepository.findByUserOrderByCreatedAtDesc(user);
+    public Page<PostDto> getPostsByUser(User user, Pageable pageable) {
+        Page<Post> posts = postRepository.findByUserOrderByCreatedAtDesc(user, pageable);
+                return this.optimizedQuery(posts);
+    }
+    
+    // Fetch All Posts with Pagination NOT OPTIMIZEED (!!!)
+    public Page<PostDto> getAllPosts(Pageable pageable) {
+        Page<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return this.optimizedQuery(posts);
+ 
     }
 
-    // Fetch All Posts with Pagination
-    public Page<Post> getAllPosts(Pageable pageable) {
-        return postRepository.findAllByOrderByCreatedAtDesc(pageable);
+    private Page<PostDto> optimizedQuery(Page<Post> posts) {
+        List<Long> postIds = posts.getContent()
+                .stream()
+                .map(Post::getId)
+                .toList();
+        List<Object[]> likes = likeRepository.countLikesByPostIds(postIds);
+        List<Object[]> comments = commentRepository.countCommentsByPostIds(postIds);
+        Map<Long, Long> likesCount = likes.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],
+                        row -> (Long) row[1]));
+        Map<Long, Long> commentsCount = comments.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],
+                        row -> (Long) row[1]));
+        return posts.map(post -> postMapper.toDto(
+                post,
+                likesCount.getOrDefault(post.getId(), 0L),
+                commentsCount.getOrDefault(post.getId(), 0L)));
     }
 
     // <<>> delete And Update (!!)
@@ -98,10 +131,10 @@ public class PostService {
             String mediaUrl = mediaStorageService.store(mediaFile);
             post.setMediaUrl(mediaUrl);
             post.setMediaType(mediaType);
-        } 
+        }
         Post updatedPost = postRepository.save(post);
         mediaUploadService.confirmUploadsUsedIn(updatedPost, newContent);
-        return updatedPost; 
+        return updatedPost;
     }
 
     @Transactional

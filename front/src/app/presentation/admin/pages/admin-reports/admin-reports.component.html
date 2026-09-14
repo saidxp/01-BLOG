@@ -1,0 +1,41 @@
+<!-- admin-reports.component.html -->
+<h1>Reports</h1>
+
+@if (isLoading()) {
+  <p>Loading reports…</p>
+} @else if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Reporter</th>
+        <th>Reported User</th>
+        <th>Reason</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (report of reports(); track report.id) {
+        <tr>
+          <td>{{ report.id }}</td>
+          <td>{{ report.reporterUsername }}</td>
+          <td>{{ report.reportedUsername }}</td>
+          <td class="reason-cell" (click)="toggleReason(report.id)">
+            @if (expandedReportId() === report.id) {
+              {{ report.reason }}
+            } @else {
+              {{ report.reason | slice: 0:40 }}{{ report.reason.length > 40 ? '…' : '' }}
+            }
+          </td>
+          <td>{{ report.createdAt | date: 'MMM d, y' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (hasMore) {
+    <button (click)="loadMore()">Load more</button>
+  }
+}

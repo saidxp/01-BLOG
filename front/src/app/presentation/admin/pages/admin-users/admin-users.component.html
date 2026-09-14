@@ -1,0 +1,41 @@
+<h1>Users</h1>
+
+@if (isLoading()) {
+  <p>Loading users…</p>
+} @else if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (user of users(); track user.id) {
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>{{ user.status }}</td>
+          <td>
+            <button (click)="toggleBan(user)">
+              {{ user.status === 'BANNED' ? 'Unban' : 'Ban' }}
+            </button>
+            <button (click)="deleteUser(user)">Delete</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (hasMore) {
+    <button (click)="loadMore()">Load more</button>
+  }
+}
