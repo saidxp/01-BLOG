@@ -48,7 +48,8 @@ export class AdminUsersComponent implements OnInit {
         this.totalPages = result.totalPages;
         this.users.set(page === 0 ? result.users : [...this.users(), ...result.users]);
         this.isLoading.set(false);
-      },
+      }, 
+      
       error: (err) => {
         this.errorMessage.set(err.message);
         this.isLoading.set(false);
