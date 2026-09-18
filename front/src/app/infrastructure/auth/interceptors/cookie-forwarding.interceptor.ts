@@ -3,6 +3,7 @@ import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import { SERVER_REQUEST } from '../../ssr/request.token';
 
+
 export const cookieForwardingInterceptor: HttpInterceptorFn = (req, next) => {
 
   const platformId = inject(PLATFORM_ID);

@@ -32,7 +32,11 @@
             "prerender": false,
             "ssr": {
               "entry": "server.ts"
-            }
+            },
+            "externalDependencies": [
+              "jsdom",
+              "whatwg-url"
+            ]
           },
           "configurations": {
             "production": {

@@ -25,7 +25,6 @@ export class PublicPostsFeed implements OnInit {
   private totalPages = 1;
 
   ngOnInit(): void { 
-    console.log("Hello World Im Her 01");
     this.loadPosts(0, false, this.isLoading);
   }
 
@@ -45,16 +44,15 @@ export class PublicPostsFeed implements OnInit {
     this.getPostsByUsernameUseCase.execute(page).subscribe({
       next: (result) => {
         this.currentPage = result.currentPage;
-        this.totalPages = result.totalPages; 
+        this.totalPages = result.totalPages;
 
-        console.log("the posts %d",result.posts);
+        console.log("the posts %d",result);
 
         if (append) {
           this.posts.update((existing) => [...existing, ...result.posts]);
         } else {
           this.posts.set(result.posts);
         }
-
         loadingSignal.set(false);
       }, 
       error: (err) => {
@@ -62,7 +60,5 @@ export class PublicPostsFeed implements OnInit {
         loadingSignal.set(false);
       },
     });
-    // <<==>> \\ (<!<->!>). /
-    // <<==>> \\ (<!<->!>). /\\ 
   }
 }

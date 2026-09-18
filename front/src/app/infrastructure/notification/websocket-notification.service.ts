@@ -42,8 +42,7 @@ export class WebSocketNotificationService {
 
         const destination = '/user/queue/notifications';
 
-        console.log('Subscribing to:', destination);
-
+        console.log('Subscribing to:', destination); // <<==>> \\ (<!<->!>)
         const subscription = this.client!.subscribe(
           destination,
           (message) => {
@@ -87,4 +86,5 @@ export class WebSocketNotificationService {
     this.client?.deactivate();
     this.client = null;
   }
+
 }
