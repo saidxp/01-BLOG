@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.domain.Page;
- 
 
 @RestController
 @RequiredArgsConstructor
@@ -46,14 +45,15 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
-    // <<======================POSTS FETCHING OPTIMIZED QUERY <!!> =========================>> 
+    // <<======================POSTS FETCHING OPTIMIZED QUERY <!!>
+    // =========================>>
     @GetMapping("/api/posts") // <<==>> \\
     public ResponseEntity<Page<PostDto>> getAllPosts(Pageable pageable) {
         Page<PostDto> posts = postService.getAllPosts(pageable);
         return ResponseEntity.ok(posts);
-    } 
-    
-    @GetMapping("/api/users/{username}/posts") // Posts By User <!> 
+    }
+
+    @GetMapping("/api/users/{username}/posts") // Posts By User <!>
     public ResponseEntity<Page<PostDto>> getUserPosts(
             @PathVariable String username,
             @PageableDefault(size = 10) Pageable pageable) {
@@ -63,9 +63,10 @@ public class PostController {
         Page<PostDto> posts = postService.getPostsByUser(user, pageable);
         return ResponseEntity.ok(posts);
     }
+
     // <<====================================================================================>
     // <<====================================================================================>
-    @GetMapping("/api/posts/{id}") // Single Post 
+    @GetMapping("/api/posts/{id}") // Single Post
     public ResponseEntity<PostDetailDto> getPost(
             @PathVariable Long id,
             Authentication authentication) {
@@ -83,8 +84,6 @@ public class PostController {
         return ResponseEntity.ok(dto);
     }
 
-    
-
     // Edit post
     @PutMapping(value = "/api/posts/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostId> updatePost(
@@ -99,11 +98,21 @@ public class PostController {
         return ResponseEntity.ok(dto);
     }
 
-    // Delete Still Not Work
+    //  
     @DeleteMapping("/api/posts/{id}")
     public ResponseEntity<PostDeleteResponse> deletePost(@PathVariable Long id, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         PostDeleteResponse result = postService.deletePost(userDetails.getUser(), id);
         return ResponseEntity.ok(result);
-    }
+    } 
+
+    // <<==>> \\ {<!>} 
+    // That's It'Private EndPoint 
+    @GetMapping("/api/feed/following")
+    public ResponseEntity<Page<PostDto>> getFollowingFeed( Authentication authentication, Pageable pageable) { 
+         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();  
+         // << Now It's Will Be Handled >> ||  
+         Page<PostDto> posts  = postService.getPostBysubscribeTo(userDetails.getUsername(), pageable);
+        return ResponseEntity.ok(posts);
+    } 
 }

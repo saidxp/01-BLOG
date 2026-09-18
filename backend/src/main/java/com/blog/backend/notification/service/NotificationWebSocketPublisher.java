@@ -2,9 +2,9 @@ package com.blog.backend.notification.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service; 
+import com.blog.backend.notification.dto.NotificationDto;
 
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -12,16 +12,13 @@ public class NotificationWebSocketPublisher {
 
     private final SimpMessagingTemplate messagingTemplate;
 
-    public void sendTestMessage(String username) {
+    public void sendTestMessage(String username, NotificationDto Notification) {
         System.out.println("===== WS PUBLISHER =====");
         System.out.println("Sending to username: " + username);
         messagingTemplate.convertAndSendToUser(
             username,
             "/queue/notifications",
-            Map.of(
-                "message",
-                "Test message: WebSocket connected successfully!"
-            )
+            Notification
         );
         System.out.println("===== WS MESSAGE SENT TO BROKER =====");
     }

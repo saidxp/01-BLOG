@@ -28,5 +28,5 @@ public class AdminPostController {
         Page<AdminPostDto> posts = adminService.getAllPosts(pageable);
         return ResponseEntity.ok(posts);
     }
-
+    
 }

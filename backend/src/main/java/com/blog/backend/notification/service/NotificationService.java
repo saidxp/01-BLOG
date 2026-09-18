@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.blog.backend.notification.mapper.NotificationMapper;
+import com.blog.backend.notification.dto.NotificationDto;;
 
 @Service
 @RequiredArgsConstructor
@@ -18,18 +20,24 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final NotificationWebSocketPublisher publisher;
+    private final NotificationMapper mapper;
 
     @Transactional
-    public void notifySubscribersOfNewPost(Post post) {
+    public void notifySubscribersOfNewPost(Post post) { 
         User author = post.getUser();
-
+        
         subscriptionRepository.findBySubscribedTo(author).forEach(subscription -> {
             Notification notification = Notification.builder()
                     .recipient(subscription.getSubscriber())
                     .post(post)
                     .message(author.getUsername() + " published a new post")
                     .build();
-            notificationRepository.save(notification);
+            notificationRepository.save(notification); 
+            // <<==>> \\ {<!!>}
+            // Her I WILL send  !
+            NotificationDto notificationDto = mapper.toDto(notification);
+            publisher.sendTestMessage(notification.getRecipient().getUsername(), notificationDto);
         });
     }
 
@@ -51,5 +59,6 @@ public class NotificationService {
         }
         notification.setRead(true);
         notificationRepository.save(notification); 
-    } // <<==>> \\ // <<==>> \\ (<!!>) (!!)....
+    } // <<==>> \\ // <<==>> \\ {<!>} 
+
 }

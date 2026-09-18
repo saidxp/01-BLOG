@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import java.security.Principal;
 
-
 @Component
 @RequiredArgsConstructor
 public class WebSocketAuthChannelInterceptor implements ChannelInterceptor {

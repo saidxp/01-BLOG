@@ -1,4 +1,5 @@
 package com.blog.backend.auth.security;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import javax.crypto.SecretKey;
@@ -55,7 +56,7 @@ public class JwtService {
                                 .getSubject();
         }
 
-        // Extract Jwt From Header (!!). 
+        // Extract Jwt From Header (!!).
         public String extractTokenFromCookie(HttpServletRequest request) {
                 Cookie[] cookies = request.getCookies();
                 if (cookies == null) {
@@ -78,7 +79,7 @@ public class JwtService {
                 return username.equals(userDetails.getUsername())
                                 && !isTokenExpired(token);
         }
-        
+
         // Notice Im Verify IT EVERY TIME !...
         private boolean isTokenExpired(String token) {
                 Date expiration = Jwts.parser()

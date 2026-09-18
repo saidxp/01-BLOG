@@ -40,8 +40,8 @@ public class PostService {
     private final NotificationService notificationService;
     private final MediaUploadService mediaUploadService;
     private final MediaUploadRepository mediaUploadRepository;
-    private final  LikeRepository likeRepository;
-    private final CommentRepository commentRepository ;
+    private final LikeRepository likeRepository;
+    private final CommentRepository commentRepository;
     private final PostMapper postMapper;
 
     @Transactional
@@ -76,14 +76,22 @@ public class PostService {
     // Fetch All Posts BY USER <!!!!>
     public Page<PostDto> getPostsByUser(User user, Pageable pageable) {
         Page<Post> posts = postRepository.findByUserOrderByCreatedAtDesc(user, pageable);
-                return this.optimizedQuery(posts);
+        return this.optimizedQuery(posts);
     }
-    
+
     // Fetch All Posts with Pagination NOT OPTIMIZEED (!!!)
     public Page<PostDto> getAllPosts(Pageable pageable) {
         Page<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
         return this.optimizedQuery(posts);
- 
+
+    }
+
+    // << GET POSTS BY SUBSCRIP TO >> \\ 
+    public Page<PostDto> getPostBysubscribeTo(
+            String username,
+            Pageable pageable) {
+        Page<Post> posts = postRepository.findPostsFromSubscribedUsers(username, pageable);
+        return optimizedQuery(posts);
     }
 
     private Page<PostDto> optimizedQuery(Page<Post> posts) {
@@ -164,4 +172,5 @@ public class PostService {
         return new PostDeleteResponse(true, postId, "Post deleted successfully");
     }
 
+    //
 }

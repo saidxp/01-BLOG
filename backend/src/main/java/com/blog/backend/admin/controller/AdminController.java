@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.blog.backend.admin.service.AdminService;
 import com.blog.backend.report.dto.AdminReportDto;
 import com.blog.backend.user.dto.AdminUserDto;
-import com.blog.backend.user.dto.UserDto;
+ 
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class AdminController {
 
     private final AdminService adminService;
-
+    
     @GetMapping
     public ResponseEntity<Page<AdminUserDto>> getAllUsers(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(adminService.getAllUsers(pageable));

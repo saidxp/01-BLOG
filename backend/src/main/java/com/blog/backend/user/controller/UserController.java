@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blog.backend.auth.security.CustomUserDetails;
-import com.blog.backend.notification.service.NotificationWebSocketPublisher;
+ 
 import com.blog.backend.user.dto.UserProfileDto;
 import com.blog.backend.user.dto.UserDto;
 import com.blog.backend.user.model.User;
