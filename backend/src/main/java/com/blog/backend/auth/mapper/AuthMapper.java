@@ -21,10 +21,12 @@ public class AuthMapper {
     // I CAN OPTIMISE This MAPPER LATER (!!)
     public LoginResponse toLoginResponse(User user) {
         return LoginResponse.builder()
-            .id(user.getId())
-            .email(user.getEmail())
-            .username(user.getUsername())
-            .build();
+                .id(user.getId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .avatarUrl(user.getAvatarUrl()) 
+                .role(user.getRole())
+                .build();
     }
-
+    
 }

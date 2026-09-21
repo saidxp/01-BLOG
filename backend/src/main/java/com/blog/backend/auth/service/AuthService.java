@@ -72,7 +72,7 @@ public class AuthService {
                         identifier,
                         request.getPassword()
                 );
-
+                
         Authentication authenticated;
 
         try {

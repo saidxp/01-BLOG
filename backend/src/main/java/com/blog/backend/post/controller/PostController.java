@@ -105,8 +105,7 @@ public class PostController {
         PostDeleteResponse result = postService.deletePost(userDetails.getUser(), id);
         return ResponseEntity.ok(result);
     } 
-
-    // <<==>> \\ {<!>} 
+    
     // That's It'Private EndPoint 
     @GetMapping("/api/feed/following")
     public ResponseEntity<Page<PostDto>> getFollowingFeed( Authentication authentication, Pageable pageable) { 
@@ -114,5 +113,5 @@ public class PostController {
          // << Now It's Will Be Handled >> ||  
          Page<PostDto> posts  = postService.getPostBysubscribeTo(userDetails.getUsername(), pageable);
         return ResponseEntity.ok(posts);
-    } 
+    }  
 }

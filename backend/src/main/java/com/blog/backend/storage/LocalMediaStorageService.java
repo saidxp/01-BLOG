@@ -47,5 +47,5 @@ public class LocalMediaStorageService implements MediaStorageService {
         if (filename == null || !filename.contains("."))
             return "";
         return filename.substring(filename.lastIndexOf("."));
-    }
+    } 
 }
