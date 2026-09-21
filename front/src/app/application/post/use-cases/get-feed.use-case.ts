@@ -9,5 +9,6 @@ export class GetFeedUseCase {
   private readonly postRepository = inject(PostRepository);
   execute(page : number): Observable<PagedPosts> {
     return this.postRepository.getFeed(page);
-  }   
+  } 
+  // <<==>> \\ {<!!>} \\ 
 }

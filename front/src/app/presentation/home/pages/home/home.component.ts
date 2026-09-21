@@ -8,15 +8,16 @@
 // And this feed i will fetch Posts it's public for everyone And put them in Card !
 // So I Will Use The Post Service To Fetch The Posts And Show Them In The Home Page (!!) 
 // <<==>> \\  
-import { Component, inject} from '@angular/core';
+import { Component, inject, signal} from '@angular/core';
 import { RouterLink } from '@angular/router'; 
 import { AuthState } from '../../../../application/auth/state/auth-state.service';
 import { PublicPostsFeed } from './component/public-posts/public-posts-feed.component';
+import { PrivatePostsFeed } from './component/private-posts/private-posts-feed.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,    
-  imports: [RouterLink, PublicPostsFeed],
+  imports: [RouterLink, PublicPostsFeed, PrivatePostsFeed],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
@@ -24,5 +25,6 @@ import { PublicPostsFeed } from './component/public-posts/public-posts-feed.comp
 export class HomeComponent {
   private readonly authState = inject(AuthState);
   readonly currentUser = this.authState.currentUser;
+  readonly showPrivatePosts = signal(false);
 }
 

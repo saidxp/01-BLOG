@@ -2,6 +2,8 @@ import { Injectable, signal } from '@angular/core';
 import { Notification } from '../../../domain/notification/entity/notification.entity'; 
 
 @Injectable({ providedIn: 'root' })
+
+//
 export class NotificationState {
 
     private readonly _unreadCount = signal(0);

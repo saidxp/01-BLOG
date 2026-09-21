@@ -29,6 +29,27 @@ export class PostRepositoryImpl extends PostRepository {
       })
     );
     // <<==>> \\ (<!!>)
+  } 
+
+  // get subsc feed {}
+  override getSubscriptionfeed(page: number): Observable<PagedPosts> { 
+
+    console.log()
+    const params = new HttpParams().set('page', page).set('size', 10); 
+
+    const base = `${environment.apiUrl}/api/feed/following`;
+
+    return this.http.get<PostPageDto>(base, { params, withCredentials: true }).pipe(
+     map((pageDto) => ({
+        posts: pageDto.content.map(toPostEntity),
+        totalPages: pageDto.totalPages,
+        currentPage: pageDto.number,
+      })),
+      tap((post)=> console.log('posts shape', post)),
+      catchError((err: HttpErrorResponse) => {
+        return throwError(() => new Error('Failed to load feed.'));
+      })
+    );
   }
 
   override getPostsByUsername(username: string, page: number): Observable<PagedPosts> { 
@@ -48,6 +69,6 @@ export class PostRepositoryImpl extends PostRepository {
         return throwError(() => new Error('Failed to load posts.'));
       })
     );
-  }
+  } 
   // <<==>> \\ (<!!>) \\ // <<==>> \\  
 }

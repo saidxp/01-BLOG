@@ -1,6 +1,6 @@
-<article class="post-card">
-  <a [routerLink]="['/post', post().id]" class="post-link">
+<article class="post-card"> 
 
+  <a [routerLink]="['/post', post().id]" class="post-link">
     <div class="author">
       <img
         class="author-avatar"
@@ -10,7 +10,7 @@
       <span>{{ post().authorUsername }}</span>
       <span class="timestamp">{{ post().createdAt | date: 'MMM d, y' }}</span>
     </div>
-
+    
     <p class="description">
       {{ post().title }}
     </p>
@@ -20,5 +20,5 @@
   <div class="post-stats">
     <span>❤️ {{ post().likesCount }}</span>
     <span>💬 {{ post().commentsCount }}</span>
-  </div>
+  </div> 
 </article>

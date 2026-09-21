@@ -16,7 +16,9 @@ import { WebSocketNotificationService } from '../../../../infrastructure/notific
 export class HeaderComponent implements OnInit {
 
   // <<==>> \\ {<!!>} // <<==>> \\ {<!!>} \\ 
-  private readonly authState = inject(AuthState);
+  private readonly authState = inject(AuthState); 
+
+  // 
   private readonly getUnreadCountUseCase = inject(GetUnreadCountUseCase);
   private readonly notificationState = inject(NotificationState);
   private readonly webSocketNotificationService = inject(WebSocketNotificationService);

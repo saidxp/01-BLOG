@@ -6,9 +6,12 @@ import { PostRepository, PagedPosts } from '../../../domain/post/repositories/po
 
 @Injectable({ providedIn: 'root' })
 export class GetPostsByUsernameUseCase {
+  
   private readonly postRepository = inject(PostRepository);
 
   execute(username: string, page: number): Observable<PagedPosts> {
     return this.postRepository.getPostsByUsername(username, page);
   }
+
+  // <<==>> \\ {<-!!->} // <<==>> \\  
 }

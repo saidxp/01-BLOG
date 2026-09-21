@@ -1,0 +1,17 @@
+// application/feed/use-cases/get-posts-by-username.use-case.ts
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { PostRepository, PagedPosts } from '../../../domain/post/repositories/post.repository';
+
+
+@Injectable({ providedIn: 'root' })
+export class GetFeedPrivateUseCase {
+
+  private readonly postRepository = inject(PostRepository);
+  execute(page: number): Observable<PagedPosts> {
+    return this.postRepository.getSubscriptionfeed(page);
+  }  
+  // <<==>> \\ {<<!!>>},!
+  // <<==>> \\ {<<!!>>},!
+  // <<==>> \\ {<<!!>>},! 
+}

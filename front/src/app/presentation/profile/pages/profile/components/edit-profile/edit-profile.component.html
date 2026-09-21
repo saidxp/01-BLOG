@@ -1,0 +1,18 @@
+<form class="edit-profile-form" [formGroup]="form" (ngSubmit)="submit()">
+  <label for="bio">Bio</label>
+  <textarea id="bio" formControlName="bio" rows="4" maxlength="300"></textarea>
+
+  <label for="avatar">Avatar</label>
+  <input id="avatar" type="file" accept="image/*" (change)="onAvatarSelected($event)" />
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  <div class="form-actions">
+    <button type="button" (click)="cancel()" [disabled]="isSubmitting()">Cancel</button>
+    <button type="submit" [disabled]="isSubmitting()">
+      {{ isSubmitting() ? 'Saving…' : 'Save' }}
+    </button>
+  </div>
+</form>

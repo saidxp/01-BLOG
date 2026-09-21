@@ -13,6 +13,8 @@ export class GetCurrentUserUseCase {
   execute(): Observable<User | null> {
     return this.authRepository.getCurrentUser().pipe(
       tap((user) => {
+        // <<==>> \\ 
+        console.log("It's Me Her I Want To Build", user);
         if (user) this.authState.setUser(user);
       })
     );

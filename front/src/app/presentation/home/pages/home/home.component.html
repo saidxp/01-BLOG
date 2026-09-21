@@ -1,3 +1,4 @@
+ 
 <!-- home.component.html -->
 
 @if (!currentUser()) {
@@ -6,4 +7,29 @@
   </div>
 }
 
-<app-public-posts-feed />
+@if (currentUser()) {
+  <div class="feed-navigation">
+    <button
+      type="button"
+      (click)="showPrivatePosts.set(true)"
+      [class.active]="showPrivatePosts()"
+    >
+      Following
+    </button>
+
+    <button
+      type="button"
+      (click)="showPrivatePosts.set(false)"
+      [class.active]="!showPrivatePosts()"
+    >
+      Explore
+    </button>
+  </div>
+}
+
+@if (showPrivatePosts() && currentUser()) {
+  <app-private-posts-feed />
+} @else {
+  <app-public-posts-feed />
+}
+<!--(<There Is Alot Of Thing>)-->

@@ -12,7 +12,7 @@ import { viewChild } from '@angular/core';
 import { Comment } from '../../../../domain/comment/entity/comment.entity';
 
 // This hook checker and portected to not let any thing else instead of youtbe be inject 
-// XSS atack protection !
+// XSS atack protection ! <=> !
 DOMPurify.addHook('uponSanitizeElement', (node, data) => {
   if (data.tagName === 'iframe' && node instanceof Element) {
     const src = node.getAttribute('src');
@@ -37,7 +37,8 @@ DOMPurify.addHook('uponSanitizeElement', (node, data) => {
   imports: [RouterLink, SubmitCommentComponent, CommentListComponent, LikeButtonComponent],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css',
-})
+}) 
+// <<<==>>> \\ {-?}
 export class PostDetailComponent implements OnInit {
   // <<==>> \\ (<!!>) <...> \\
   private readonly route = inject(ActivatedRoute);
@@ -53,13 +54,17 @@ export class PostDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.getPostByIdUseCase.execute(id).subscribe({
+
       next: (post) => {
         // <<==>> \\ (<!<->!>)
         this.post.set(post);
         // Make Break Inside This One (!!) ...
-        marked.setOptions({ breaks: true });
+
+        marked.setOptions({ breaks: true }); 
+
         const rawHtml = marked.parse(post.content) as string;
 
+        /// 
         const safeHtml = DOMPurify.sanitize(rawHtml, {
           ADD_TAGS: ['iframe'],
           ADD_ATTR: ['src', 'allow', 'allowfullscreen'],
@@ -75,10 +80,10 @@ export class PostDetailComponent implements OnInit {
         this.isLoading.set(false);
       },
     });
-  } // <<==>> \\ //(<!<->!>)\\
+  }
 
   // I Will Pass This To Submit For Treger In Event (!) \\ ()
   onCommentAdded(comment: Comment): void {
     this.commentListRef()?.addCommentLocally(comment);
-  } 
+  } // <<-->> \\ {<!>} \\ {!!>} 
 }

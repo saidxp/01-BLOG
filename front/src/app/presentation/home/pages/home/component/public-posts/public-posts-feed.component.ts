@@ -3,7 +3,6 @@ import {GetFeedUseCase} from '../../../../../../application/post/use-cases/get-f
 import { Post } from '../../../../../../domain/post/entity/post.entity';
 import { PostCardComponent } from '../../../../../shared/components/post-card/post-card.component';
 
-
 @Component({
   selector: 'app-public-posts-feed',
   standalone: true,
@@ -14,7 +13,7 @@ import { PostCardComponent } from '../../../../../shared/components/post-card/po
 
 export class PublicPostsFeed implements OnInit {
 
-  private readonly getPostsByUsernameUseCase = inject(GetFeedUseCase);
+  private readonly getPosts = inject(GetFeedUseCase);
 
   readonly posts = signal<Post[]>([]);
   readonly isLoading = signal(true);
@@ -41,7 +40,7 @@ export class PublicPostsFeed implements OnInit {
   private loadPosts(page: number, append: boolean, loadingSignal: typeof this.isLoading): void {
     loadingSignal.set(true);
 
-    this.getPostsByUsernameUseCase.execute(page).subscribe({
+    this.getPosts.execute(page).subscribe({
       next: (result) => {
         this.currentPage = result.currentPage;
         this.totalPages = result.totalPages;
