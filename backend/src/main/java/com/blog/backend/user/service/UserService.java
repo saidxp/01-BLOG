@@ -48,27 +48,39 @@ public class UserService {
         return subscriptionRepository.existsBySubscriberAndSubscribedTo(currentUser, targetUser);
     }
 
-    // <<==>> (UPDATE) <<==>> (THIS) <<==>> (PROFILE) \\  {(0101011010101010)} // {<!!>}
-    public UserProfileDto updateProfile(User currentUser, String bio, MultipartFile avatar) { 
-        // <<==>> \\ {<!!>}  
-        if (avatar != null && !avatar.isEmpty()) {
-            if (currentUser.getAvatarUrl() != null) {
-                mediaStorageService.delete(currentUser.getAvatarUrl());
-            } 
+    // <<==>> (UPDATE) <<==>> (THIS) <<==>> (PROFILE) \\ {(0101011010101010)} \\
+     
+    public UserProfileDto updateProfile(User currentUser, String bio,  MultipartFile avatar) {
 
-            // <<===>> {} \\ 
+        if (avatar != null && !avatar.isEmpty()) {
+            // <<==>> \\
             MediaType mediaType = validator.validateAndDetectType(avatar);
+
             if (mediaType != MediaType.IMAGE) {
-                throw new InvalidMediaTypeException("Please Provide In Valid Image");
-            } 
-            // <<==>> \\ {(|<->|)}
-            // <<==>> \\ {(|<->|)} // {(|<->|)}
+                throw new InvalidMediaTypeException(
+                        "Please provide a valid image");
+            }
+            // <<==>> 
+            String oldAvatarUrl = currentUser.getAvatarUrl();
+
+            // <<==>> 
             String avatarUrl = mediaStorageService.store(avatar);
-            currentUser.setAvatarUrl(avatarUrl); // 
-        } // <<==>> \\ {<!<->!>} 
-        currentUser.setBio(bio);  // {<=>} \\ {<!-!>}
-        User saved = userRepository.save(currentUser);
-        return getPublicProfile(saved.getUsername(), currentUser); 
-    } 
-    // <<==>> \\
+
+            currentUser.setAvatarUrl(avatarUrl);
+
+            User saved = userRepository.save(currentUser);
+            if (oldAvatarUrl != null) {
+                mediaStorageService.delete(oldAvatarUrl);
+            }
+            currentUser = saved;
+        } else {
+            currentUser.setBio(bio);
+            currentUser = userRepository.save(currentUser);
+        }
+
+        return getPublicProfile(
+                currentUser.getUsername(),
+                currentUser);
+    }  
+    // {<->} \\
 }

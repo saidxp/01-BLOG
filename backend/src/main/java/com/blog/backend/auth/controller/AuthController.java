@@ -1,5 +1,8 @@
 package com.blog.backend.auth.controller;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,21 +27,34 @@ public class AuthController {
 
     private final AuthService authService;
     private final AuthCookieService authCookieService;
-    
+
     // <<<===>>> \\
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequest request, HttpServletResponse res) {
-        Pair<RegisterResponse, String> result = authService.register(request); 
+    public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequest request,
+            HttpServletResponse res) {
+        Pair<RegisterResponse, String> result = authService.register(request);
         authCookieService.setAccessTokenCookie(res, result.getRight());
         return ResponseEntity.status(HttpStatus.CREATED).body(result.getLeft());
     }
 
-    // <<<===>>> \\ 
+    // <<<===>>> \\
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginRequest request ,  HttpServletResponse res) {
-        Pair<LoginResponse, String> result = authService.login(request); 
+    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginRequest request, HttpServletResponse res) {
+        Pair<LoginResponse, String> result = authService.login(request);
         authCookieService.setAccessTokenCookie(res, result.getRight());
         return ResponseEntity.status(HttpStatus.OK).body(result.getLeft());
     }
-}
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("jwt", "")
+                .httpOnly(true)
+                .secure(false)
+                .sameSite("Lax")
+                .path("/")
+                .maxAge(0)
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.ok().build();
+    }  
+}
