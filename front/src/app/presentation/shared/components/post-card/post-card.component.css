@@ -45,3 +45,9 @@
   color: inherit;
   display: block;
 }
+
+.description {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

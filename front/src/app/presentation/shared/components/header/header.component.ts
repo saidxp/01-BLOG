@@ -4,6 +4,8 @@ import { AuthState } from '../../../../application/auth/state/auth-state.service
 import { GetUnreadCountUseCase } from '../../../../application/notification/use-cases/get-unread-count.use-case';
 import { NotificationState } from '../../../../application/notification/state/notification-state.service';
 import { WebSocketNotificationService } from '../../../../infrastructure/notification/websocket-notification.service';
+import { LogoutUseCase } from '../../../../application/auth/use-cases/logout.use-case';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -16,12 +18,16 @@ import { WebSocketNotificationService } from '../../../../infrastructure/notific
 export class HeaderComponent implements OnInit {
 
   // <<==>> \\ {<!!>} // <<==>> \\ {<!!>} \\ 
-  private readonly authState = inject(AuthState); 
+  private readonly authState = inject(AuthState);
 
   // 
   private readonly getUnreadCountUseCase = inject(GetUnreadCountUseCase);
   private readonly notificationState = inject(NotificationState);
   private readonly webSocketNotificationService = inject(WebSocketNotificationService);
+
+  private readonly logoutUseCase = inject(LogoutUseCase);
+  private readonly router = inject(Router);
+
 
   isUserMenuOpen = signal(false);
 
@@ -32,14 +38,21 @@ export class HeaderComponent implements OnInit {
     if (this.currentUser()) {
       this.getUnreadCountUseCase.execute().subscribe({
         next: (count) => this.notificationState.setUnreadCount(count),
-      });  
+      });
       console.log()
       this.webSocketNotificationService.connect(); // connection it's ping 
     }
-  }
+  } 
+  
+  // <<==>> \\
   toggleUserMenu(): void {
     this.isUserMenuOpen.update(open => !open);
-  } 
+  }
 
+  logout(): void {
+    this.logoutUseCase.execute().subscribe({
+      next: () => this.router.navigateByUrl('/'),
+    });
+  }
   // <<==>> \\ {} {} {} \\ {<!!>} \\{}//
 }

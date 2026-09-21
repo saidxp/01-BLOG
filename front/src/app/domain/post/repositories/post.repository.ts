@@ -11,4 +11,5 @@ export abstract class PostRepository {
   abstract getFeed(page: number): Observable<PagedPosts>;
   abstract getPostsByUsername(username: string, page: number): Observable<PagedPosts>;
   abstract getSubscriptionfeed(page: number): Observable<PagedPosts>;
+   abstract deletePost(id: number): Observable<void>;
 }

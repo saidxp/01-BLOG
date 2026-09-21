@@ -35,16 +35,14 @@
         </a>
         }
 
-        <button type="button">
-          Log out
-        </button>
+        <button (click)="logout()">Log out</button>
 
       </div>
       }
     </div>
 
     } @else {
-
+      
     <a routerLink="/login">Log in</a>
     <a routerLink="/register">Sign up</a>
     }

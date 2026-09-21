@@ -1,5 +1,5 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Component, inject, signal, OnInit } from '@angular/core'; 
+import { ActivatedRoute, RouterLink } from '@angular/router'; 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
 import DOMPurify from 'isomorphic-dompurify';
@@ -10,7 +10,9 @@ import { CommentListComponent } from './components/comment-list/comment-list.com
 import { LikeButtonComponent } from './components/like-button/like-button.component';
 import { viewChild } from '@angular/core';
 import { Comment } from '../../../../domain/comment/entity/comment.entity';
-
+import { DeletePostUseCase } from '../../../../application/post/use-cases/delete.post.use-case';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { Router } from '@angular/router';
 // This hook checker and portected to not let any thing else instead of youtbe be inject 
 // XSS atack protection ! <=> !
 DOMPurify.addHook('uponSanitizeElement', (node, data) => {
@@ -29,27 +31,35 @@ DOMPurify.addHook('uponSanitizeElement', (node, data) => {
       node.remove();
     }
   }
-}); 
+});
 
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [RouterLink, SubmitCommentComponent, CommentListComponent, LikeButtonComponent],
+  imports: [RouterLink, SubmitCommentComponent, CommentListComponent, LikeButtonComponent, ConfirmModalComponent],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css',
-}) 
+})
+
+// <<===>> \\ {-?}
 // <<<==>>> \\ {-?}
 export class PostDetailComponent implements OnInit {
   // <<==>> \\ (<!!>) <...> \\
   private readonly route = inject(ActivatedRoute);
   private readonly getPostByIdUseCase = inject(GetPostByIdUseCase);
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly deletePostUseCase = inject(DeletePostUseCase);
+  private readonly _router = inject(Router);
+
   // << RefRence CHIILD >>
   readonly commentListRef = viewChild(CommentListComponent);
   readonly post = signal<PostDetail | null>(null);
   readonly renderedContent = signal<SafeHtml | null>(null);
   readonly isLoading = signal(true);
   readonly errorMessage = signal<string | null>(null);
+
+  // <<==>>> \\\
+  readonly showDeleteConfirm = signal(false);
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -60,7 +70,7 @@ export class PostDetailComponent implements OnInit {
         this.post.set(post);
         // Make Break Inside This One (!!) ...
 
-        marked.setOptions({ breaks: true }); 
+        marked.setOptions({ breaks: true });
 
         const rawHtml = marked.parse(post.content) as string;
 
@@ -82,8 +92,17 @@ export class PostDetailComponent implements OnInit {
     });
   }
 
-  // I Will Pass This To Submit For Treger In Event (!) \\ ()
+  // I Will Pass This To Submit For Treger In Event (!) \\ () 
+  
   onCommentAdded(comment: Comment): void {
     this.commentListRef()?.addCommentLocally(comment);
-  } // <<-->> \\ {<!>} \\ {!!>} 
+  }
+
+  // <<==>>>
+  deletePost(id: number): void {
+    this.deletePostUseCase.execute(id).subscribe({
+      next: () => this._router.navigateByUrl('/'),
+    });
+  }
+
 }

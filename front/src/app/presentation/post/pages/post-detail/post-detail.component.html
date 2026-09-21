@@ -1,26 +1,32 @@
 @if (isLoading()) {
-  <p>Loading post…</p>
+<p>Loading post…</p>
 } @else if (errorMessage()) {
-  <p class="error">{{ errorMessage() }}</p>
+<p class="error">{{ errorMessage() }}</p>
 } @else {
 
-  @if (post(); as p) { 
-    <article class="post-detail">
-      @if (p.mediaUrl) {
-        <img [src]="p.mediaUrl" [alt]="p.title" class="cover-media" />
-      } 
-      <h1>{{ p.title }}</h1>
-      <p class="meta">By {{ p.authorUsername }}</p>
-      <div class="content" [innerHTML]="renderedContent()"></div>   
-      @if (p.owner) {
-        <div class="owner-actions">
-          <a routerLink="/post/{{ p.id }}/edit">Edit</a>
-          <button>Delete</button>
-        </div>
-      }
-    </article>
-     <app-submit-comment [postId]="p.id" (commentAdded)="onCommentAdded($event)" />
-     <app-comment-list [postId] = "p.id"></app-comment-list>
-     <app-like-button [postId]="p.id" [initialLiked]="p.liked" [initialLikeCount]="p.likedCount" />  
+@if (post(); as p) {
+<article class="post-detail">
+  @if (p.mediaUrl) {
+  <img [src]="p.mediaUrl" [alt]="p.title" class="cover-media" />
   }
+  <h1>{{ p.title }}</h1>
+  <p class="meta">By {{ p.authorUsername }}</p>
+  <div class="content" [innerHTML]="renderedContent()"></div>
+</article>
+
+@if (p.owner) {
+  <div class="owner-actions">
+    <a routerLink="/post/{{ p.id }}/edit">Edit</a>
+  </div>
+  <button (click)="showDeleteConfirm.set(true)">Delete</button>
+  <app-confirm-modal [isOpen]="showDeleteConfirm()" title="Delete post?" message="This post will be permanently deleted."
+  (confirmed)="deletePost(p.id); showDeleteConfirm.set(false)" (cancelled)="showDeleteConfirm.set(false)" />
+}
+
+<app-submit-comment [postId]="p.id" (commentAdded)="onCommentAdded($event)" />
+<app-comment-list [postId]="p.id"></app-comment-list>
+<app-like-button [postId]="p.id" [initialLiked]="p.liked" [initialLikeCount]="p.likedCount" /> 
+
+} 
+
 }

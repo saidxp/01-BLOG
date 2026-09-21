@@ -70,5 +70,13 @@ export class PostRepositoryImpl extends PostRepository {
       })
     );
   } 
-  // <<==>> \\ (<!!>) \\ // <<==>> \\  
+
+  // <<==>> \\ (<!!>) \\ // <<==>> \\   
+  override deletePost(id: number): Observable<void> {
+    // reuses the EXISTING post-delete endpoint, which already supports admin permission
+    return this.http
+      .delete<void>(`${environment.apiUrl}/api/posts/${id}`, { withCredentials: true })
+      .pipe(catchError(() => throwError(() => new Error('Failed to delete post.'))));
+  }
+  
 }

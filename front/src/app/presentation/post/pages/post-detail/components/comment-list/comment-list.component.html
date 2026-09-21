@@ -10,9 +10,11 @@
     <li class="comment-item">
         <p class="author">{{ comment.authorUsername }}</p>
         <p class="content">{{ comment.content }}</p>
-        @if (comment.canDelete) {
-        <button (click)="onDelete(comment.id)">Delete</button>
+        
+         @if (comment.canDelete) {
+          <button (click)="requestDelete(comment.id)">Delete</button>
         }
+
     </li>
     }
 </ul>
@@ -22,4 +24,12 @@
 @if (hasMore) {
 <button (click)="loadMore()">Load more comments</button>
 }
-}
+} 
+
+<app-confirm-modal
+  [isOpen]="showDeleteConfirm()"
+  title="Delete comment?"
+  message="This comment will be permanently deleted."
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+/> 
