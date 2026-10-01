@@ -1,5 +1,6 @@
 import { Component, inject, input, signal, OnInit } from '@angular/core';
 import { ToggleLikeUseCase } from '../../../../../../application/like/use-case/toggle-like.use-case';
+import { AuthNavigationService } from '../../../../../../application/auth/services/auth-navigation.service';
 
 @Component({
   selector: 'app-like-button',
@@ -10,6 +11,7 @@ import { ToggleLikeUseCase } from '../../../../../../application/like/use-case/t
 
 export class LikeButtonComponent implements OnInit {
   private readonly toggleLikeUseCase = inject(ToggleLikeUseCase);
+  private readonly authNavigation = inject(AuthNavigationService);
 
   readonly postId = input.required<number>();
   readonly initialLiked = input<boolean>(false);
@@ -24,8 +26,10 @@ export class LikeButtonComponent implements OnInit {
     this.likeCount.set(this.initialLikeCount());
   }
 
+  
   toggle(): void {
     if (this.isSubmitting()) return;
+    if (!this.authNavigation.requireAuthentication()) return;
 
     this.isSubmitting.set(true);
     const wasLiked = this.liked();

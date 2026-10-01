@@ -1,24 +1,30 @@
-<form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
-  <h1>Log in</h1>
-
-  <label for="email"> Test For Now </label>
-  <input id="email" type="email" formControlName="email" autocomplete="email" />
-  @if (form.controls.email.touched && form.controls.email.invalid) {
-    <p class="field-error">Enter a valid email address.</p>
-  }
-  
-  <label for="password">Password</label>
-  <input id="password" type="password" formControlName="password" autocomplete="current-password" />
-  @if (form.controls.password.touched && form.controls.password.invalid) {
-    <p class="field-error">Password must be at least 8 characters.</p>
-  }
-
-  @if (errorMessage()) {
-    <p class="form-error">{{ errorMessage() }}</p>
-  }
-
-  <button type="submit" [disabled]="isLoading()">
-    {{ isLoading() ? 'Logging in…' : 'Log in' }}
-  </button>
-
-</form>
+<section class="auth-card" aria-labelledby="login-title">
+  <a class="auth-brand" href="/" aria-label="01Blog home"><span aria-hidden="true">01</span>Blog</a>
+  <header class="auth-card__header">
+    <p class="auth-card__eyebrow">Welcome back</p>
+    <h1 id="login-title">Log in to 01Blog</h1>
+    <p>Continue reading, writing and joining the conversation.</p>
+  </header>
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="field-group">
+      <label class="field-label" for="identifier">Username or email</label>
+      <input class="field-control" id="identifier" type="text" formControlName="identifier" autocomplete="username" [attr.aria-invalid]="form.controls.identifier.touched && form.controls.identifier.invalid" />
+      @if (form.controls.identifier.touched && form.controls.identifier.invalid) {
+        <p class="field-error-01">Enter your username or email address.</p>
+      }
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="password">Password</label>
+      <input class="field-control" id="password" type="password" formControlName="password" autocomplete="current-password" [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid" />
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <p class="field-error-01">Password must be at least 8 characters.</p>
+      }
+    </div>
+    @if (errorMessage()) {
+      <p class="form-alert" role="alert">{{ errorMessage() }}</p>
+    }
+    <button class="button-01 button-01--primary auth-submit" type="submit" [disabled]="isLoading()">
+      {{ isLoading() ? 'Logging in…' : 'Log in' }}
+    </button>
+  </form>
+</section>

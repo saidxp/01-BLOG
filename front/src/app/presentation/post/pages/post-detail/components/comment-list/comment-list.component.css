@@ -1,29 +1,15 @@
-.comment-list {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.comment-item {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 0.75rem;
-}
-
-.comment-item .author {
-  font-weight: 600;
-  font-size: 0.85rem;
-  margin: 0;
-}
-
-.comment-item .content {
-  margin: 0.25rem 0 0;
-}
-
-.empty,
-.error {
-  color: #666;
-}
-  
+.comment-list { list-style: none; display: flex; flex-direction: column; gap: 0; margin: var(--space-5) 0 0; padding: 0; }
+.comment-item { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-3); padding: var(--space-5) 0; border-bottom: var(--border-subtle); }
+.comment-item:first-child { padding-top: 0; }
+.comment-body { min-width: 0; }
+.comment-meta { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2); }
+.comment-meta strong { font-size: 0.875rem; }
+.comment-meta time { color: var(--color-muted-foreground); font-size: 0.72rem; white-space: nowrap; }
+.comment-body > p { margin: var(--space-2) 0 0; color: #40403d; line-height: 1.65; overflow-wrap: anywhere; white-space: pre-wrap; }
+.comment-delete { min-height: 2rem; margin-top: var(--space-2); padding: 0; border: 0; background: transparent; color: var(--color-danger); font-size: 0.75rem; font-weight: 650; }
+.comment-delete:hover { text-decoration: underline; text-underline-offset: 0.16em; }
+.comments-status { padding: var(--space-5); border-radius: var(--radius-lg); background: var(--color-surface-subtle); color: var(--color-muted-foreground); text-align: center; }
+.comments-status--error { background: var(--color-danger-soft); color: var(--color-danger); }
+.comments-empty { padding: var(--space-8) var(--space-4); border: 1px dashed var(--color-border-strong); border-radius: var(--radius-lg); text-align: center; }
+.comments-empty p { margin: 0; color: var(--color-foreground); font-weight: 650; }
+.comments-empty span { display: block; margin-top: var(--space-1); color: var(--color-muted-foreground); font-size: 0.875rem; }

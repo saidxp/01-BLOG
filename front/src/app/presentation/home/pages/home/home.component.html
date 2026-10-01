@@ -1,35 +1,54 @@
- 
-<!-- home.component.html -->
+<section class="feed-page">
+  <div class="container-xl feed-page__container">
+    <div class="feed-page__main">
+      @if (!currentUser()) {
+        <div class="guest-banner">
+          <div>
+            <strong>Join the conversation</strong>
+            <span>Log in to like, comment, and publish your own posts.</span>
+          </div>
+          <a routerLink="/login" class="button-01 button-01--secondary">Log in</a>
+        </div>
 
-@if (!currentUser()) {
-  <div class="guest-banner">
-    <span>Log in to like, comment, and post.</span>
+        <header class="feed-heading">
+          <p class="feed-eyebrow">Community feed</p>
+          <h1>Explore recent posts</h1>
+        </header>
+      } @else {
+        <header class="feed-heading feed-heading--authenticated">
+          <div>
+            <p class="feed-eyebrow">Community feed</p>
+            <h1>Stories worth opening</h1>
+          </div>
+
+          <div class="feed-tabs" role="tablist" aria-label="Choose feed">
+            <button
+              type="button"
+              role="tab"
+              [attr.aria-selected]="!showPrivatePosts()"
+              [class.active]="!showPrivatePosts()"
+              (click)="showPrivatePosts.set(false)"
+            >
+              Explore
+            </button>
+            <button
+              type="button"
+              role="tab"
+              [attr.aria-selected]="showPrivatePosts()"
+              [class.active]="showPrivatePosts()"
+              (click)="showPrivatePosts.set(true)"
+            >
+              Following
+            </button>
+          </div>
+        </header>
+      }
+
+      @if (showPrivatePosts() && currentUser()) {
+        <app-private-posts-feed />
+      } @else {
+        <app-public-posts-feed />
+      }
+    </div>
   </div>
-}
-
-@if (currentUser()) {
-  <div class="feed-navigation">
-    <button
-      type="button"
-      (click)="showPrivatePosts.set(true)"
-      [class.active]="showPrivatePosts()"
-    >
-      Following
-    </button>
-
-    <button
-      type="button"
-      (click)="showPrivatePosts.set(false)"
-      [class.active]="!showPrivatePosts()"
-    >
-      Explore
-    </button>
-  </div>
-}
-
-@if (showPrivatePosts() && currentUser()) {
-  <app-private-posts-feed />
-} @else {
-  <app-public-posts-feed />
-}
-<!--(<There Is Alot Of Thing>)-->
+</section>

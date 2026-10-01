@@ -1,6 +1,8 @@
 package com.blog.backend.user.service;
 
 import com.blog.backend.post.service.Validator;
+import com.blog.backend.post.repository.PostRepository;
+import com.blog.backend.comment.repository.CommentRepository;
 import com.blog.backend.post.enums.MediaType;
 import com.blog.backend.subscription.repository.SubscriptionRepository;
 import com.blog.backend.user.dto.UserProfileDto;
@@ -22,6 +24,8 @@ public class UserService {
     private final SubscriptionRepository subscriptionRepository;
     private final MediaStorageService mediaStorageService;
     private final Validator validator;
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     // <<==>> \\ (<!!>)
     public UserProfileDto getPublicProfile(String username, User currentUser) {
@@ -29,7 +33,14 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + username));
         boolean isOwner = isOwner(currentUser, targetUser);
         boolean isSubscribed = isSubscribed(currentUser, targetUser, isOwner);
-        return userMapper.toPublicDto(targetUser, isSubscribed, isOwner);
+        long postsCount = postRepository.countByUser(targetUser);
+        long commentsReceivedCount = commentRepository.countByPostOwner(targetUser);
+        return userMapper.toPublicDto(
+                targetUser,
+                isSubscribed,
+                isOwner,
+                postsCount,
+                commentsReceivedCount);
     }
 
     private boolean isOwner(User currentUser, User targetUser) {

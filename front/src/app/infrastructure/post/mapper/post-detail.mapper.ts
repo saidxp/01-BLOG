@@ -14,6 +14,6 @@ export function toPostDetailEntity(dto: PostDetailDto): PostDetail {
     dto.owner,
     dto.liked,
     dto.likedCount,
+    dto.commentCount ?? 0,
   );
-} // <<==>> 
- 
+} // <<==>>

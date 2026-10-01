@@ -1,0 +1,101 @@
+- generic [ref=f8e135]:
+  - generic [ref=f8e136]:
+    - link "Skip to content" [ref=f8e137] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=f8e138]:
+      - generic [ref=f8e139]:
+        - link "01Blog home" [ref=f8e141] [cursor=pointer]:
+          - /url: /
+          - generic [aria-hidden] [ref=f8e142]: "01"
+          - generic [ref=f8e143]: Blog
+        - button "Toggle navigation" [ref=f8e144] [cursor=pointer]
+  - main [ref=f8e147]:
+    - generic [ref=f8e150]:
+      - article [ref=f8e151]:
+        - generic [ref=f8e152]:
+          - paragraph [ref=f8e153]: Published on 01Blog
+          - heading "RGHURGYUTYURTYU" [level=1] [ref=f8e154]
+          - generic [ref=f8e155]:
+            - generic [aria-hidden] [ref=f8e156]: S
+            - generic [ref=f8e157]:
+              - link "soubaaiss" [ref=f8e158] [cursor=pointer]:
+                - /url: /profile/soubaaiss
+              - time [ref=f8e159]: September 26, 2026
+        - generic [ref=f8e160]:
+          - heading "****FGHUFGUYFGUGFYFU" [level=2] [ref=f8e161]
+          - paragraph [ref=f8e162]: ERTYERRTYERTYEYTRYERTYERTYERTYERTERTYERTYERTRYERTYERTYERTYERTYERTYERRTYERTYRTYERTYERTYERTYERYERTYERTYERTYERTYERTERTYERTYERTYTRYERTYERTYERYEeYERTYERTYERTYERTYTYRETY
+          - paragraph [ref=f8e163]: ERYETRYeRTYERTYERTYERTYeRTYERTYERYERTYERTETRYEeRTYRTYTRYJGJGJGJGKGGJK
+        - button "Like post. 1 likes" [ref=f8e166] [cursor=pointer]:
+          - generic [ref=f8e169]: Like
+          - strong [ref=f8e170]: "1"
+      - region [ref=f8e171]:
+        - generic [ref=f8e172]:
+          - paragraph [ref=f8e173]: Discussion
+          - heading "Join the conversation" [level=2] [ref=f8e174]
+        - generic [ref=f8e175]:
+          - generic [ref=f8e177]:
+            - generic [ref=f8e178]: Join the conversation
+            - textbox "Join the conversation" [ref=f8e179]:
+              - /placeholder: Write a thoughtful comment…
+            - generic [ref=f8e180]:
+              - generic [ref=f8e181]: Keep it constructive and relevant.
+              - button "Post comment" [disabled] [ref=f8e182]
+          - generic [ref=f8e183]:
+            - list [ref=f8e184]:
+              - listitem [ref=f8e185]:
+                - generic [aria-hidden] [ref=f8e186]: S
+                - generic [ref=f8e187]:
+                  - generic [ref=f8e188]:
+                    - strong [ref=f8e189]: soubaaiss
+                    - time [ref=f8e190]: 2 hours ago
+                  - paragraph [ref=f8e191]: ETYERTYT
+              - listitem [ref=f8e192]:
+                - generic [aria-hidden] [ref=f8e193]: S
+                - generic [ref=f8e194]:
+                  - generic [ref=f8e195]:
+                    - strong [ref=f8e196]: soubaaiss
+                    - time [ref=f8e197]: 2 hours ago
+                  - paragraph [ref=f8e198]: ERTYERTYERT
+              - listitem [ref=f8e199]:
+                - generic [aria-hidden] [ref=f8e200]: S
+                - generic [ref=f8e201]:
+                  - generic [ref=f8e202]:
+                    - strong [ref=f8e203]: soubaaiss
+                    - time [ref=f8e204]: 2 hours ago
+                  - paragraph [ref=f8e205]: ETYERTYERTY
+              - listitem [ref=f8e206]:
+                - generic [aria-hidden] [ref=f8e207]: S
+                - generic [ref=f8e208]:
+                  - generic [ref=f8e209]:
+                    - strong [ref=f8e210]: soubaaiss
+                    - time [ref=f8e211]: 2 hours ago
+                  - paragraph [ref=f8e212]: ETYERYERT
+              - listitem [ref=f8e213]:
+                - generic [aria-hidden] [ref=f8e214]: S
+                - generic [ref=f8e215]:
+                  - generic [ref=f8e216]:
+                    - strong [ref=f8e217]: soubaaiss
+                    - time [ref=f8e218]: 2 hours ago
+                  - paragraph [ref=f8e219]: EYTTERYERTYTRY
+              - listitem [ref=f8e220]:
+                - generic [aria-hidden] [ref=f8e221]: S
+                - generic [ref=f8e222]:
+                  - generic [ref=f8e223]:
+                    - strong [ref=f8e224]: soubaaiss
+                    - time [ref=f8e225]: 2 hours ago
+                  - paragraph [ref=f8e226]: ERTYERYERTYERTY
+              - listitem [ref=f8e227]:
+                - generic [aria-hidden] [ref=f8e228]: S
+                - generic [ref=f8e229]:
+                  - generic [ref=f8e230]:
+                    - strong [ref=f8e231]: soubaaiss
+                    - time [ref=f8e232]: 2 hours ago
+                  - paragraph [ref=f8e233]: ERTYETRYRTYTRY
+              - listitem [ref=f8e234]:
+                - generic [aria-hidden] [ref=f8e235]: S
+                - generic [ref=f8e236]:
+                  - generic [ref=f8e237]:
+                    - strong [ref=f8e238]: soubaaiss
+                    - time [ref=f8e239]: 2 hours ago
+                  - paragraph [ref=f8e240]: TYRURTYTREYRTY
+            - generic "Delete comment?"

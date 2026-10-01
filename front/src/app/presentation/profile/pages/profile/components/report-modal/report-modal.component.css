@@ -1,41 +1,74 @@
+:host {
+  display: inline-flex;
+}
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  z-index: 1080;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  padding: var(--space-4);
+  background: rgb(28 28 28 / 52%);
 }
 
 .modal-content {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  max-width: 24rem;
-  width: 90%;
+  width: min(100%, 27rem);
+  padding: var(--space-6);
+  border: var(--border-subtle);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.modal-content h3 {
+  margin: 0 0 var(--space-3);
+  font-size: 1.2rem;
+  letter-spacing: -0.025em;
+}
+
+.modal-content p {
+  margin: 0 0 var(--space-3);
+  color: var(--color-muted-foreground);
 }
 
 .modal-content textarea {
   width: 100%;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  min-height: 7rem;
+  resize: vertical;
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
 }
 
 .reason-preview {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-subtle);
+  color: var(--color-foreground) !important;
   font-style: italic;
-  color: #555;
 }
 
 .error {
-  color: #b3261e;
+  color: var(--color-danger) !important;
+}
+
+@media (max-width: 575.98px) {
+  :host,
+  .report-trigger {
+    width: 100%;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-actions .button-01 {
+    width: 100%;
+  }
 }

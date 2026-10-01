@@ -1,37 +1,36 @@
-<h1>Posts</h1>
-
-@if (isLoading()) {
-  <p>Loading posts…</p>
-} @else if (errorMessage()) {
-  <p class="error">{{ errorMessage() }}</p>
-} @else {
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Created</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>    
-      @for (post of posts(); track post.id) {
-        <tr>
-          <td>{{ post.id }}</td>
-          <td>{{ post.title }}</td>
-          <td>{{ post.authorUsername }}</td>
-          <td>{{ post.createdAt | date: 'MMM d, y' }}</td>
-          <td>
-            <button (click)="deletePost(post)">Delete</button>
-             <a [routerLink]="['/post', post.id]">View</a>
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
-
-  @if (hasMore) {
-    <button (click)="loadMore()">Load more</button>
+<section class="admin-page">
+  <header class="admin-page__header"><div><h1>Posts</h1><p>Review published work and moderate content when needed.</p></div></header>
+  @if (isLoading()) {
+    <div class="state-panel" role="status"><div class="state-panel__content"><p class="state-panel__title">Loading posts</p><p class="state-panel__message">Fetching published content…</p></div></div>
+  } @else if (errorMessage()) {
+    <div class="state-panel state-panel--error" role="alert"><div class="state-panel__content"><p class="state-panel__title">Could not load posts</p><p class="state-panel__message">{{ errorMessage() }}</p></div></div>
+  } @else if (posts().length === 0) {
+    <div class="state-panel"><div class="state-panel__content"><p class="state-panel__title">No posts found</p><p class="state-panel__message">Published posts will appear here.</p></div></div>
+  } @else {
+    <div class="table-responsive admin-table-wrap">
+      <table class="table admin-table posts-table">
+        <thead><tr><th scope="col">ID</th><th scope="col">Title</th><th scope="col">Author</th><th scope="col">Created</th><th scope="col">Actions</th></tr></thead>
+        <tbody>
+          @for (post of posts(); track post.id) {
+            <tr>
+              <td class="id-cell">#{{ post.id }}</td>
+              <td class="title-cell"><strong>{{ post.title }}</strong></td>
+              <td>{{ post.authorUsername }}</td>
+              <td class="date-cell">{{ post.createdAt | date: 'MMM d, y' }}</td>
+              <td><div class="admin-table__actions"><a class="button-01 button-01--secondary action-button" [routerLink]="['/post', post.id]">View</a><button class="button-01 button-01--danger action-button" type="button" (click)="requestDeletePost(post)">Delete</button></div></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (hasMore) { <div class="pagination-bar"><button class="button-01 button-01--secondary" type="button" (click)="loadMore()">Load more posts</button></div> }
   }
-}
+</section>
+
+<app-confirm-modal
+  [isOpen]="pendingDelete() !== null"
+  title="Delete post?"
+  [message]="deleteConfirmationMessage()"
+  (confirmed)="confirmDeletePost()"
+  (cancelled)="cancelDeletePost()"
+/>

@@ -1,21 +1,119 @@
 .like-button {
-  display: flex;
+  min-height: 2.5rem;
+  display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  background: #fff;
-  cursor: pointer;
-  font-size: 0.9rem;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  border: var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-muted-foreground);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.like-button:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-subtle);
+  color: var(--color-foreground);
 }
 
 .like-button.liked {
-  border-color: #e0245e;
-  color: #e0245e;
+  border-color: rgb(201 42 42 / 24%);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
 }
 
 .like-button:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
+}
+
+.like-button.is-submitting svg {
+  animation: like-pulse 700ms ease-in-out infinite alternate;
+}
+
+.like-button svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.like-button.liked svg {
+  fill: currentColor;
+}
+
+.like-button strong {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes like-pulse {
+  to { transform: scale(1.16); }
+}
+
+:host {
+  display: inline-flex;
+}
+
+:host(.article-like) .like-button {
+  width: 3.25rem;
+  min-height: 4.75rem;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.7rem 0.35rem;
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+
+:host(.article-like) .like-button svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+:host(.article-like) .like-button span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+:host(.article-like) .like-button strong {
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+@media (max-width: 991.98px) {
+  :host(.article-like) .like-button {
+    width: auto;
+    min-height: 2.5rem;
+    flex-direction: row;
+    gap: var(--space-2);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-md);
+    box-shadow: none;
+  }
+
+  :host(.article-like) .like-button svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  :host(.article-like) .like-button span {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+    white-space: normal;
+  }
 }

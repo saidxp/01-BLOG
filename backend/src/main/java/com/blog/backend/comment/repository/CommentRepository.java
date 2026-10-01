@@ -2,6 +2,7 @@ package com.blog.backend.comment.repository;
 
 import com.blog.backend.comment.model.Comment;
 import com.blog.backend.post.model.Post;
+import com.blog.backend.user.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,9 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByPostOrderByCreatedAtDesc(Post post, Pageable pageable);
     long countByPost(Post post);
+
+    @Query("SELECT COUNT(c) FROM Comment c WHERE c.post.user = :user")
+    long countByPostOwner(@Param("user") User user);
 
     //  In optimized query 
     @Query("""

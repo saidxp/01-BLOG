@@ -1,13 +1,15 @@
-import { Component, inject, input, signal, OnInit } from '@angular/core';
+import { afterNextRender, Component, DestroyRef, inject, input, signal, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { GetCommentsUseCase } from '../../../../../../application/comments/use-cases/get-comments.use-case';
 import { DeleteCommentUseCase } from '../../../../../../application/comments/use-cases/delete-comment.use-case';
 import { Comment } from '../../../../../../domain/comment/entity/comment.entity'; 
 import { ConfirmModalComponent } from '../../../../../shared/components/confirm-modal/confirm-modal.component';
+import { RelativeTimePipe } from '../../../../../shared/pipes/relative-time.pipe';
 
 @Component({
   selector: 'app-comment-list',
   standalone: true, 
-  imports :[ConfirmModalComponent],
+  imports: [ConfirmModalComponent, DatePipe, RelativeTimePipe],
   templateUrl: './comment-list.component.html',
   styleUrl: './comment-list.component.css',
 })
@@ -15,12 +17,15 @@ import { ConfirmModalComponent } from '../../../../../shared/components/confirm-
 export class CommentListComponent implements OnInit {
   private readonly getCommentsUseCase = inject(GetCommentsUseCase);
   private readonly deleteCommentUseCase = inject(DeleteCommentUseCase);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly postId = input.required<number>();
   readonly comments = signal<Comment[]>([]);
   readonly isLoading = signal(true);
   readonly isLoadingMore = signal(false);
   readonly errorMessage = signal<string | null>(null); 
+  readonly relativeTimeReady = signal(false);
+  readonly relativeTimeTick = signal(Date.now());
 
 
   //<<===>>\\
@@ -31,6 +36,16 @@ export class CommentListComponent implements OnInit {
 
   private currentPage = 0;
   private totalPages = 1;
+
+  constructor() {
+    afterNextRender(() => {
+      this.relativeTimeReady.set(true);
+      this.relativeTimeTick.set(Date.now());
+
+      const intervalId = setInterval(() => this.relativeTimeTick.set(Date.now()), 60_000);
+      this.destroyRef.onDestroy(() => clearInterval(intervalId));
+    });
+  }
 
   ngOnInit(): void {
     this.loadComments(0, false, this.isLoading);

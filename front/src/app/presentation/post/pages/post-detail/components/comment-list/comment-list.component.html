@@ -1,35 +1,36 @@
 @if (isLoading()) {
-<p>Loading comments…</p>
+  <div class="comments-status" role="status">Loading comments…</div>
 } @else if (errorMessage()) {
-<p class="error">{{ errorMessage() }}</p>
+  <div class="comments-status comments-status--error" role="alert">{{ errorMessage() }}</div>
 } @else if (comments().length === 0) {
-<p class="empty">No comments yet.</p>
+  <div class="comments-empty"><p>No comments yet.</p><span>Start the conversation with a thoughtful response.</span></div>
 } @else {
-<ul class="comment-list">
+  <ul class="comment-list">
     @for (comment of comments(); track comment.id) {
-    <li class="comment-item">
-        <p class="author">{{ comment.authorUsername }}</p>
-        <p class="content">{{ comment.content }}</p>
-        
-         @if (comment.canDelete) {
-          <button (click)="requestDelete(comment.id)">Delete</button>
-        }
-
-    </li>
+      <li class="comment-item">
+        <span class="avatar-01 avatar-01--sm" aria-hidden="true">{{ comment.authorUsername.charAt(0).toUpperCase() }}</span>
+        <div class="comment-body">
+          <div class="comment-meta">
+            <strong>{{ comment.authorUsername }}</strong>
+            <time
+              [attr.datetime]="comment.createdAt.toISOString()"
+              [attr.title]="comment.createdAt | date: 'medium'"
+              [attr.aria-label]="'Commented ' + (comment.createdAt | date: 'medium')"
+            >
+              @if (relativeTimeReady()) {
+                {{ comment.createdAt | relativeTime: relativeTimeTick() }}
+              } @else {
+                {{ comment.createdAt | date: 'medium' }}
+              }
+            </time>
+          </div>
+          <p>{{ comment.content }}</p>
+          @if (comment.canDelete) { <button class="comment-delete" type="button" (click)="requestDelete(comment.id)">Delete comment</button> }
+        </div>
+      </li>
     }
-</ul>
-@if (isLoadingMore()) {
-<p>Loading more…</p>
+  </ul>
+  @if (isLoadingMore()) { <p class="comments-status" role="status">Loading more comments…</p> }
+  @if (hasMore) { <div class="pagination-bar"><button class="button-01 button-01--secondary" type="button" (click)="loadMore()" [disabled]="isLoadingMore()">Load more comments</button></div> }
 }
-@if (hasMore) {
-<button (click)="loadMore()">Load more comments</button>
-}
-} 
-
-<app-confirm-modal
-  [isOpen]="showDeleteConfirm()"
-  title="Delete comment?"
-  message="This comment will be permanently deleted."
-  (confirmed)="confirmDelete()"
-  (cancelled)="cancelDelete()"
-/> 
+<app-confirm-modal [isOpen]="showDeleteConfirm()" title="Delete comment?" message="This comment will be permanently deleted." (confirmed)="confirmDelete()" (cancelled)="cancelDelete()" />

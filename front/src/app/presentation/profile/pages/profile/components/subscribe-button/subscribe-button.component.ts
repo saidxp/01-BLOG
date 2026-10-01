@@ -1,6 +1,6 @@
 import { Component, inject, input, signal, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { ToggleSubscriptionUseCase } from '../../../../../../application/subscription/use-cases/toggle-subscription.use-case'
+import { AuthNavigationService } from '../../../../../../application/auth/services/auth-navigation.service';
 
 @Component({
   selector: 'app-subscribe-button',
@@ -11,7 +11,7 @@ import { ToggleSubscriptionUseCase } from '../../../../../../application/subscri
 
 export class SubscribeButtonComponent implements OnInit { 
   private readonly toggleSubscriptionUseCase = inject(ToggleSubscriptionUseCase);
-  private readonly router = inject(Router);
+  private readonly authNavigation = inject(AuthNavigationService);
 
   readonly username = input.required<string>();
   readonly initialSubscribed = input<boolean>(false);
@@ -25,6 +25,7 @@ export class SubscribeButtonComponent implements OnInit {
 
   toggle(): void {
     if (this.isSubmitting()) return;
+    if (!this.authNavigation.requireAuthentication()) return;
 
     this.isSubmitting.set(true);
     const wasSubscribed = this.subscribed();
@@ -34,12 +35,8 @@ export class SubscribeButtonComponent implements OnInit {
         this.subscribed.set(status.subscribed);
         this.isSubmitting.set(false);
       },
-      error: (err: any) => {
+      error: () => {
         this.isSubmitting.set(false);
-        if (err.status === 401) { 
-          // this.router.navigateByUrl('/login'); 
-          console.log("I Will Handle Global Exeption Later To Handle Error Message ")
-        }
       },
     }); // <<==>> \\ (<!!>) 
   }

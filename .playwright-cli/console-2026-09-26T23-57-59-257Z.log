@@ -1,0 +1,14 @@
+[     469ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ http://localhost:8080/api/me:0
+[     472ms] [LOG] [getCurrentUser] FAILED - status: 401 message: Full authentication is required to access this resource @ http://localhost:4200/main.js:1082
+[     473ms] [LOG] It's Me Her I Want To Build null @ http://localhost:4200/main.js:69
+[     491ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/home/spites/01-blog/01-/front/.angular/cache/22.1.8/front/vite/deps/core-u5_93CgJ.js?v=a0601502:12637
+[     510ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4200/favicon.ico:0
+[     571ms] [LOG] Angular hydrated 3 component(s) and 38 node(s), 0 component(s) were skipped. 0 defer block(s) were configured to use incremental hydration. Learn more at https://v22.angular.dev/guide/hydration. @ http://localhost:4200/@fs/home/spites/01-blog/01-/front/.angular/cache/22.1.8/front/vite/deps/core-u5_93CgJ.js?v=a0601502:12637
+[   18345ms] [LOG]  WebSocket executing @ http://localhost:4200/main.js:167
+[   18346ms] [LOG] it's Excute In The Server Side Rendring That's The Big Problme  i can see it i can catch it to the end !! @ http://localhost:4200/main.js:171
+[   18525ms] [LOG] ===== CONNECTED ===== @ http://localhost:4200/main.js:176
+[   18525ms] [LOG] Subscribing to: /user/queue/notifications @ http://localhost:4200/main.js:178
+[   18526ms] [LOG] ===== SUBSCRIPTION CREATED ===== @ http://localhost:4200/main.js:192
+[   18526ms] [LOG] Subscription id: sub-0 @ http://localhost:4200/main.js:193
+[   45080ms] [LOG] posts shape {posts: Array(10), totalPages: 2, currentPage: 0} @ http://localhost:4200/main.js:1165
+[   45081ms] [LOG] the posts %d NaN @ http://localhost:4200/chunk-MABX6VN2.js:189

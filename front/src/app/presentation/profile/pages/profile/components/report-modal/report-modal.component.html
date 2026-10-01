@@ -1,20 +1,20 @@
-<button (click)="open()">Report user</button>
+<button class="button-01 button-01--danger report-trigger" type="button" (click)="open()">Report user</button>
 
 @if (isOpen()) {
   <div class="modal-backdrop" (click)="close()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-content" role="dialog" aria-modal="true" [attr.aria-label]="'Report ' + username()" (click)="$event.stopPropagation()">
 
       @if (step() === 'form') {
         <h3>Report {{ username() }}</h3>
-        <textarea
+        <textarea class="form-control"
           [ngModel]="reason()"
           (ngModelChange)="reason.set($event)"
           rows="4"
           placeholder="Why are you reporting this user?"
         ></textarea>
         <div class="modal-actions">
-          <button (click)="close()">Cancel</button>
-          <button (click)="goToConfirm()" [disabled]="!reason().trim()">Next</button>
+          <button class="button-01 button-01--secondary" type="button" (click)="close()">Cancel</button>
+          <button class="button-01 button-01--primary" type="button" (click)="goToConfirm()" [disabled]="!reason().trim()">Next</button>
         </div>
       }
 
@@ -26,8 +26,8 @@
           <p class="error">{{ errorMessage() }}</p>
         }
         <div class="modal-actions">
-          <button (click)="goBackToForm()" [disabled]="isSubmitting()">Back</button>
-          <button (click)="confirmSubmit()" [disabled]="isSubmitting()">
+          <button class="button-01 button-01--secondary" type="button" (click)="goBackToForm()" [disabled]="isSubmitting()">Back</button>
+          <button class="button-01 button-01--danger" type="button" (click)="confirmSubmit()" [disabled]="isSubmitting()">
             {{ isSubmitting() ? 'Submitting…' : 'Confirm Report' }}
           </button>
         </div>
@@ -37,7 +37,7 @@
         <h3>Report submitted</h3>
         <p>Thank you — our team will review this report.</p>
         <div class="modal-actions">
-          <button (click)="close()">Close</button>
+          <button class="button-01 button-01--primary" type="button" (click)="close()">Close</button>
         </div>
       }
 

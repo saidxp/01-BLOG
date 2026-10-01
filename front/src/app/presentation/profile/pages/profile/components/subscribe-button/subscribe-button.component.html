@@ -1,3 +1,3 @@
-<button class="subscribe-button" [class.subscribed]="subscribed()" (click)="toggle()" [disabled]="isSubmitting()">
-  {{ subscribed() ? 'Unsubscribe' : 'Subscribe' }}
+<button class="button-01 subscribe-button" [class.button-01--primary]="!subscribed()" [class.button-01--secondary]="subscribed()" [attr.aria-pressed]="subscribed()" (click)="toggle()" [disabled]="isSubmitting()">
+  {{ isSubmitting() ? 'Updating…' : (subscribed() ? 'Unsubscribe' : 'Subscribe') }}
 </button>

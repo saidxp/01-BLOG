@@ -1,0 +1,101 @@
+- generic [ref=f4e4]:
+  - generic [ref=f4e5]:
+    - link "Skip to content" [ref=f4e6] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=f4e7]:
+      - generic [ref=f4e8]:
+        - link "01Blog home" [ref=f4e10] [cursor=pointer]:
+          - /url: /
+          - generic [aria-hidden] [ref=f4e11]: "01"
+          - generic [ref=f4e12]: Blog
+        - button "Toggle navigation" [ref=f4e13] [cursor=pointer]
+  - main [ref=f4e16]:
+    - generic [ref=f4e19]:
+      - article [ref=f4e20]:
+        - generic [ref=f4e21]:
+          - paragraph [ref=f4e22]: Published on 01Blog
+          - heading "RGHURGYUTYURTYU" [level=1] [ref=f4e23]
+          - generic [ref=f4e24]:
+            - generic [aria-hidden] [ref=f4e25]: S
+            - generic [ref=f4e26]:
+              - link "soubaaiss" [ref=f4e27] [cursor=pointer]:
+                - /url: /profile/soubaaiss
+              - time [ref=f4e28]: September 26, 2026
+        - generic [ref=f4e29]:
+          - heading "****FGHUFGUYFGUGFYFU" [level=2] [ref=f4e30]
+          - paragraph [ref=f4e31]: ERTYERRTYERTYEYTRYERTYERTYERTYERTERTYERTYERTRYERTYERTYERTYERTYERTYERRTYERTYRTYERTYERTYERTYERYERTYERTYERTYERTYERTERTYERTYERTYTRYERTYERTYERYEeYERTYERTYERTYERTYTYRETY
+          - paragraph [ref=f4e32]: ERYETRYeRTYERTYERTYERTYeRTYERTYERYERTYERTETRYEeRTYRTYTRYJGJGJGJGKGGJK
+        - button "Like post. 1 likes" [ref=f4e35] [cursor=pointer]:
+          - generic [ref=f4e38]: Like
+          - strong [ref=f4e39]: "1"
+      - region [ref=f4e40]:
+        - generic [ref=f4e41]:
+          - paragraph [ref=f4e42]: Discussion
+          - heading "Join the conversation" [level=2] [ref=f4e43]
+        - generic [ref=f4e44]:
+          - generic [ref=f4e46]:
+            - generic [ref=f4e47]: Join the conversation
+            - textbox "Join the conversation" [ref=f4e48]:
+              - /placeholder: Write a thoughtful comment…
+            - generic [ref=f4e49]:
+              - generic [ref=f4e50]: Keep it constructive and relevant.
+              - button "Post comment" [disabled] [ref=f4e51]
+          - generic [ref=f4e52]:
+            - list [ref=f4e53]:
+              - listitem [ref=f4e54]:
+                - generic [aria-hidden] [ref=f4e55]: S
+                - generic [ref=f4e56]:
+                  - generic [ref=f4e57]:
+                    - strong [ref=f4e58]: soubaaiss
+                    - time [ref=f4e59]: Sep 26, 2026, 11:28:13 PM
+                  - paragraph [ref=f4e60]: ETYERTYT
+              - listitem [ref=f4e61]:
+                - generic [aria-hidden] [ref=f4e62]: S
+                - generic [ref=f4e63]:
+                  - generic [ref=f4e64]:
+                    - strong [ref=f4e65]: soubaaiss
+                    - time [ref=f4e66]: Sep 26, 2026, 11:28:12 PM
+                  - paragraph [ref=f4e67]: ERTYERTYERT
+              - listitem [ref=f4e68]:
+                - generic [aria-hidden] [ref=f4e69]: S
+                - generic [ref=f4e70]:
+                  - generic [ref=f4e71]:
+                    - strong [ref=f4e72]: soubaaiss
+                    - time [ref=f4e73]: Sep 26, 2026, 11:28:10 PM
+                  - paragraph [ref=f4e74]: ETYERTYERTY
+              - listitem [ref=f4e75]:
+                - generic [aria-hidden] [ref=f4e76]: S
+                - generic [ref=f4e77]:
+                  - generic [ref=f4e78]:
+                    - strong [ref=f4e79]: soubaaiss
+                    - time [ref=f4e80]: Sep 26, 2026, 11:28:09 PM
+                  - paragraph [ref=f4e81]: ETYERYERT
+              - listitem [ref=f4e82]:
+                - generic [aria-hidden] [ref=f4e83]: S
+                - generic [ref=f4e84]:
+                  - generic [ref=f4e85]:
+                    - strong [ref=f4e86]: soubaaiss
+                    - time [ref=f4e87]: Sep 26, 2026, 11:28:07 PM
+                  - paragraph [ref=f4e88]: EYTTERYERTYTRY
+              - listitem [ref=f4e89]:
+                - generic [aria-hidden] [ref=f4e90]: S
+                - generic [ref=f4e91]:
+                  - generic [ref=f4e92]:
+                    - strong [ref=f4e93]: soubaaiss
+                    - time [ref=f4e94]: Sep 26, 2026, 11:28:06 PM
+                  - paragraph [ref=f4e95]: ERTYERYERTYERTY
+              - listitem [ref=f4e96]:
+                - generic [aria-hidden] [ref=f4e97]: S
+                - generic [ref=f4e98]:
+                  - generic [ref=f4e99]:
+                    - strong [ref=f4e100]: soubaaiss
+                    - time [ref=f4e101]: Sep 26, 2026, 11:28:03 PM
+                  - paragraph [ref=f4e102]: ERTYETRYRTYTRY
+              - listitem [ref=f4e103]:
+                - generic [aria-hidden] [ref=f4e104]: S
+                - generic [ref=f4e105]:
+                  - generic [ref=f4e106]:
+                    - strong [ref=f4e107]: soubaaiss
+                    - time [ref=f4e108]: Sep 26, 2026, 11:28:01 PM
+                  - paragraph [ref=f4e109]: TYRURTYTREYRTY
+            - generic "Delete comment?"

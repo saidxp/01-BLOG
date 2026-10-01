@@ -1,7 +1,17 @@
+:host {
+  display: block;
+}
+
 .auth-layout {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fafafa;
+  padding: clamp(var(--space-6), 6vw, var(--space-16)) var(--space-4);
+  background: var(--color-background);
+}
+
+.auth-layout__content {
+  width: 100%;
+  max-width: 30rem;
 }

@@ -1,0 +1,197 @@
+- generic [ref=f4e4]:
+  - generic [ref=f4e5]:
+    - link "Skip to content" [ref=f4e6] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=f4e7]:
+      - generic [ref=f4e8]:
+        - link "01Blog home" [ref=f4e10] [cursor=pointer]:
+          - /url: /
+          - generic [aria-hidden] [ref=f4e11]: "01"
+          - generic [ref=f4e12]: Blog
+        - button "Toggle navigation" [ref=f4e13] [cursor=pointer]
+  - main [ref=f4e16]:
+    - generic [ref=f4e217]:
+      - generic [ref=f4e218]:
+        - generic [ref=f4e219]:
+          - strong [ref=f4e220]: Join the conversation
+          - generic [ref=f4e221]: Log in to like, comment, and publish your own posts.
+        - link "Log in" [ref=f4e222] [cursor=pointer]:
+          - /url: /login
+      - generic [ref=f4e223]:
+        - paragraph [ref=f4e224]: Community feed
+        - heading "Explore recent posts" [level=1] [ref=f4e225]
+      - generic [ref=f4e226]:
+        - generic [ref=f4e227]:
+          - article [ref=f4e229]:
+            - generic [ref=f4e230]:
+              - generic [ref=f4e231]:
+                - img "soubaaiss" [ref=f4e232]
+                - generic [ref=f4e233]:
+                  - generic [ref=f4e234]: soubaaiss
+                  - time [ref=f4e235]: Sep 26, 2026
+              - link [ref=f4e236] [cursor=pointer]:
+                - /url: /post/18
+                - heading "RGHURGYUTYURTYU" [level=2] [ref=f4e237]
+              - generic "Post activity" [ref=f4e238]:
+                - generic [ref=f4e239]:
+                  - text: "1"
+                  - generic [ref=f4e242]: likes
+                - generic [ref=f4e243]:
+                  - text: "8"
+                  - generic [ref=f4e246]: comments
+          - article [ref=f4e248]:
+            - link [aria-hidden] [ref=f4e249] [cursor=pointer]:
+              - /url: /post/17
+            - generic [ref=f4e251]:
+              - generic [ref=f4e252]:
+                - img "soubaaiss" [ref=f4e253]
+                - generic [ref=f4e254]:
+                  - generic [ref=f4e255]: soubaaiss
+                  - time [ref=f4e256]: Sep 26, 2026
+              - link [ref=f4e257] [cursor=pointer]:
+                - /url: /post/17
+                - heading "sdfgdsfgsdfg" [level=2] [ref=f4e258]
+              - generic "Post activity" [ref=f4e259]:
+                - generic [ref=f4e260]:
+                  - text: "0"
+                  - generic [ref=f4e263]: likes
+                - generic [ref=f4e264]:
+                  - text: "0"
+                  - generic [ref=f4e267]: comments
+          - article [ref=f4e269]:
+            - generic [ref=f4e270]:
+              - generic [ref=f4e271]:
+                - generic [aria-hidden] [ref=f4e272]: A
+                - generic [ref=f4e273]:
+                  - generic [ref=f4e274]: amine
+                  - time [ref=f4e275]: Sep 26, 2026
+              - link [ref=f4e276] [cursor=pointer]:
+                - /url: /post/16
+                - heading "GFHGFHGFHGFHGFHGF" [level=2] [ref=f4e277]
+              - generic "Post activity" [ref=f4e278]:
+                - generic [ref=f4e279]:
+                  - text: "1"
+                  - generic [ref=f4e282]: likes
+                - generic [ref=f4e283]:
+                  - text: "5"
+                  - generic [ref=f4e286]: comments
+          - article [ref=f4e288]:
+            - generic [ref=f4e289]:
+              - generic [ref=f4e290]:
+                - generic [aria-hidden] [ref=f4e291]: A
+                - generic [ref=f4e292]:
+                  - generic [ref=f4e293]: amine
+                  - time [ref=f4e294]: Sep 26, 2026
+              - link [ref=f4e295] [cursor=pointer]:
+                - /url: /post/15
+                - heading "sdfsfsdfdsfsdf" [level=2] [ref=f4e296]
+              - generic "Post activity" [ref=f4e297]:
+                - generic [ref=f4e298]:
+                  - text: "0"
+                  - generic [ref=f4e301]: likes
+                - generic [ref=f4e302]:
+                  - text: "0"
+                  - generic [ref=f4e305]: comments
+          - article [ref=f4e307]:
+            - generic [ref=f4e308]:
+              - generic [ref=f4e309]:
+                - generic [aria-hidden] [ref=f4e310]: A
+                - generic [ref=f4e311]:
+                  - generic [ref=f4e312]: amine
+                  - time [ref=f4e313]: Sep 26, 2026
+              - link [ref=f4e314] [cursor=pointer]:
+                - /url: /post/14
+                - heading "asdsadasdasd" [level=2] [ref=f4e315]
+              - generic "Post activity" [ref=f4e316]:
+                - generic [ref=f4e317]:
+                  - text: "0"
+                  - generic [ref=f4e320]: likes
+                - generic [ref=f4e321]:
+                  - text: "0"
+                  - generic [ref=f4e324]: comments
+          - article [ref=f4e326]:
+            - generic [ref=f4e327]:
+              - generic [ref=f4e328]:
+                - generic [aria-hidden] [ref=f4e329]: A
+                - generic [ref=f4e330]:
+                  - generic [ref=f4e331]: amine
+                  - time [ref=f4e332]: Sep 26, 2026
+              - link [ref=f4e333] [cursor=pointer]:
+                - /url: /post/13
+                - heading "werwerewrwerweer" [level=2] [ref=f4e334]
+              - generic "Post activity" [ref=f4e335]:
+                - generic [ref=f4e336]:
+                  - text: "1"
+                  - generic [ref=f4e339]: likes
+                - generic [ref=f4e340]:
+                  - text: "25"
+                  - generic [ref=f4e343]: comments
+          - article [ref=f4e345]:
+            - generic [ref=f4e346]:
+              - generic [ref=f4e347]:
+                - generic [aria-hidden] [ref=f4e348]: I
+                - generic [ref=f4e349]:
+                  - generic [ref=f4e350]: integrationtest
+                  - time [ref=f4e351]: Sep 26, 2026
+              - link [ref=f4e352] [cursor=pointer]:
+                - /url: /post/12
+                - heading "fv ghvyhgvyvgyftyy" [level=2] [ref=f4e353]
+              - generic "Post activity" [ref=f4e354]:
+                - generic [ref=f4e355]:
+                  - text: "0"
+                  - generic [ref=f4e358]: likes
+                - generic [ref=f4e359]:
+                  - text: "0"
+                  - generic [ref=f4e362]: comments
+          - article [ref=f4e364]:
+            - generic [ref=f4e365]:
+              - generic [ref=f4e366]:
+                - generic [aria-hidden] [ref=f4e367]: I
+                - generic [ref=f4e368]:
+                  - generic [ref=f4e369]: integrationtest
+                  - time [ref=f4e370]: Sep 26, 2026
+              - link [ref=f4e371] [cursor=pointer]:
+                - /url: /post/11
+                - heading "vgyuvgyugvyuvgyuvgyuvgyu" [level=2] [ref=f4e372]
+              - generic "Post activity" [ref=f4e373]:
+                - generic [ref=f4e374]:
+                  - text: "0"
+                  - generic [ref=f4e377]: likes
+                - generic [ref=f4e378]:
+                  - text: "0"
+                  - generic [ref=f4e381]: comments
+          - article [ref=f4e383]:
+            - generic [ref=f4e384]:
+              - generic [ref=f4e385]:
+                - generic [aria-hidden] [ref=f4e386]: I
+                - generic [ref=f4e387]:
+                  - generic [ref=f4e388]: integrationtest
+                  - time [ref=f4e389]: Sep 26, 2026
+              - link [ref=f4e390] [cursor=pointer]:
+                - /url: /post/10
+                - heading "fgtyuhjgyugvyuvgyuvghuvgyu" [level=2] [ref=f4e391]
+              - generic "Post activity" [ref=f4e392]:
+                - generic [ref=f4e393]:
+                  - text: "0"
+                  - generic [ref=f4e396]: likes
+                - generic [ref=f4e397]:
+                  - text: "0"
+                  - generic [ref=f4e400]: comments
+          - article [ref=f4e402]:
+            - generic [ref=f4e403]:
+              - generic [ref=f4e404]:
+                - generic [aria-hidden] [ref=f4e405]: I
+                - generic [ref=f4e406]:
+                  - generic [ref=f4e407]: integrationtest
+                  - time [ref=f4e408]: Sep 26, 2026
+              - link [ref=f4e409] [cursor=pointer]:
+                - /url: /post/9
+                - heading "vgyujvguyujugvyjgvy" [level=2] [ref=f4e410]
+              - generic "Post activity" [ref=f4e411]:
+                - generic [ref=f4e412]:
+                  - text: "0"
+                  - generic [ref=f4e415]: likes
+                - generic [ref=f4e416]:
+                  - text: "0"
+                  - generic [ref=f4e419]: comments
+        - button "Load more posts" [ref=f4e421] [cursor=pointer]

@@ -1,19 +1,7 @@
+:host {
+  display: inline-flex;
+}
+
 .subscribe-button {
-  padding: 0.5rem 1.25rem;
-  border-radius: 20px;
-  border: 1px solid #1a1a1a;
-  background: #1a1a1a;
-  color: #fff;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.subscribe-button.subscribed {
-  background: #fff;
-  color: #1a1a1a;
-}
-
-.subscribe-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  min-width: 7.5rem;
 }

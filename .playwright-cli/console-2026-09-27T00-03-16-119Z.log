@@ -1,0 +1,15 @@
+[     370ms] [LOG] Curent User  {id: 1, email: integrationtest.20260926@example.com, username: integrationtest, avatarUrl: null, role: ADMIN} @ http://localhost:4200/main.js:1081
+[     370ms] [LOG] It's Me Her I Want To Build User @ http://localhost:4200/main.js:69
+[     377ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/home/spites/01-blog/01-/front/.angular/cache/22.1.8/front/vite/deps/core-u5_93CgJ.js?v=a0601502:12637
+[     439ms] [LOG]  WebSocket executing @ http://localhost:4200/main.js:167
+[     440ms] [LOG] it's Excute In The Server Side Rendring That's The Big Problme  i can see it i can catch it to the end !! @ http://localhost:4200/main.js:171
+[     478ms] [LOG] The Post It's Come Her {avatarUrl: null, bio: null, commentsReceivedCount: 1, createdAt: 2026-09-26T20:29:52.84382, id: 1} @ http://localhost:4200/main.js:1580
+[     479ms] [LOG] State Of Profile  UserProfile @ http://localhost:4200/chunk-RE5FAFKL.js:1189
+[     483ms] [LOG] Hello World Im Her 01 @ http://localhost:4200/chunk-RE5FAFKL.js:332
+[     484ms] [LOG] Hello World Im Her If You Want integrationtest 0 @ http://localhost:4200/main.js:1183
+[     527ms] [LOG] the posts %d NaN @ http://localhost:4200/chunk-RE5FAFKL.js:349
+[     543ms] [LOG] Angular hydrated 4 component(s) and 48 node(s), 0 component(s) were skipped. 0 defer block(s) were configured to use incremental hydration. Learn more at https://v22.angular.dev/guide/hydration. @ http://localhost:4200/@fs/home/spites/01-blog/01-/front/.angular/cache/22.1.8/front/vite/deps/core-u5_93CgJ.js?v=a0601502:12637
+[     544ms] [LOG] ===== CONNECTED ===== @ http://localhost:4200/main.js:176
+[     544ms] [LOG] Subscribing to: /user/queue/notifications @ http://localhost:4200/main.js:178
+[     545ms] [LOG] ===== SUBSCRIPTION CREATED ===== @ http://localhost:4200/main.js:192
+[     545ms] [LOG] Subscription id: sub-0 @ http://localhost:4200/main.js:193

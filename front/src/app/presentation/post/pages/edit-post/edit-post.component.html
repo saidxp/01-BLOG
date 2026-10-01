@@ -1,43 +1,47 @@
-@if (isLoading()) {
-<p>Loading post…</p>
-} @else if (errorMessage() && !form.dirty) {
-<p class="error">{{ errorMessage() }}</p>
-} @else {
-<form class="edit-post-form" [formGroup]="form" (ngSubmit)="submit()">
-  <h1>Edit post</h1>
-
-  <label for="title">Title</label>
-  <input id="title" type="text" formControlName="title" />
-  @if (form.controls.title.touched && form.controls.title.invalid) {
-  <p class="field-error">Title must be at least 3 characters.</p>
+<main class="page-shell page-shell--narrow author-page">
+  @if (isLoading()) {
+    <div class="state-panel" role="status"><div class="state-panel__content"><p class="state-panel__title">Loading your post</p><p class="state-panel__message">Preparing the editor…</p></div></div>
+  } @else if (errorMessage() && !form.dirty) {
+    <div class="state-panel state-panel--error" role="alert"><div class="state-panel__content"><p class="state-panel__title">Could not load this post</p><p class="state-panel__message">{{ errorMessage() }}</p></div></div>
+  } @else {
+    <header class="page-heading">
+      <p class="page-heading__eyebrow">Edit story</p>
+      <h1>Refine your post.</h1>
+      <p class="page-heading__description">Update the words or replace the cover while keeping the original story intact.</p>
+    </header>
+    <form class="form-shell author-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field-group">
+        <label class="field-label" for="title">Title</label>
+        <input class="field-control title-control" id="title" type="text" formControlName="title" [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid" />
+        @if (form.controls.title.touched && form.controls.title.invalid) { <p class="field-error-01">Title must be at least 3 characters.</p> }
+      </div>
+      <div class="field-group editor-group">
+        <div class="editor-label-row"><label class="field-label" for="content">Content</label><span>Markdown supported</span></div>
+        <div class="markdown-editor" [class.markdown-editor--invalid]="form.controls.content.touched && form.controls.content.invalid">
+          <div class="markdown-toolbar" role="toolbar" aria-label="Markdown formatting">
+            <button type="button" (click)="wrapSelection('**')" title="Bold" aria-label="Bold"><strong>B</strong></button>
+            <button type="button" (click)="wrapSelection('*')" title="Italic" aria-label="Italic"><em>I</em></button>
+            <button type="button" (click)="insertAtCursor('\n## ')" title="Heading" aria-label="Heading">H</button>
+            <button type="button" (click)="wrapSelection('[', '](url)')" title="Link" aria-label="Insert link">↗</button>
+            <button type="button" (click)="insertAtCursor('\n- ')" title="List" aria-label="Bulleted list">•</button>
+            <span class="toolbar-divider" aria-hidden="true"></span>
+            <button type="button" (click)="triggerImageUpload()" title="Insert image or video" aria-label="Insert image or video">Media</button>
+            <button type="button" (click)="insertYoutube()" title="Insert YouTube video" aria-label="Insert YouTube video">YouTube</button>
+          </div>
+          <textarea #contentTextarea id="content" rows="16" formControlName="content"></textarea>
+        </div>
+        @if (form.controls.content.touched && form.controls.content.invalid) { <p class="field-error-01">Content must be at least 10 characters.</p> }
+      </div>
+      <div class="field-group upload-field">
+        <label class="field-label" for="media">Replace cover <span>Optional</span></label>
+        <p class="field-hint">Leave this empty to keep the current cover.</p>
+        <input class="field-control file-control" id="media" type="file" accept="image/*" (change)="onFileSelected($event)" />
+      </div>
+      @if (errorMessage()) { <p class="form-alert" role="alert">{{ errorMessage() }}</p> }
+      <footer class="author-actions">
+        <span>Changes update the published post.</span>
+        <button class="button-01 button-01--primary" type="submit" [disabled]="isSubmitting()">{{ isSubmitting() ? 'Saving…' : 'Save changes' }}</button>
+      </footer>
+    </form>
   }
-
-  <label for="content">Content (Markdown)</label>
-  
-  <div class="markdown-toolbar">
-    <button type="button" (click)="wrapSelection('**')" title="Bold"><strong>B</strong></button>
-    <button type="button" (click)="wrapSelection('*')" title="Italic"><em>I</em></button>
-    <button type="button" (click)="insertAtCursor('\n## ')" title="Heading">H</button>
-    <button type="button" (click)="wrapSelection('[', '](url)')" title="Link">🔗</button>
-    <button type="button" (click)="insertAtCursor('\n- ')" title="List">•</button>
-    <button type="button" (click)="triggerImageUpload()" title="Insert Image">🖼️</button>
-     <button type="button" (click)="insertYoutube()" title="Insert YouTube"> ▶️ </button>
-  </div> 
-
-  <textarea #contentTextarea id="content" rows="12" formControlName="content"></textarea>
-  @if (form.controls.content.touched && form.controls.content.invalid) {
-  <p class="field-error">Content must be at least 10 characters.</p>
-  }
-
-  @if (errorMessage()) {
-  <p class="form-error">{{ errorMessage() }}</p>
-  } 
-
-  <label for="media">Replace cover image/video (optional)</label>
-  <input id="media" type="file" accept="image/*" (change)="onFileSelected($event)" /> 
-
-  <button type="submit" [disabled]="isSubmitting()">
-    {{ isSubmitting() ? 'Saving…' : 'Save' }}
-  </button> 
-</form>
-}
+</main>

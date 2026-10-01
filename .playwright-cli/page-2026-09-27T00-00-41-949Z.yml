@@ -1,0 +1,18 @@
+- main [ref=f5e201]:
+  - region [ref=f5e204]:
+    - link "01Blog home" [ref=f5e205] [cursor=pointer]:
+      - /url: /
+      - generic [aria-hidden] [ref=f5e206]: "01"
+      - text: Blog
+    - generic [ref=f5e207]:
+      - paragraph [ref=f5e208]: Welcome back
+      - heading "Log in to 01Blog" [level=1] [ref=f5e209]
+      - paragraph [ref=f5e210]: Continue reading, writing and joining the conversation.
+    - generic [ref=f5e211]:
+      - generic [ref=f5e212]:
+        - generic [ref=f5e213]: Username or email
+        - textbox "Username or email" [ref=f5e214]
+      - generic [ref=f5e215]:
+        - generic [ref=f5e216]: Password
+        - textbox "Password" [ref=f5e217]
+      - button "Log in" [ref=f5e218] [cursor=pointer]

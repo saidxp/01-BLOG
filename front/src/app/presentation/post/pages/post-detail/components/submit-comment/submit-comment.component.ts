@@ -2,6 +2,7 @@ import { Component, inject, input, signal , output} from '@angular/core'; // <<=
 import { FormsModule } from '@angular/forms';
 import { AddCommentUseCase } from '../../../../../../application/comments/use-cases/add-comment.use-case';
 import { Comment } from '../../../../../../domain/comment/entity/comment.entity';
+import { AuthNavigationService } from '../../../../../../application/auth/services/auth-navigation.service';
 
 @Component({
   selector: 'app-submit-comment',
@@ -13,7 +14,8 @@ import { Comment } from '../../../../../../domain/comment/entity/comment.entity'
 
 export class SubmitCommentComponent {
 
-  private readonly addCommentUseCase = inject(AddCommentUseCase); // <<==>> \\ 
+  private readonly addCommentUseCase = inject(AddCommentUseCase); // <<==>> \\
+  private readonly authNavigation = inject(AuthNavigationService);
 
   readonly commentAdded = output<Comment>();
   readonly postId = input.required<number>();
@@ -29,6 +31,8 @@ export class SubmitCommentComponent {
     if (!content) {
       return;
     }
+
+    if (!this.authNavigation.requireAuthentication()) return;
 
     this.isSubmitting.set(true);
     this.errorMessage.set(null);

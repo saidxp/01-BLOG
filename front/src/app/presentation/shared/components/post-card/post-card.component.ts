@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 import { Post } from '../../../../domain/post/entity/post.entity';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { MediaType } from '../../../../enum/MediaType';
 
 
 @Component({
@@ -15,4 +16,14 @@ import { RouterLink } from '@angular/router';
 // <<==>> \\ (<!<->!>).
 export class PostCardComponent {
   readonly post = input.required<Post>();
+
+  isImageMedia(): boolean {
+    const type = this.post().mediaType;
+    return type === MediaType.IMAGE || String(type).toUpperCase() === 'IMAGE';
+  }
+
+  isVideoMedia(): boolean {
+    const type = this.post().mediaType;
+    return type === MediaType.VIDEO || String(type).toUpperCase() === 'VIDEO';
+  }
 }

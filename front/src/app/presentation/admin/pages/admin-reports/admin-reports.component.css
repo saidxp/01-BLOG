@@ -1,4 +1,6 @@
-table { width: 100%; border-collapse: collapse; }
-th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid #eee; }
-.reason-cell { cursor: pointer; max-width: 250px; }
-.error { color: #b3261e; }
+.reports-table { min-width: 60rem; }
+.id-cell { color: var(--color-muted-foreground); font-family: var(--font-mono); font-size: 0.8rem; }
+.reason-cell { width: 38%; min-width: 18rem; }
+.reason-cell button { width: 100%; padding: 0; border: 0; background: transparent; color: var(--color-foreground); line-height: 1.5; text-align: left; overflow-wrap: anywhere; }
+.reason-cell button span { display: block; margin-top: var(--space-1); color: var(--color-primary); font-size: 0.75rem; font-weight: 650; }
+.date-cell { color: var(--color-muted-foreground); white-space: nowrap; }

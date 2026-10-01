@@ -1,0 +1,13 @@
+:host,
+.main-layout {
+  display: block;
+  min-height: 100vh;
+}
+
+.main-layout {
+  background: var(--color-background);
+}
+
+.main-layout__content {
+  min-width: 0;
+}

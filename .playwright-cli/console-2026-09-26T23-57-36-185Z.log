@@ -1,0 +1,7 @@
+[    5254ms] [ERROR] Access to fetch at 'http://localhost:8080/api/me' from origin 'http://127.0.0.1:4200' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://127.0.0.1:4200/login?returnUrl=%2Fnew:0
+[    5254ms] [ERROR] Failed to load resource: net::ERR_FAILED @ http://localhost:8080/api/me:0
+[    5255ms] [LOG] [getCurrentUser] FAILED - status: 0 message: Failed to fetch @ http://127.0.0.1:4200/main.js:1082
+[    5256ms] [LOG] It's Me Her I Want To Build null @ http://127.0.0.1:4200/main.js:69
+[    5278ms] [LOG] Angular is running in development mode. @ http://127.0.0.1:4200/@fs/home/spites/01-blog/01-/front/.angular/cache/22.1.8/front/vite/deps/core-u5_93CgJ.js?v=a0601502:12637
+[    5322ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4200/favicon.ico:0
+[    5377ms] [LOG] Angular hydrated 3 component(s) and 38 node(s), 0 component(s) were skipped. 0 defer block(s) were configured to use incremental hydration. Learn more at https://v22.angular.dev/guide/hydration. @ http://127.0.0.1:4200/@fs/home/spites/01-blog/01-/front/.angular/cache/22.1.8/front/vite/deps/core-u5_93CgJ.js?v=a0601502:12637

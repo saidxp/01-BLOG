@@ -29,6 +29,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder 
 
+
 public class User {
     
     @Id
@@ -76,4 +77,5 @@ public class User {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+    
 }

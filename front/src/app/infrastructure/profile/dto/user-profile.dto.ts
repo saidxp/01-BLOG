@@ -6,4 +6,6 @@ export interface UserProfileDto {
   createdAt: string;
   owner: boolean;
   subscribed: boolean;
+  postsCount: number;
+  commentsReceivedCount: number;
 }

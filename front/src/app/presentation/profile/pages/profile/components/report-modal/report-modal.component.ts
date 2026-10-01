@@ -1,6 +1,7 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReportUserUseCase } from '../../../../../../application/report/use-cases/report-user.use-case';
+import { AuthNavigationService } from '../../../../../../application/auth/services/auth-navigation.service';
 
 @Component({
   selector: 'app-report-modal',
@@ -13,6 +14,7 @@ import { ReportUserUseCase } from '../../../../../../application/report/use-case
 export class ReportModalComponent {
 
   private readonly reportUserUseCase = inject(ReportUserUseCase);
+  private readonly authNavigation = inject(AuthNavigationService);
 
   readonly username = input.required<string>();
 
@@ -23,6 +25,8 @@ export class ReportModalComponent {
   readonly errorMessage = signal<string | null>(null);
 
   open(): void {
+    if (!this.authNavigation.requireAuthentication()) return;
+
     this.isOpen.set(true);
     this.step.set('form');
     this.reason.set('');

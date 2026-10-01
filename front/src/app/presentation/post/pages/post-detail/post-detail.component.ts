@@ -8,11 +8,14 @@ import { PostDetail } from '../../../../domain/post/entity/PostDetail';
 import { SubmitCommentComponent } from './components/submit-comment/submit-comment.component';
 import { CommentListComponent } from './components/comment-list/comment-list.component';
 import { LikeButtonComponent } from './components/like-button/like-button.component';
+import { CommentCountComponent } from './components/comment-count/comment-count.component';
 import { viewChild } from '@angular/core';
 import { Comment } from '../../../../domain/comment/entity/comment.entity';
 import { DeletePostUseCase } from '../../../../application/post/use-cases/delete.post.use-case';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MediaType } from '../../../../enum/MediaType';
 // This hook checker and portected to not let any thing else instead of youtbe be inject 
 // XSS atack protection ! <=> !
 DOMPurify.addHook('uponSanitizeElement', (node, data) => {
@@ -36,7 +39,7 @@ DOMPurify.addHook('uponSanitizeElement', (node, data) => {
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [RouterLink, SubmitCommentComponent, CommentListComponent, LikeButtonComponent, ConfirmModalComponent],
+  imports: [CommonModule, RouterLink, SubmitCommentComponent, CommentListComponent, LikeButtonComponent, CommentCountComponent, ConfirmModalComponent],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css',
 })
@@ -103,6 +106,14 @@ export class PostDetailComponent implements OnInit {
     this.deletePostUseCase.execute(id).subscribe({
       next: () => this._router.navigateByUrl('/'),
     });
+  }
+
+  isImageMedia(mediaType: MediaType): boolean {
+    return mediaType === MediaType.IMAGE || String(mediaType).toUpperCase() === 'IMAGE';
+  }
+
+  isVideoMedia(mediaType: MediaType): boolean {
+    return mediaType === MediaType.VIDEO || String(mediaType).toUpperCase() === 'VIDEO';
   }
 
 }

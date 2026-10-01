@@ -1,3 +1,6 @@
 #!/bin/bash
-ng build --configuration development
+
+cd "$(dirname "$0")"
+
+npx ng build --configuration development
 node dist/front/server/server.mjs

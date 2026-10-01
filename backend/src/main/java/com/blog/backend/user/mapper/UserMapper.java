@@ -20,14 +20,22 @@ public class UserMapper {
                 .build();
     }
 
-    public UserProfileDto toPublicDto(User user, boolean isSubscribed, boolean isOwner) {
+    public UserProfileDto toPublicDto(
+            User user,
+            boolean isSubscribed,
+            boolean isOwner,
+            long postsCount,
+            long commentsReceivedCount) {
         return UserProfileDto.builder()
+                .id(user.getId())
                 .username(user.getUsername())
                 .bio(user.getBio())
                 .avatarUrl(user.getAvatarUrl())
                 .createdAt(user.getCreatedAt())
                 .subscribed(isSubscribed)
                 .owner(isOwner)
+                .postsCount(postsCount)
+                .commentsReceivedCount(commentsReceivedCount)
                 .build();
     } 
 

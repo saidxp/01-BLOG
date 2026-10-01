@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './presentation/shared/layouts/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './presentation/shared/layouts/auth-layout/auth-layout.component';
 import { AdminLayoutComponent } from './presentation/shared/layouts/admin-layout/admin-layout.component';
+import { adminGuard, authGuard } from './application/auth/guards/auth.guards';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,7 @@ export const routes: Routes = [
       },
       {
         path: 'new',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./presentation/post/pages/newpost/create-post.component').then((m) => m.CreatePostComponent),
       },
@@ -25,6 +27,7 @@ export const routes: Routes = [
       },
       {
         path: 'post/:id/edit',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./presentation/post/pages/edit-post/edit-post.component').then((m) => m.EditPostComponent),
       },
@@ -35,6 +38,7 @@ export const routes: Routes = [
       },
       {
         path: 'notifications',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./presentation/notifications/pages/notifications/notifications.component').then((howa) => howa.NotificationsComponent)
 
@@ -45,6 +49,8 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayoutComponent,
+    canActivate: [adminGuard],
+    canActivateChild: [adminGuard],
     children: [
       {
         path: 'users',

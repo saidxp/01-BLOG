@@ -4,11 +4,12 @@ import { GetAdminPostsUseCase } from '../../../../application/admin/use-cases/po
 import { AdminDeletePostUseCase } from  '../../../../application/admin/use-cases/posts/admin-delete-post.use-case'
 import { AdminPost } from '../../../../domain/admin/entity/admin-post.entity';
 import { RouterLink } from '@angular/router';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-admin-posts',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ConfirmModalComponent],
   templateUrl: './admin-posts.component.html',
   styleUrl: './admin-posts.component.css',
 })
@@ -20,6 +21,8 @@ export class AdminPostsComponent implements OnInit {
   readonly posts = signal<AdminPost[]>([]);
   readonly isLoading = signal(true);
   readonly errorMessage = signal<string | null>(null);
+  readonly pendingDelete = signal<AdminPost | null>(null);
+  readonly isDeleteSubmitting = signal(false);
 
   private currentPage = 0;
   private totalPages = 1;
@@ -54,13 +57,35 @@ export class AdminPostsComponent implements OnInit {
     });
   }
 
-  deletePost(post: AdminPost): void {
-    if (!confirm(`Delete post "${post.title}"? This cannot be undone.`)) return;
+  requestDeletePost(post: AdminPost): void {
+    this.pendingDelete.set(post);
+  }
 
+  cancelDeletePost(): void {
+    if (!this.isDeleteSubmitting()) {
+      this.pendingDelete.set(null);
+    }
+  }
+
+  deleteConfirmationMessage(): string {
+    const post = this.pendingDelete();
+    return post
+      ? `The post "${post.title}" will be permanently deleted. This action cannot be undone.`
+      : '';
+  }
+
+  confirmDeletePost(): void {
+    const post = this.pendingDelete();
+    if (!post || this.isDeleteSubmitting()) return;
+
+    this.isDeleteSubmitting.set(true);
     this.adminDeletePostUseCase.execute(post.id).subscribe({
       next: () => {
         this.posts.update((list) => list.filter((p) => p.id !== post.id));
+        this.isDeleteSubmitting.set(false);
+        this.pendingDelete.set(null);
       },
+      error: () => this.isDeleteSubmitting.set(false),
     });
   }
 }

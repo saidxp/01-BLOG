@@ -1,6 +1,25 @@
 package com.blog.backend.post.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.blog.backend.auth.security.CustomUserDetails;
+import com.blog.backend.comment.repository.CommentRepository;
+import com.blog.backend.exception.UserNotFoundException;
+import com.blog.backend.likes.repository.LikeRepository;
 import com.blog.backend.post.dto.PostDeleteResponse;
 import com.blog.backend.post.dto.PostDetailDto;
 import com.blog.backend.post.dto.PostDto;
@@ -10,19 +29,8 @@ import com.blog.backend.post.model.Post;
 import com.blog.backend.post.service.PostService;
 import com.blog.backend.user.model.User;
 import com.blog.backend.user.repository.UserRepository;
-import com.blog.backend.exception.UserNotFoundException;
-import com.blog.backend.likes.repository.LikeRepository;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.data.domain.Page;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +40,7 @@ public class PostController {
     private final PostMapper postMapper;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final CommentRepository commentRepository;
 
     @PostMapping(value = "/api/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostId> createPost(
@@ -73,14 +82,16 @@ public class PostController {
         Post post = postService.getPostById(id);
         Long currentUserId = null;
         User currentUser = null;
-
+        
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             currentUserId = userDetails.getUser().getId();
             currentUser = userDetails.getUser();
         }
         boolean liked = currentUser != null && likeRepository.existsByUserAndPost(currentUser, post);
         long likeCount = likeRepository.countByPost(post);
-        PostDetailDto dto = postMapper.toDetailDto(post, currentUserId, liked, likeCount);
+        long commentCount = commentRepository.countByPost(post);
+
+        PostDetailDto dto = postMapper.toDetailDto(post, currentUserId, liked, likeCount, commentCount);
         return ResponseEntity.ok(dto);
     }
 

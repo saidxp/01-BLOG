@@ -1,41 +1,28 @@
-<!-- admin-reports.component.html -->
-<h1>Reports</h1>
-
-@if (isLoading()) {
-  <p>Loading reports…</p>
-} @else if (errorMessage()) {
-  <p class="error">{{ errorMessage() }}</p>
-} @else {
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Reporter</th>
-        <th>Reported User</th>
-        <th>Reason</th>
-        <th>Date</th>
-      </tr>     
-    </thead>
-    <tbody>
-      @for (report of reports(); track report.id) {
-        <tr>
-          <td>{{ report.id }}</td>
-          <td>{{ report.reporterUsername }}</td>
-          <td>{{ report.reportedUsername }}</td>
-          <td class="reason-cell" (click)="toggleReason(report.id)">
-            @if (expandedReportId() === report.id) {
-              {{ report.reason }}
-            } @else {
-              {{ report.reason | slice: 0:40 }}{{ report.reason.length > 40 ? '…' : '' }}
-            }
-          </td>
-          <td>{{ report.createdAt | date: 'MMM d, y' }}</td>
-        </tr>
-      }
-    </tbody>
-  </table>
-
-  @if (hasMore) {
-    <button (click)="loadMore()">Load more</button>
+<section class="admin-page">
+  <header class="admin-page__header"><div><h1>Reports</h1><p>Review community reports with the full submitted context.</p></div></header>
+  @if (isLoading()) {
+    <div class="state-panel" role="status"><div class="state-panel__content"><p class="state-panel__title">Loading reports</p><p class="state-panel__message">Fetching moderation reports…</p></div></div>
+  } @else if (errorMessage()) {
+    <div class="state-panel state-panel--error" role="alert"><div class="state-panel__content"><p class="state-panel__title">Could not load reports</p><p class="state-panel__message">{{ errorMessage() }}</p></div></div>
+  } @else if (reports().length === 0) {
+    <div class="state-panel"><div class="state-panel__content"><p class="state-panel__title">No reports</p><p class="state-panel__message">There are no community reports to review.</p></div></div>
+  } @else {
+    <div class="table-responsive admin-table-wrap">
+      <table class="table admin-table reports-table">
+        <thead><tr><th scope="col">ID</th><th scope="col">Reporter</th><th scope="col">Reported user</th><th scope="col">Reason</th><th scope="col">Date</th></tr></thead>
+        <tbody>
+          @for (report of reports(); track report.id) {
+            <tr>
+              <td class="id-cell">#{{ report.id }}</td>
+              <td>{{ report.reporterUsername }}</td>
+              <td><strong>{{ report.reportedUsername }}</strong></td>
+              <td class="reason-cell"><button type="button" (click)="toggleReason(report.id)" [attr.aria-expanded]="expandedReportId() === report.id">@if (expandedReportId() === report.id) { {{ report.reason }} } @else { {{ report.reason | slice: 0:40 }}{{ report.reason.length > 40 ? '…' : '' }} }<span>{{ expandedReportId() === report.id ? 'Show less' : 'Read more' }}</span></button></td>
+              <td class="date-cell">{{ report.createdAt | date: 'MMM d, y' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (hasMore) { <div class="pagination-bar"><button class="button-01 button-01--secondary" type="button" (click)="loadMore()">Load more reports</button></div> }
   }
-}
+</section>

@@ -1,18 +1,6 @@
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  text-align: left;
-  padding: 0.5rem;
-  border-bottom: 1px solid #eee;
-}
-
-.error {
-  color: #b3261e;
-}
-
-td a {
-  margin-right: 0.75rem;
-}
+.posts-table { min-width: 52rem; }
+.id-cell { color: var(--color-muted-foreground); font-family: var(--font-mono); font-size: 0.8rem; }
+.title-cell { min-width: 18rem; max-width: 32rem; }
+.title-cell strong { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-height: 1.4; }
+.date-cell { color: var(--color-muted-foreground); white-space: nowrap; }
+.action-button { min-height: 2.25rem; padding-inline: var(--space-3); font-size: 0.8rem; }

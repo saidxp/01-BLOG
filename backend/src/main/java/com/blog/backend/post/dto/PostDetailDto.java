@@ -1,9 +1,11 @@
 package com.blog.backend.post.dto;
 
+import java.time.LocalDateTime;
+
 import com.blog.backend.post.enums.MediaType;
+
 import lombok.Builder;
 import lombok.Getter;
-import java.time.LocalDateTime;
 
 @Builder
 @Getter 
@@ -20,4 +22,5 @@ public class PostDetailDto {
   private boolean owner;
   private boolean liked;
   private long likedCount; 
+  private long commentCount;
 }

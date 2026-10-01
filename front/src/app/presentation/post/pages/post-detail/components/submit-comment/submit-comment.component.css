@@ -1,0 +1,6 @@
+.comment-composer { display: grid; gap: var(--space-3); padding-bottom: var(--space-6); border-bottom: var(--border-subtle); }
+.comment-composer label { color: var(--color-foreground); font-size: 1rem; font-weight: 700; }
+.comment-composer textarea { min-height: 7.5rem; resize: vertical; }
+.composer-actions { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.composer-actions span { color: var(--color-muted-foreground); font-size: 0.75rem; }
+@media (max-width: 575.98px) { .composer-actions { align-items: stretch; flex-direction: column; } .composer-actions .button-01 { width: 100%; } }

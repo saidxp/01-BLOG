@@ -1,10 +1,11 @@
 package com.blog.backend.post.mapper;
 
+import org.springframework.stereotype.Component;
+
+import com.blog.backend.post.dto.PostDetailDto;
 import com.blog.backend.post.dto.PostDto;
 import com.blog.backend.post.dto.PostId;
 import com.blog.backend.post.model.Post;
-import com.blog.backend.post.dto.PostDetailDto;
-import org.springframework.stereotype.Component;
 
 @Component
 public class PostMapper {
@@ -29,7 +30,7 @@ public class PostMapper {
         return PostId.builder().id(post.getId()).build();
     }
 
-    public PostDetailDto toDetailDto(Post post, Long currentUserId, boolean liked, long likedCount) {
+    public PostDetailDto toDetailDto(Post post, Long currentUserId, boolean liked, long likedCount, long commentCount) {
         boolean isOwner = currentUserId != null && post.getUser().getId().equals(currentUserId);
         return PostDetailDto.builder()
                 .id(post.getId())
@@ -43,6 +44,7 @@ public class PostMapper {
                 .owner(isOwner)
                 .liked(liked)
                 .likedCount(likedCount)
+                .commentCount(commentCount)
                 .build();
     }  // <<==>> \\ (<!!>) (!) <(!)> () \\ (<!!>)
 }

@@ -1,35 +1,96 @@
-@if (isLoading()) {
-<p>Loading profile…</p>
-} @else if (errorMessage()) {
-<p class="error">{{ errorMessage() }}</p>
-} @else if (!profile()) {
-<p class="error">Profile not found.</p>
-} @else {
-@if (profile(); as p) {
-<div class="profile-header">
-  @if (p.avatarUrl) {
-  <img [src]="p.avatarUrl" [alt]="p.username" class="avatar" />
-  }
-  <h1>{{ p.username }}</h1>
+<section class="profile-page">
+  <div class="container-xl profile-page__container">
+    @if (isLoading()) {
+      <div class="profile-skeleton" aria-label="Loading profile">
+        <div class="profile-skeleton__banner"></div>
+        <div class="profile-skeleton__avatar"></div>
+        <div class="skeleton-line skeleton-line--title"></div>
+        <div class="skeleton-line"></div>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="state-panel state-panel--error" role="alert">
+        <div class="state-panel__content">
+          <p class="state-panel__title">The profile could not be loaded</p>
+          <p class="state-panel__message">{{ errorMessage() }}</p>
+        </div>
+      </div>
+    } @else if (!profile()) {
+      <div class="state-panel">
+        <div class="state-panel__content">
+          <p class="state-panel__title">Profile not found</p>
+          <p class="state-panel__message">This member may no longer be available.</p>
+        </div>
+      </div>
+    } @else if (profile(); as p) {
+      <article class="profile-summary">
+        <div class="profile-summary__banner" aria-hidden="true"></div>
+        <div class="profile-summary__body">
+          <div class="profile-summary__topline">
+            @if (p.avatarUrl) {
+              <img [src]="p.avatarUrl" [alt]="p.username" class="avatar-01 avatar-01--xl profile-avatar" />
+            } @else {
+              <span class="avatar-01 avatar-01--xl profile-avatar" aria-hidden="true">{{ p.username.charAt(0).toUpperCase() }}</span>
+            }
 
-  @if (p.bio) {
-  <p class="bio">{{ p.bio }}</p>
-  }
-  <p class="joined">Joined {{ p.createdAt | date: 'MMMM yyyy' }}</p>
+            <div class="profile-actions">
+              @if (p.owner) {
+                <button class="button-01 button-01--secondary" type="button" (click)="isEditing.set(!isEditing())">
+                  {{ isEditing() ? 'Close editor' : 'Edit Profile' }}
+                </button>
+              } @else {
+                <app-subscribe-button [username]="p.username" [initialSubscribed]="p.subscribed" />
+                <app-report-modal [username]="p.username" />
+              }
+            </div>
+          </div>
 
-  @if (!p.owner) { 
-  <!-- Subscribe button here, later -->
-  <app-subscribe-button [username]="p.username" [initialSubscribed]="p.subscribed" />
-  <app-report-modal [username]="p.username" />
-  }
-  @if (p.owner) {
-  @if (isEditing()) {
-  <app-edit-profile [profile]="p" (saved)="onProfileSaved($event)" (cancelled)="isEditing.set(false)" /> 
-  }  
-  }
-</div>
-  <button style="z-index: 1000;" (click)="isEditing.set(true) ">Edit Profile</button>
-<!--User -> List <- Posts-->
-<app-user-post-list [username]="p.username" />
-}
-}
+          <div class="profile-copy">
+            <h1>{{ p.username }}</h1>
+            @if (p.bio) {
+              <p class="profile-bio">{{ p.bio }}</p>
+            } @else {
+              <p class="profile-bio profile-bio--empty">No bio added yet.</p>
+            }
+            <p class="profile-joined">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z" /></svg>
+              Joined {{ p.createdAt | date: 'MMMM yyyy' }}
+            </p>
+          </div>
+
+          @if (p.owner && isEditing()) {
+            <div class="profile-editor">
+              <app-edit-profile [profile]="p" (saved)="onProfileSaved($event)" (cancelled)="isEditing.set(false)" />
+            </div>
+          }
+        </div>
+      </article>
+
+      <div class="profile-content-grid">
+        <aside class="profile-stats" aria-labelledby="profile-stats-title">
+          <div class="profile-stats__heading">
+            <p>At a glance</p>
+            <h2 id="profile-stats-title">Contribution</h2>
+          </div>
+          <dl>
+            <div>
+              <dt>Published posts</dt>
+              <dd>{{ p.postsCount }}</dd>
+            </div>
+            <div>
+              <dt>Comments received</dt>
+              <dd>{{ p.commentsReceivedCount }}</dd>
+            </div>
+          </dl>
+        </aside>
+
+        <section class="profile-posts" [attr.aria-label]="'Posts by ' + p.username">
+          <div class="profile-posts__heading">
+            <p class="profile-posts__eyebrow">Published work</p>
+            <h2>Posts by {{ p.username }}</h2>
+          </div>
+          <app-user-post-list [username]="p.username" />
+        </section>
+      </div>
+    }
+  </div>
+</section>

@@ -15,4 +15,6 @@ public class UserProfileDto {
     private LocalDateTime createdAt;
     private boolean owner;
     private boolean subscribed;
+    private long postsCount;
+    private long commentsReceivedCount;
 }

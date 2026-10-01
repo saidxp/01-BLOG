@@ -1,14 +1,23 @@
-<div class="admin-container">
-  <aside class="admin-sidebar">
-    <h2>Admin</h2>
-    <nav>
-      <a routerLink="/admin/users">Users</a>
-      <a routerLink="/admin/posts">Posts</a>
-      <a routerLink="/admin/reports">Reports</a>
+<div class="admin-layout">
+  <aside class="admin-sidebar" aria-label="Administration navigation">
+    <div class="admin-sidebar__brand">
+      <a routerLink="/" class="admin-brand" aria-label="01Blog home">
+        <span class="admin-brand__mark" aria-hidden="true">01</span>
+        <span>Blog</span>
+      </a>
+      <span class="admin-label">Admin</span>
+    </div>
+
+    <nav class="admin-nav">
+      <a routerLink="/admin/users" routerLinkActive="active">Users</a>
+      <a routerLink="/admin/posts" routerLinkActive="active">Posts</a>
+      <a routerLink="/admin/reports" routerLinkActive="active">Reports</a>
     </nav>
+
+    <a routerLink="/" class="back-link">Back to site</a>
   </aside>
 
   <main class="admin-content">
-    <router-outlet></router-outlet>
+    <router-outlet />
   </main>
 </div>

@@ -1,42 +1,37 @@
-<h1>Users</h1>
-
-@if (isLoading()) {
-  <p>Loading users…</p>
-} @else if (errorMessage()) {
-  <p class="error">{{ errorMessage() }}</p>
-} @else {
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (user of users(); track user.id) {
-        <tr>
-          <td>{{ user.id }}</td>
-          <td>{{ user.username }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-          <td>{{ user.status }}</td>
-          <td>
-            <button (click)="toggleBan(user)">
-              {{ user.status === 'BANNED' ? 'Unban' : 'Ban' }}
-            </button>
-            <button (click)="deleteUser(user)">Delete</button>
-          </td>
-        </tr>
-      }
-      
-    </tbody>
-  </table>
-
-  @if (hasMore) {
-    <button (click)="loadMore()">Load more</button>
+<section class="admin-page">
+  <header class="admin-page__header"><div><h1>Users</h1><p>Manage access and account status across 01Blog.</p></div></header>
+  @if (isLoading()) {
+    <div class="state-panel" role="status"><div class="state-panel__content"><p class="state-panel__title">Loading users</p><p class="state-panel__message">Fetching the latest account records…</p></div></div>
+  } @else if (errorMessage()) {
+    <div class="state-panel state-panel--error" role="alert"><div class="state-panel__content"><p class="state-panel__title">Could not load users</p><p class="state-panel__message">{{ errorMessage() }}</p></div></div>
+  } @else if (users().length === 0) {
+    <div class="state-panel"><div class="state-panel__content"><p class="state-panel__title">No users found</p><p class="state-panel__message">User accounts will appear here.</p></div></div>
+  } @else {
+    <div class="table-responsive admin-table-wrap">
+      <table class="table admin-table">
+        <thead><tr><th scope="col">ID</th><th scope="col">Username</th><th scope="col">Email</th><th scope="col">Role</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead>
+        <tbody>
+          @for (user of users(); track user.id) {
+            <tr>
+              <td class="id-cell">#{{ user.id }}</td>
+              <td><strong>{{ user.username }}</strong></td>
+              <td class="email-cell">{{ user.email }}</td>
+              <td><span class="status-badge status-badge--info">{{ user.role }}</span></td>
+              <td><span class="status-badge" [class.status-badge--danger]="user.status === 'BANNED'" [class.status-badge--success]="user.status !== 'BANNED'">{{ user.status }}</span></td>
+              <td><div class="admin-table__actions"><button class="button-01 button-01--secondary action-button" type="button" (click)="requestToggleBan(user)">{{ user.status === 'BANNED' ? 'Unban' : 'Ban' }}</button><button class="button-01 button-01--danger action-button" type="button" (click)="requestDeleteUser(user)">Delete</button></div></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (hasMore) { <div class="pagination-bar"><button class="button-01 button-01--secondary" type="button" (click)="loadMore()">Load more users</button></div> }
   }
-}
+</section>
+
+<app-confirm-modal
+  [isOpen]="pendingAction() !== null"
+  [title]="confirmationTitle()"
+  [message]="confirmationMessage()"
+  (confirmed)="confirmPendingAction()"
+  (cancelled)="cancelPendingAction()"
+/>

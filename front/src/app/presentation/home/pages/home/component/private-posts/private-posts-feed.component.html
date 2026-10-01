@@ -1,22 +1,39 @@
 @if (isLoading()) {
-  <p>Loading feed…</p>
+  <div class="skeleton-stack" aria-label="Loading following feed">
+    @for (item of [1, 2]; track item) {
+      <div class="skeleton-card" aria-hidden="true">
+        <div class="skeleton-line skeleton-line--short"></div>
+        <div class="skeleton-line skeleton-line--title"></div>
+        <div class="skeleton-line"></div>
+      </div>
+    }
+  </div>
 } @else if (errorMessage()) {
-  <p class="error">{{ errorMessage() }}</p>
+  <div class="state-panel state-panel--error" role="alert">
+    <div class="state-panel__content">
+      <p class="state-panel__title">The following feed could not be loaded</p>
+      <p class="state-panel__message">{{ errorMessage() }}</p>
+    </div>
+  </div>
 } @else if (posts().length === 0) {
-  <p class="empty-state">No posts yet.</p>
+  <div class="state-panel">
+    <div class="state-panel__content">
+      <p class="state-panel__title">Your following feed is quiet</p>
+      <p class="state-panel__message">Posts from people you subscribe to will appear here.</p>
+    </div>
+  </div>
 } @else {
-  <div class="feed">
+  <div class="feed-list">
     @for (post of posts(); track post.id) {
       <app-post-card [post]="post" />
     }
   </div>
 
-  @if (isLoadingMore()) {
-    <p class="loading-more">Loading more…</p>
-  }
-
-  @if (hasMore) {
-    <button class="load-more-btn" (click)="loadMore()">Load more posts</button>
-  } 
-  <!--There Is Alot Of Thing -->
+  <div class="feed-footer">
+    @if (isLoadingMore()) {
+      <span class="text-muted-01" aria-live="polite">Loading more posts…</span>
+    } @else if (hasMore) {
+      <button class="button-01 button-01--secondary" type="button" (click)="loadMore()">Load more posts</button>
+    }
+  </div>
 }

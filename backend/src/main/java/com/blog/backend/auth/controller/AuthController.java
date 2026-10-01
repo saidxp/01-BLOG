@@ -20,6 +20,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import com.blog.backend.auth.cookie.AuthCookieService;
 
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -33,7 +34,9 @@ public class AuthController {
     public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequest request,
             HttpServletResponse res) {
         Pair<RegisterResponse, String> result = authService.register(request);
+
         authCookieService.setAccessTokenCookie(res, result.getRight());
+        
         return ResponseEntity.status(HttpStatus.CREATED).body(result.getLeft());
     }
 

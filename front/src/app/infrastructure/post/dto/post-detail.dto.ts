@@ -12,5 +12,6 @@ export interface PostDetailDto {
   owner : boolean; 
   liked : boolean;
   likedCount : number;
+  commentCount : number;
 }
 

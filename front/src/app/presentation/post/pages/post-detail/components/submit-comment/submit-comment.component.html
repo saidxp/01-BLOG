@@ -1,26 +1,6 @@
-<form (ngSubmit)="submit()">
-
-  <textarea
-    [ngModel]="content()"
-    (ngModelChange)="content.set($event)"
-    name="content"
-    placeholder="Write a comment..."
-    [disabled]="isSubmitting()"
-  ></textarea>
-
-  @if (errorMessage()) {
-    <p class="error">{{ errorMessage() }}</p>
-  }
-  
-  <button
-    type="submit"
-    [disabled]="isSubmitting() || !content().trim()"
-  >
-    @if (isSubmitting()) {
-      Posting...
-    } @else {
-      Comment
-    }
-  </button>
-
+<form class="comment-composer" (ngSubmit)="submit()">
+  <label for="comment-content">Join the conversation</label>
+  <textarea id="comment-content" class="field-control" [ngModel]="content()" (ngModelChange)="content.set($event)" name="content" placeholder="Write a thoughtful comment…" [disabled]="isSubmitting()"></textarea>
+  @if (errorMessage()) { <p class="form-alert" role="alert">{{ errorMessage() }}</p> }
+  <div class="composer-actions"><span>Keep it constructive and relevant.</span><button class="button-01 button-01--primary" type="submit" [disabled]="isSubmitting() || !content().trim()">{{ isSubmitting() ? 'Posting…' : 'Post comment' }}</button></div>
 </form>

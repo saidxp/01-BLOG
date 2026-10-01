@@ -9,7 +9,9 @@ export function toUserProfileEntity(dto: UserProfileDto): UserProfile {
     dto.avatarUrl,
     new Date(dto.createdAt),
     dto.owner,
-    dto.subscribed
+    dto.subscribed,
+    dto.postsCount,
+    dto.commentsReceivedCount
   );
 }
-// <<==>> \\ (<!!>) 
+// <<==>> \\ (<!!>)

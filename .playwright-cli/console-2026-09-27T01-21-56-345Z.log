@@ -1,0 +1,6 @@
+[    2268ms] [ERROR] Access to fetch at 'http://localhost:8080/api/me' from origin 'http://localhost:4100' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://localhost:4100/post/18:0
+[    2275ms] [ERROR] Failed to load resource: net::ERR_FAILED @ http://localhost:8080/api/me:0
+[    2282ms] [LOG] [getCurrentUser] FAILED - status: 0 message: Failed to fetch @ http://localhost:4100/main-ARAPU6I2.js:8
+[    2288ms] [LOG] It's Me Her I Want To Build null @ http://localhost:4100/main-ARAPU6I2.js:8
+[    2523ms] [ERROR] Access to fetch at 'http://localhost:8080/api/posts/18' from origin 'http://localhost:4100' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://localhost:4100/post/18:0
+[    2523ms] [ERROR] Failed to load resource: net::ERR_FAILED @ http://localhost:8080/api/posts/18:0

@@ -1,42 +1,22 @@
-.notification-list {
-  display: flex;
-  flex-direction: column;
-  max-width: 32rem;
-  margin: 1rem auto;
-}
-
-.notification-item {
-  display: flex;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-}
-
-.notification-item.unread {
-  background: #f0f7ff;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.message {
-  margin: 0;
-}
-
-.timestamp {
-  margin: 0.15rem 0 0;
-  font-size: 0.8rem;
-  color: #888;
-}
-
-.empty,
-.error {
-  text-align: center;
-  color: #888;
-  padding: 1rem;
-}
+.notifications-page { max-width: 52rem; }
+.notifications-header { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-5); }
+.notification-list { overflow: hidden; }
+.notification-item { width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: var(--space-4); padding: var(--space-4) var(--space-5); border: 0; border-bottom: var(--border-subtle); background: var(--color-surface); color: inherit; text-align: left; transition: background-color var(--transition-fast); }
+.notification-item:last-child { border-bottom: 0; }
+.notification-item:hover { background: var(--color-surface-subtle); }
+.notification-item.unread { background: var(--color-primary-soft); }
+.notification-item.unread:hover { background: #e5eaff; }
+.notification-content { min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.message { color: var(--color-foreground); font-size: 0.9375rem; line-height: 1.5; overflow-wrap: anywhere; }
+.timestamp { color: var(--color-muted-foreground); font-size: 0.75rem; }
+.unread-dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--color-primary); box-shadow: 0 0 0 4px rgb(59 91 219 / 10%); }
+.notification-item > svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: var(--color-muted-foreground); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.loading-more { margin: var(--space-5) 0 0; color: var(--color-muted-foreground); text-align: center; }
+.empty-symbol { display: block; margin-bottom: var(--space-3); color: var(--color-primary); font-size: 2.5rem; line-height: 1; }
+.notification-skeleton { overflow: hidden; border: var(--border-subtle); border-radius: var(--radius-xl); background: var(--color-surface); }
+.notification-skeleton__row { display: flex; gap: var(--space-4); padding: var(--space-5); border-bottom: var(--border-subtle); }
+.notification-skeleton__row > span { width: 2.75rem; height: 2.75rem; flex: 0 0 auto; border-radius: 50%; background: var(--color-muted); animation: skeleton-pulse 1.5s ease-in-out infinite; }
+.notification-skeleton__row > div { width: 100%; display: grid; gap: var(--space-2); }
+.notification-skeleton__row i { width: 75%; height: 0.75rem; border-radius: var(--radius-pill); background: var(--color-muted); animation: skeleton-pulse 1.5s ease-in-out infinite; }
+.notification-skeleton__row i:last-child { width: 32%; }
+@media (max-width: 575.98px) { .notification-item { grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--space-3); padding: var(--space-4); } .notification-item > svg { display: none; } .unread-dot { align-self: start; margin-top: var(--space-2); } }
