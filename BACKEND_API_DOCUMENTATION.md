@@ -33,6 +33,8 @@
 
 ---
 
+
+
 ## 1. System Architecture Overview
 
 This is a **stateless RESTful backend** serving a blog platform. The application follows a classic **layered architecture**:
