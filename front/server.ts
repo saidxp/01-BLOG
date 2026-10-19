@@ -15,7 +15,8 @@ export function app(): express.Express {
 
 
   const commonEngine = new CommonEngine({
-    allowedHosts: ['localhost', '127.0.0.1', '192.168.11.225'],
+    // Her i need to add to to this where it's will be runing this server ip <!!>
+    allowedHosts: ['localhost', '127.0.0.1', '192.168.11.225', '10.1.13.3', 'frontend'],
   });
 
   server.set('view engine', 'html');

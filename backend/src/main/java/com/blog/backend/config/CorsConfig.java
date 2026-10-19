@@ -11,12 +11,18 @@ public class CorsConfig {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
-
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:4200" , "http://localhost:4000")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                        .allowedOrigins(
+                                "http://localhost:4000",
+                                "http://localhost:4200", 
+                                "https://10.1.13.3:8443"
+                        )
+                        .allowedMethods(
+                                "GET", "POST", "PUT", "DELETE",
+                                "PATCH", "OPTIONS"
+                        )
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
