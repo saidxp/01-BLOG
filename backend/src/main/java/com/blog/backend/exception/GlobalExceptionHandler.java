@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -316,4 +317,18 @@ public class GlobalExceptionHandler {
                                 .status(HttpStatus.BAD_REQUEST)
                                 .body(response);
         }
+
+        @ExceptionHandler(AccountBannedException.class)
+        public ResponseEntity<ApiErrorResponse> handleAccountBanned(
+                        AccountBannedException ex) {
+
+                return ResponseEntity
+                                .status(HttpStatus.FORBIDDEN)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.FORBIDDEN.value())
+                                                .message(ex.getMessage())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        }
+
 }

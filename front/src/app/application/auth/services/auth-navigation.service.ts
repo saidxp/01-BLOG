@@ -10,7 +10,7 @@ export class AuthNavigationService {
   isAuthenticated(): boolean {
     return this.authState.currentUser() !== null;
   }
-
+  
   requireAuthentication(returnUrl = this.router.url): boolean {
     if (this.isAuthenticated()) {
       return true;
@@ -19,7 +19,7 @@ export class AuthNavigationService {
     void this.router.navigateByUrl(this.loginUrl(returnUrl));
     return false;
   }
-
+  
   loginUrl(returnUrl: string): UrlTree {
     return this.router.createUrlTree(['/login'], {
       queryParams: { returnUrl: this.safeReturnUrl(returnUrl) },

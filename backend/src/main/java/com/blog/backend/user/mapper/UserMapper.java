@@ -3,6 +3,7 @@ package com.blog.backend.user.mapper;
 import org.springframework.stereotype.Component;
 
 import com.blog.backend.user.dto.UserProfileDto;
+import com.blog.backend.user.dto.UserSearchResultDto;
 import com.blog.backend.user.dto.AdminUserDto;
 import com.blog.backend.user.dto.UserDto;
 import com.blog.backend.user.model.User;
@@ -37,9 +38,9 @@ public class UserMapper {
                 .postsCount(postsCount)
                 .commentsReceivedCount(commentsReceivedCount)
                 .build();
-    } 
+    }
 
-    // <<==>> \\ (<!<->!>) \\ <<==>> \\ (<!!>) \\ 
+    // <<==>> \\ (<!<->!>) \\ <<==>> \\ (<!!>) \\
     public AdminUserDto toAdminUserDto(User user) {
         return new AdminUserDto(
                 user.getId(),
@@ -48,5 +49,13 @@ public class UserMapper {
                 user.getRole(),
                 user.getStatus(),
                 user.getCreatedAt());
-    } //<<<==>>\\ (<!-!>)
+    } // <<<==>>\\ (<!-!>)
+
+    ///
+    public UserSearchResultDto toSearchResultDto(User user) {
+        return new UserSearchResultDto(
+                user.getId(),
+                user.getUsername(),
+                user.getAvatarUrl());
+    }
 }

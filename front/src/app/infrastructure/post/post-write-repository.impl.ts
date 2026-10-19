@@ -17,7 +17,7 @@ export class PostWriteRepositoryImpl extends PostWriteRepository {
   // <<==>> \\ (!) 
 
   override createPost(title: string, content: string, media: File | null): Observable<number> { 
-
+    
     const formData = new FormData(); 
     formData.append('title', title);
     formData.append('content', content);

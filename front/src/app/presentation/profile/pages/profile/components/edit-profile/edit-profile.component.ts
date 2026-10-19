@@ -35,7 +35,7 @@ export class EditProfileComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     this.selectedAvatar = input.files?.[0] ?? null;
   }
-
+  
   submit(): void {
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
@@ -43,13 +43,15 @@ export class EditProfileComponent implements OnInit {
     const { bio } = this.form.getRawValue();
 
     this.updateProfileUseCase.execute(bio, this.selectedAvatar).subscribe({
-      next: (updatedProfile) => {
+      next: (updatedProfile) => { 
+        // <<==>> \\ <!> \\ {<!-!>}
         this.isSubmitting.set(false);
         this.saved.emit(updatedProfile);
+
       },
       error: (err) => {
-        this.isSubmitting.set(false);
-        this.errorMessage.set(err.message);
+        this.isSubmitting.set(false); 
+        this.errorMessage.set(err.error?.message || 'Failed to update profile.');
       },
     });
   }

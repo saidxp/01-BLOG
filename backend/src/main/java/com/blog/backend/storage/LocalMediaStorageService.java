@@ -14,8 +14,7 @@ public class LocalMediaStorageService implements MediaStorageService {
 
     private static final String UPLOAD_DIR = "uploads/media/";
 
-    @Value("${app.base-url}")
-    private String baseUrl;
+ 
 
     @Override
     public String store(MultipartFile file) {
@@ -25,7 +24,7 @@ public class LocalMediaStorageService implements MediaStorageService {
             String filename = UUID.randomUUID() + extension;
             Path target = Path.of(UPLOAD_DIR, filename);
             Files.copy(file.getInputStream(), target);
-            return baseUrl + "/media/" + filename; 
+            return  "/media/" + filename; 
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file", e);
         }

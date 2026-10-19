@@ -24,6 +24,11 @@ public class CommentService {
 
     @Transactional
     public Comment addComment(User currentUser, Long postId, String content) {
+
+        if (content == null || content.isBlank() || content.length() > 2000) {
+            throw new IllegalArgumentException("Comment must be between 1 and 2000 characters");
+        } 
+        // <<==>> \\ {<!!>} \\ {} 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
 

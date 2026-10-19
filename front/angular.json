@@ -20,9 +20,11 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
+              "webWorkerTsConfig": "tsconfig.worker.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets", 
+              "public"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -50,7 +52,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "7kb",
-                  "maximumError": "8kb"
+                  "maximumError": "12kb"
                 }
               ],
               "outputHashing": "all"

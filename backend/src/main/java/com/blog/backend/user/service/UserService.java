@@ -6,6 +6,7 @@ import com.blog.backend.comment.repository.CommentRepository;
 import com.blog.backend.post.enums.MediaType;
 import com.blog.backend.subscription.repository.SubscriptionRepository;
 import com.blog.backend.user.dto.UserProfileDto;
+import com.blog.backend.user.dto.UserSearchResultDto;
 import com.blog.backend.user.mapper.UserMapper;
 import com.blog.backend.user.model.User;
 import com.blog.backend.user.repository.UserRepository;
@@ -13,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.blog.backend.storage.MediaStorageService;
-import com.blog.backend.exception.*;;
+import com.blog.backend.exception.*;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -60,8 +62,12 @@ public class UserService {
     }
 
     // <<==>> (UPDATE) <<==>> (THIS) <<==>> (PROFILE) \\ {(0101011010101010)} \\
-     
-    public UserProfileDto updateProfile(User currentUser, String bio,  MultipartFile avatar) {
+
+    public UserProfileDto updateProfile(User currentUser, String bio, MultipartFile avatar) {
+
+        if (bio != null && bio.length() > 300) {
+            throw new IllegalArgumentException("Bio cannot exceed 300 characters");
+        }
 
         if (avatar != null && !avatar.isEmpty()) {
             // <<==>> \\
@@ -71,10 +77,10 @@ public class UserService {
                 throw new InvalidMediaTypeException(
                         "Please provide a valid image");
             }
-            // <<==>> 
+            // <<==>>
             String oldAvatarUrl = currentUser.getAvatarUrl();
 
-            // <<==>> 
+            // <<==>>
             String avatarUrl = mediaStorageService.store(avatar);
 
             currentUser.setAvatarUrl(avatarUrl);
@@ -83,15 +89,27 @@ public class UserService {
             if (oldAvatarUrl != null) {
                 mediaStorageService.delete(oldAvatarUrl);
             }
+            // <=> \\ {<!>}. {<!>} \\ {}
             currentUser = saved;
-        } else {
-            currentUser.setBio(bio);
-            currentUser = userRepository.save(currentUser);
         }
+
+        currentUser.setBio(bio);
+        currentUser = userRepository.save(currentUser);
 
         return getPublicProfile(
                 currentUser.getUsername(),
                 currentUser);
-    }  
-    // {<->} \\
+    }
+
+    /// Search On Users !!
+    public List<UserSearchResultDto> searchUsers(String query) {
+        if (query == null || query.isBlank()) {
+            return List.of();
+        }
+        return userRepository.findByUsernameContainingIgnoreCase(query.trim())
+                .stream()
+                .map(userMapper::toSearchResultDto)
+                .toList();
+    }
+    // <<==>>>>>>>>.. \\ {<!>} {!!}
 }

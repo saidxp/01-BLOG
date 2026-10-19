@@ -7,88 +7,147 @@
         <span class="brand-mark" aria-hidden="true">01</span>
         <span class="brand-name">Blog</span>
       </a>
-
       <nav class="desktop-primary-nav" aria-label="Primary navigation">
         <a routerLink="/" (click)="closeMenus()">Feed</a>
       </nav>
     </div>
 
+    <div class="user-search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+      
+      <input #searchInput type="search" placeholder="Search users..." aria-label="Search users"
+        (input)="onSearchInput($event)" (focus)="isSearchOpen.set(true)" />
+      @if (isSearchOpen() && searchQuery().trim().length >= 2) {
+      <div class="search-results">
+        @if (searchLoading()) {
+        <div class="search-message">Searching...</div>
+        } @else if (searchResults().length > 0) {
+        @for (user of searchResults(); track user.id) {
+        <a class="search-result" [routerLink]="['/profile', user.username]" (click)="clearSearch(searchInput)">
+          @if (user.avatarUrl) {
+          <img [src]="user.avatarUrl" [alt]="user.username" />
+          } @else {
+          <span class="search-avatar-fallback">
+            {{ user.username.charAt(0).toUpperCase() }}
+          </span>
+          }
+
+          <span>{{ user.username }}</span>
+        </a>
+        }
+        } @else {
+        <div class="search-message">User not found.</div>
+        }
+      </div>
+      }
+    </div>
+
     <nav class="desktop-actions" aria-label="Account navigation">
       @if (currentUser(); as user) {
-        <a routerLink="/new" class="create-post-link">Create Post</a>
+      <a routerLink="/new" class="create-post-link">Create Post</a>
 
-        <a routerLink="/notifications" class="icon-link" aria-label="Notifications" (click)="closeMenus()">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
+      <a routerLink="/notifications" class="icon-link" aria-label="Notifications" (click)="closeMenus()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="lucide lucide-bell preview-icon">
+          <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+          <path
+            d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+        </svg>
+        @if (unreadCount() > 0) {
+        <span class="notification-badge" aria-label="Unread notifications">{{ unreadCount() > 99 ? '99+' : unreadCount()
+          }}</span>
+        }
+      </a>
+      <button type="button" class="theme-toggle" aria-label="Toggle dark mode" (click)="toggleTheme()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="lucide lucide-sun-moon preview-icon">
+          <path d="M12 2v2" />
+          <path
+            d="M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715" />
+          <path d="M16 12a4 4 0 0 0-4-4" />
+          <path d="m19 5-1.256 1.256" />
+          <path d="M20 12h2" />
+        </svg>
+      </button>
+
+      <div class="user-menu">
+        <button class="user-menu-button" type="button" aria-haspopup="menu"
+          [attr.aria-label]="'Open profile menu for ' + user.username" [attr.aria-expanded]="isUserMenuOpen()"
+          aria-controls="profile-menu" (click)="toggleUserMenu()">
+          @if (user.avatarUrl) {
+          <img class="user-avatar" [src]="user.avatarUrl" [alt]="user.username" />
+          } @else {
+          <span class="user-avatar user-avatar-fallback" aria-hidden="true">{{ user.username.charAt(0).toUpperCase()
+            }}</span>
+          }
+          <span class="username">{{ user.username }}</span>
+          <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="m4 6 4 4 4-4" />
           </svg>
-          @if (unreadCount() > 0) {
-            <span class="notification-badge" aria-label="Unread notifications">{{ unreadCount() > 99 ? '99+' : unreadCount() }}</span>
+        </button>
+        @if (isUserMenuOpen()) {
+        <div id="profile-menu" class="user-dropdown" role="menu">
+          <div class="user-dropdown__identity">
+            <strong>{{ user.username }}</strong>
+            <span>{{ user.email }}</span>
+          </div>
+          <a [routerLink]="['/profile', user.username]" role="menuitem" (click)="closeMenus()">Profile</a>
+          @if (user.role === 'ADMIN') {
+          <a routerLink="/admin/users" role="menuitem" (click)="closeMenus()">Admin panel</a>
           }
-        </a>
-
-        <div class="user-menu">
-          <button class="user-menu-button" type="button" aria-haspopup="menu" [attr.aria-label]="'Open profile menu for ' + user.username" [attr.aria-expanded]="isUserMenuOpen()" aria-controls="profile-menu" (click)="toggleUserMenu()">
-            @if (user.avatarUrl) {
-              <img class="user-avatar" [src]="user.avatarUrl" [alt]="user.username" />
-            } @else {
-              <span class="user-avatar user-avatar-fallback" aria-hidden="true">{{ user.username.charAt(0).toUpperCase() }}</span>
-            }
-            <span class="username">{{ user.username }}</span>
-            <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>
-          </button>
-
-          @if (isUserMenuOpen()) {
-            <div id="profile-menu" class="user-dropdown" role="menu">
-              <div class="user-dropdown__identity">
-                <strong>{{ user.username }}</strong>
-                <span>{{ user.email }}</span>
-              </div>
-              <a [routerLink]="['/profile', user.username]" role="menuitem" (click)="closeMenus()">Profile</a>
-              @if (user.role === 'ADMIN') {
-                <a routerLink="/admin/users" role="menuitem" (click)="closeMenus()">Admin panel</a>
-              }
-              <div class="dropdown-divider"></div>
-              <button type="button" role="menuitem" (click)="logout()">Log out</button>
-            </div>
-          }
+          <div class="dropdown-divider"></div>
+          <button type="button" role="menuitem" (click)="logout()">Log out</button>
         </div>
+        }
+      </div>
       } @else {
-        <a routerLink="/login" class="login-link" (click)="closeMenus()">Log in</a>
-        <a routerLink="/register" class="register-link" (click)="closeMenus()">Create account</a>
+      <a routerLink="/login" class="login-link" (click)="closeMenus()">Log in</a>
+      <a routerLink="/register" class="register-link" (click)="closeMenus()">Create account</a>
       }
     </nav>
 
-    <button class="mobile-menu-button" type="button" aria-label="Toggle navigation" aria-controls="mobile-navigation" [attr.aria-expanded]="isMobileMenuOpen()" (click)="toggleMobileMenu()">
+    <button class="mobile-menu-button" type="button" aria-label="Toggle navigation" aria-controls="mobile-navigation"
+      [attr.aria-expanded]="isMobileMenuOpen()" (click)="toggleMobileMenu()">
       @if (isMobileMenuOpen()) {
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 6l12 12M18 6 6 18" />
+      </svg>
       } @else {
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
       }
     </button>
   </div>
 
   @if (isMobileMenuOpen()) {
-    <nav id="mobile-navigation" class="mobile-navigation" aria-label="Mobile navigation">
-      <div class="container-xl mobile-navigation__inner">
-        <a routerLink="/" (click)="closeMenus()">Feed</a>
-        @if (currentUser(); as user) {
-          <a routerLink="/new" (click)="closeMenus()">Create Post</a>
-          <a routerLink="/notifications" (click)="closeMenus()">
-            <span>Notifications</span>
-            @if (unreadCount() > 0) {
-              <span class="mobile-count">{{ unreadCount() > 99 ? '99+' : unreadCount() }}</span>
-            }
-          </a>
-          <a [routerLink]="['/profile', user.username]" (click)="closeMenus()">Profile</a>
-          @if (user.role === 'ADMIN') {
-            <a routerLink="/admin/users" (click)="closeMenus()">Admin panel</a>
-          }
-          <button type="button" (click)="logout()">Log out</button>
-        } @else {
-          <a routerLink="/login" (click)="closeMenus()">Log in</a>
-          <a routerLink="/register" class="mobile-register-link" (click)="closeMenus()">Create account</a>
+  <nav id="mobile-navigation" class="mobile-navigation" aria-label="Mobile navigation">
+    <div class="container-xl mobile-navigation__inner">
+      <a routerLink="/" (click)="closeMenus()">Feed</a>
+      @if (currentUser(); as user) {
+      <a routerLink="/new" (click)="closeMenus()">Create Post</a>
+      <a routerLink="/notifications" (click)="closeMenus()">
+        <span>Notifications</span>
+        @if (unreadCount() > 0) {
+        <span class="mobile-count">{{ unreadCount() > 99 ? '99+' : unreadCount() }}</span>
         }
-      </div>
-    </nav>
+      </a>
+      <a [routerLink]="['/profile', user.username]" (click)="closeMenus()">Profile</a>
+      @if (user.role === 'ADMIN') {
+      <a routerLink="/admin/users" (click)="closeMenus()">Admin panel</a>
+      }
+      <button type="button" (click)="logout()">Log out</button>
+      } @else {
+      <a routerLink="/login" (click)="closeMenus()">Log in</a>
+      <a routerLink="/register" class="mobile-register-link" (click)="closeMenus()">Create account</a>
+      }
+    </div>
+  </nav>
   }
 </header>

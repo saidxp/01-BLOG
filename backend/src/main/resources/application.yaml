@@ -8,9 +8,9 @@ spring:
       max-request-size: 10MB 
 
   datasource:
-    url: jdbc:postgresql://localhost:1337/blogdb
+    url: jdbc:postgresql://postgres:5432/blogdb
     username: bloguser
-    password: 1234
+    password: 1234 
 
   jpa:
     hibernate:
@@ -20,13 +20,12 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
-
+    
 app:
   base-url: http://localhost:8080 
-jwt:
+jwt: 
   secret: ${JWT_SECRET}
   access-token-expiration: ${JWT_EXPIRATION:86400000}
-
 
 logging:
   level:
@@ -34,3 +33,9 @@ logging:
     org.flywaydb: DEBUG
     org.springframework.messaging.simp.user: TRACE
     org.springframework.messaging.simp.broker: TRACE
+
+springdoc:
+  swagger-ui:
+    path: /api/swagger-ui.html
+  api-docs:
+    path: /api/v3/api-docs

@@ -41,10 +41,11 @@ public class AuthController {
     }
 
     // <<<===>>> \\
-    @PostMapping("/login")
+    @PostMapping("/login") 
     public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginRequest request, HttpServletResponse res) {
         Pair<LoginResponse, String> result = authService.login(request);
         authCookieService.setAccessTokenCookie(res, result.getRight());
+        // {}
         return ResponseEntity.status(HttpStatus.OK).body(result.getLeft());
     }
 

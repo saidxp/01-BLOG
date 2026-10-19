@@ -7,8 +7,8 @@
   <form class="form-shell author-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <div class="field-group">
       <label class="field-label" for="title">Title</label>
-      <input class="field-control title-control" id="title" type="text" formControlName="title" placeholder="A clear, specific title" [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid" />
-      @if (form.controls.title.touched && form.controls.title.invalid) { <p class="field-error-01">Title must be at least 3 characters.</p> }
+      <input class="field-control title-control" id="title" type="text"   maxlength="200" formControlName="title" placeholder="A clear, specific title" [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid" />
+      @if (form.controls.title.touched && form.controls.title.invalid) { <p class="field-error-01">Title must be between 3 and 200 characters.</p> }
     </div>
     <div class="field-group editor-group">
       <div class="editor-label-row"><label class="field-label" for="content">Content</label><span>Markdown supported</span></div>

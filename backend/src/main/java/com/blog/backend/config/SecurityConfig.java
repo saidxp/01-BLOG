@@ -70,7 +70,12 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll() 
                                                 .requestMatchers(HttpMethod.GET,"/api/users/**").permitAll()
                                                 .requestMatchers("/media/**").permitAll() 
-                                                 .requestMatchers("/ws/**").permitAll() 
+                                                .requestMatchers("/ws/**").permitAll() 
+                                                .requestMatchers(
+                                                                "/api/v3/api-docs/**",
+                                                                "/api/swagger-ui/**",
+                                                                "/api/swagger-ui.html"
+                                                ).permitAll()
                                                 .requestMatchers(
                                                                 "/api/admin/**")
                                                 .hasRole("ADMIN")

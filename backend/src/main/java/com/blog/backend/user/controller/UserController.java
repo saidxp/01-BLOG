@@ -14,12 +14,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.blog.backend.auth.security.CustomUserDetails;
 
 import com.blog.backend.user.dto.UserProfileDto;
+import com.blog.backend.user.dto.UserSearchResultDto;
 import com.blog.backend.user.dto.UserDto;
 import com.blog.backend.user.model.User;
 import com.blog.backend.user.mapper.UserMapper;
 import com.blog.backend.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -62,5 +64,11 @@ public class UserController {
         UserProfileDto updated = userService.updateProfile(userDetails.getUser(), bio, avatar);
         return ResponseEntity.ok(updated);
     } 
-    // <<==>> \\ {<<==>>} <!>   
+
+    // <<==>> \\ {<<==>>} <!>
+    @GetMapping("/users/search")
+    public ResponseEntity<List<UserSearchResultDto>> searchUsers(
+            @RequestParam("q") String query) {
+        return ResponseEntity.ok(userService.searchUsers(query));
+    }
 }

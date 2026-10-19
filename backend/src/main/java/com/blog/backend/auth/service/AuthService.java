@@ -2,6 +2,8 @@ package com.blog.backend.auth.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,8 +18,9 @@ import com.blog.backend.auth.security.CustomUserDetails;
 import com.blog.backend.auth.security.JwtService;
 import com.blog.backend.exception.InvalidCredentialsException;
 import com.blog.backend.exception.UserAlreadyExistsException;
+import com.blog.backend.exception.AccountBannedException;
 import com.blog.backend.user.model.User;
-import com.blog.backend.user.repository.UserRepository; 
+import com.blog.backend.user.repository.UserRepository;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,71 +30,54 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    // still 
     private final JwtService jwtService;
     private final AuthMapper authMapper;
     private final Normalizer normalizer;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     @Transactional
     public Pair<RegisterResponse, String> register(RegisterRequest request) {
-
         String normalizedUsername = normalizer.normalizeUsername(request.getUsername());
         String normalizedEmail = normalizer.normalizeEmail(request.getEmail());
-
         if (userRepository.existsByUsername(normalizedUsername)) {
             throw new UserAlreadyExistsException("Username Is Already Taken");
         }
-
         if (userRepository.existsByEmail(normalizedEmail)) {
             throw new UserAlreadyExistsException("Email Is Already Registered");
         }
-
         String passwordHash = passwordEncoder.encode(request.getPassword());
-
         User user = User.builder()
                 .username(normalizedUsername)
                 .email(normalizedEmail)
                 .passwordHash(passwordHash)
                 .build();
-
         User savedUser = userRepository.save(user);
-        
-        return Pair.of(authMapper.toRegisterResponse(savedUser), jwtService.generateAccessToken(new CustomUserDetails(savedUser)));
+        return Pair.of(authMapper.toRegisterResponse(savedUser),
+                jwtService.generateAccessToken(new CustomUserDetails(savedUser)));
     }
 
     @Transactional
-    public  Pair<LoginResponse, String> login(LoginRequest request) {
-
+    public Pair<LoginResponse, String> login(LoginRequest request) {
         String identifier = normalizer.normalizeUsername(request.getIdentifier());
-
-        Authentication authentication
-                = new UsernamePasswordAuthenticationToken(
-                        identifier,
-                        request.getPassword()
-                );
-                
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                identifier,
+                request.getPassword());
         Authentication authenticated;
-
         try {
             authenticated = authenticationManager.authenticate(authentication);
+        } catch (LockedException e) {
+            throw new AccountBannedException("Your account has been banned talk with ba33iss");
+        } catch (DisabledException e) {
+            throw new AccountBannedException("Your account has been banned talk with ba33iss");
         } catch (BadCredentialsException e) {
-
             throw new InvalidCredentialsException(
-                    "Invalid email or password"
-            );
+                    "Invalid email or password");
         }
-
-        CustomUserDetails principal
-                = (CustomUserDetails) authenticated.getPrincipal();
+        CustomUserDetails principal = (CustomUserDetails) authenticated.getPrincipal();
+        User user = principal.getUser();
         String token = jwtService.generateAccessToken(principal);
-        // Her I Will Set HttpOnly Cookie For The Access Token (!!) 
-
-        // It's Make Sense Will Return in User (!!) \\  
-        User user = principal.getUser();  
         return Pair.of(authMapper.toLoginResponse(user), token);
-
-    }
+    } // {} \\ {<->}.. {<->} \\ // {}
 }

@@ -1,41 +1,52 @@
 <article class="post-card" [attr.aria-labelledby]="'post-title-' + post().id">
   @if (post().mediaUrl && isImageMedia()) {
-    <a [routerLink]="['/post', post().id]" class="post-media" tabindex="-1" aria-hidden="true">
-      <img [src]="post().mediaUrl" [alt]="post().title" loading="lazy" />
-    </a>
+  <a [routerLink]="['/post', post().id]" class="post-media" tabindex="-1" aria-hidden="true">
+    <img [src]="post().mediaUrl" [alt]="post().title" loading="lazy" />
+  </a>
   } @else if (post().mediaUrl && isVideoMedia()) {
-    <div class="post-media post-media--video">
-      <video [src]="post().mediaUrl" controls preload="metadata" playsinline [attr.aria-label]="post().title"></video>
-    </div>
+  <div class="post-media post-media--video">
+    <video [src]="post().mediaUrl" controls preload="metadata" playsinline [attr.aria-label]="post().title"></video>
+  </div>
   }
 
   <div class="post-card__body">
     <div class="post-author">
       @if (post().avatarUrl) {
-        <img class="avatar-01 avatar-01--sm" [src]="post().avatarUrl" [alt]="post().authorUsername" loading="lazy" />
+      <img class="avatar-01 avatar-01--sm" [src]="post().avatarUrl" [alt]="post().authorUsername" loading="lazy" />
       } @else {
-        <span class="avatar-01 avatar-01--sm" aria-hidden="true">{{ post().authorUsername.charAt(0).toUpperCase() }}</span>
+      <span class="avatar-01 avatar-01--sm" aria-hidden="true">{{ post().authorUsername.charAt(0).toUpperCase()
+        }}</span>
       }
 
       <div class="post-author__meta">
-        <span class="post-author__name">{{ post().authorUsername }}</span>
-        <time [attr.datetime]="post().createdAt.toISOString()">{{ post().createdAt | date: 'MMM d, y' }}</time>
-      </div>
+        <a class="post-author__name" [routerLink]="['/profile', post().authorUsername]">
+          {{ post().authorUsername }}
+        </a>
+        
+        <time [attr.datetime]="post().createdAt.toISOString()">
+          {{ post().createdAt | date: 'MMM d, y' }}
+        </time>
     </div>
+  </div>
 
-    <a [routerLink]="['/post', post().id]" class="post-title-link">
-      <h2 [id]="'post-title-' + post().id">{{ post().title }}</h2>
-    </a>
+  <a [routerLink]="['/post', post().id]" class="post-title-link">
+    <h2 [id]="'post-title-' + post().id">{{ post().title }}</h2>
+  </a>
 
-    <div class="post-stats" aria-label="Post activity">
-      <span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" /></svg>
-        {{ post().likesCount }} <span class="stat-label">likes</span>
-      </span>
-      <span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z" /></svg>
-        {{ post().commentsCount }} <span class="stat-label">comments</span>
-      </span>
-    </div>
+  <div class="post-stats" aria-label="Post activity">
+    <span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" />
+      </svg>
+      {{ post().likesCount }} <span class="stat-label">likes</span>
+    </span>
+    <span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z" />
+      </svg>
+      {{ post().commentsCount }} <span class="stat-label">comments</span>
+    </span>
+  </div>
   </div>
 </article>

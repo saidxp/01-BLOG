@@ -50,6 +50,18 @@ public class PostService {
                 .user(owner)
                 .title(title)
                 .content(content);
+
+
+        // Protected against invalid title and content
+        if (title == null || title.isBlank() || title.length() > 200) {
+            throw new IllegalArgumentException("Invalid title");
+        }
+
+        if (content == null || content.isBlank() || content.length() > 50_000) {
+            throw new IllegalArgumentException("Invalid content");
+        }
+        
+        // <<==>> \\ {<<!!>>}
         if (mediaFile != null && !mediaFile.isEmpty()) {
             MediaType mediaType = validator.validateAndDetectType(mediaFile);
 
@@ -86,7 +98,7 @@ public class PostService {
 
     }
 
-    // << GET POSTS BY SUBSCRIP TO >> \\ 
+    // << GET POSTS BY SUBSCRIP TO >> \\
     public Page<PostDto> getPostBysubscribeTo(
             String username,
             Pageable pageable) {

@@ -4,6 +4,7 @@ import { AuthLayoutComponent } from './presentation/shared/layouts/auth-layout/a
 import { AdminLayoutComponent } from './presentation/shared/layouts/admin-layout/admin-layout.component';
 import { adminGuard, authGuard } from './application/auth/guards/auth.guards';
 
+
 export const routes: Routes = [
   {
     path: '',
@@ -69,7 +70,7 @@ export const routes: Routes = [
       }
     ],
   },
-  
+
   {
     path: '',
     component: AuthLayoutComponent,
@@ -86,4 +87,11 @@ export const routes: Routes = [
       },
     ],
   },  // <<==>> \\ {(<|<->|>)} 
+
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./presentation/shared/components/notfound/not-found.component')
+        .then((m) => m.NotFoundComponent),
+  },
 ]; 

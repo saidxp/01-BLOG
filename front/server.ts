@@ -15,12 +15,12 @@ export function app(): express.Express {
 
 
   const commonEngine = new CommonEngine({
-    allowedHosts: ['localhost'],
+    allowedHosts: ['localhost', '127.0.0.1', '192.168.11.225'],
   });
 
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
-
+  
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser

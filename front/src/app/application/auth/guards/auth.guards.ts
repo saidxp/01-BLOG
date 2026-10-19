@@ -12,11 +12,13 @@ export const authGuard: CanActivateFn = (_route, state) => {
 };
 
 export const adminGuard: CanActivateFn = (_route, state) => {
-  const user = inject(AuthState).currentUser();
 
+  const user = inject(AuthState).currentUser(); // 
+  console.log("hello ==>>>>>>>>>  users", user);  // {<->} 
   if (!user) {
     return inject(AuthNavigationService).loginUrl(state.url);
   }
 
-  return user.role === Role.ADMIN ? true : inject(Router).parseUrl('/');
+  return user.role === Role.ADMIN ? true : inject(Router).parseUrl('/'); 
+  
 };

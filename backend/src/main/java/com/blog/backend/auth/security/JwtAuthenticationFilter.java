@@ -2,10 +2,13 @@ package com.blog.backend.auth.security;
 
 import java.io.IOException;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -55,18 +58,55 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Context (!!)
         if (username != null
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
+            try {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                // <<===>> \\ <<==>> \\ (!<->!)....
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            // <<===>> \\ <<==>> \\ (!<->!)....
-            if (jwtService.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities());
-                SecurityContextHolder
-                        .getContext()
-                        .setAuthentication(authentication);
+                if (!userDetails.isAccountNonLocked()) {
+                    SecurityContextHolder.clearContext();
+
+                    ResponseCookie cookie = ResponseCookie.from("jwt", "")
+                            .httpOnly(true)
+                            .secure(false)
+                            .sameSite("Lax")
+                            .path("/")
+                            .maxAge(0)
+                            .build();
+
+                    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+                    filterChain.doFilter(request, response);
+                    return; 
+                    
+                }
+                if (jwtService.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities());
+                    SecurityContextHolder
+                            .getContext()
+                            .setAuthentication(authentication);
+                }
+
+            } catch (UsernameNotFoundException ex) {
+
+                SecurityContextHolder.clearContext();
+
+                ResponseCookie cookie = ResponseCookie.from("jwt", "")
+                        .httpOnly(true)
+                        .secure(false)
+                        .sameSite("Lax")
+                        .path("/")
+                        .maxAge(0)
+                        .build();
+
+                response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+                filterChain.doFilter(request, response);
+                return;
             }
+            // {} <-> {}
         }
         filterChain.doFilter(request, response);
     }

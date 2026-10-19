@@ -1,32 +1,89 @@
 <section class="auth-card" aria-labelledby="register-title">
   <a class="auth-brand" href="/" aria-label="01Blog home"><span aria-hidden="true">01</span>Blog</a>
+
   <header class="auth-card__header">
     <p class="auth-card__eyebrow">Join the community</p>
     <h1 id="register-title">Create your account</h1>
     <p>A calm space to publish ideas and follow developers you trust.</p>
   </header>
+
   <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
     <div class="field-group">
-      <label class="field-label" for="name">Name</label>
-      <input class="field-control" id="name" type="text" formControlName="name" autocomplete="name" [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid" />
-      @if (form.controls.name.touched && form.controls.name.invalid) { <p class="field-error-01">Enter your name (at least 2 characters).</p> }
+      <label class="field-label" for="name">Username</label>
+      <input
+        class="field-control"
+        id="name"
+        type="text"
+        formControlName="name"
+        autocomplete="name"
+        maxlength="20"
+        [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
+      />
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        <p class="field-error-01">Enter your username (at least between 3 and 20 characters).</p>
+      }
     </div>
+
     <div class="field-group">
       <label class="field-label" for="email">Email address</label>
-      <input class="field-control" id="email" type="email" formControlName="email" autocomplete="email" [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid" />
-      @if (form.controls.email.touched && form.controls.email.invalid) { <p class="field-error-01">Enter a valid email address.</p> }
+      <input
+        class="field-control"
+        id="email"
+        type="email"
+        formControlName="email"
+        autocomplete="email"
+        maxlength="100"
+        [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid"
+      />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <p class="field-error-01">Enter a valid email address.</p>
+      }
     </div>
+
     <div class="field-group">
       <label class="field-label" for="password">Password</label>
-      <input class="field-control" id="password" type="password" formControlName="password" autocomplete="new-password" [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid" />
-      @if (form.controls.password.touched && form.controls.password.invalid) { <p class="field-error-01">Password must be at least 8 characters.</p> }
+      <input
+        class="field-control"
+        id="password"
+        type="password"
+        formControlName="password"
+        autocomplete="new-password"
+        maxlength="100"
+        [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid"
+      />
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <p class="field-error-01">Password must be at least 8 characters.</p>
+      }
     </div>
+
     <div class="field-group">
       <label class="field-label" for="confirmPassword">Confirm password</label>
-      <input class="field-control" id="confirmPassword" type="password" formControlName="confirmPassword" autocomplete="new-password" [attr.aria-invalid]="form.controls.confirmPassword.touched && form.errors?.['passwordsMismatch']" />
-      @if (form.controls.confirmPassword.touched && form.errors?.['passwordsMismatch']) { <p class="field-error-01">Passwords do not match.</p> }
+      <input
+        class="field-control"
+        id="confirmPassword"
+        type="password"
+        formControlName="confirmPassword"
+        autocomplete="new-password"
+        maxlength="100"
+        [attr.aria-invalid]="form.controls.confirmPassword.touched && form.errors?.['passwordsMismatch']"
+      />
+      @if (form.controls.confirmPassword.touched && form.errors?.['passwordsMismatch']) {
+        <p class="field-error-01">Passwords do not match.</p>
+      }
     </div>
-    @if (errorMessage()) { <p class="form-alert" role="alert">{{ errorMessage() }}</p> }
-    <button class="button-01 button-01--primary auth-submit" type="submit" [disabled]="isLoading()">{{ isLoading() ? 'Creating account…' : 'Create account' }}</button>
+
+    @if (errorMessage()) {
+      <p class="form-alert" role="alert">{{ errorMessage() }}</p>
+    }
+
+    <button
+      class="button-01 button-01--primary auth-submit"
+      type="submit"
+      [disabled]="isLoading()"
+    >
+      {{ isLoading() ? 'Creating account…' : 'Create account' }}
+    </button>
+
   </form>
 </section>
