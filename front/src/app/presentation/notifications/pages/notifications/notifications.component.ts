@@ -5,6 +5,7 @@ import { GetNotificationsUseCase } from '../../../../application/notification/us
 import { MarkNotificationReadUseCase } from '../../../../application/notification/use-cases/mark-notification-read.use-case';
 import { NotificationState } from '../../../../application/notification/state/notification-state.service';
 import { Notification } from '../../../../domain/notification/entity/notification.entity';
+import { AuthNavigationService } from '../../../../application/auth/services/auth-navigation.service';
 
 @Component({
   selector: 'app-notifications',
@@ -18,6 +19,7 @@ export class NotificationsComponent implements OnInit {
   private readonly markNotificationReadUseCase = inject(MarkNotificationReadUseCase);
   private readonly notificationState = inject(NotificationState);
   private readonly router = inject(Router);
+  private readonly authNavigation = inject(AuthNavigationService);
 
   // read directly from shared state, instead of a local signal
   readonly notifications = this.notificationState.notifications;
@@ -28,12 +30,14 @@ export class NotificationsComponent implements OnInit {
   
   private currentPage = 0;
   private totalPages = 1;
+  private readonly markingRead = new Set<number>();
 
   ngOnInit(): void {
     this.loadNotifications(0, false, this.isLoading);
   }
 
   loadMore(): void {
+    if (this.isLoadingMore()) return;
     if (this.currentPage + 1 < this.totalPages) {
       this.loadNotifications(this.currentPage + 1, true, this.isLoadingMore);
     }
@@ -60,22 +64,36 @@ export class NotificationsComponent implements OnInit {
         loadingSignal.set(false);
       },
       error: (err) => {
-        this.errorMessage.set(err.message);
         loadingSignal.set(false);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        this.errorMessage.set(err.error?.message ?? 'Could not load notifications.');
       },
     });
   }
 
   onNotificationClick(notification: Notification): void {
-    if (!notification.read) {
+    if (!notification.read && !this.markingRead.has(notification.id)) {
+      this.markingRead.add(notification.id);
       this.markNotificationReadUseCase.execute(notification.id).subscribe({
         next: () => {
+          this.markingRead.delete(notification.id);
           // update the shared state's list, marking this one read
           const updated = this.notifications().map((n) =>
             n.id === notification.id ? { ...n, read: true } : n
           );
           this.notificationState.setNotifications(updated);
           this.notificationState.decrement();
+        },
+        error: (err) => {
+          this.markingRead.delete(notification.id);
+          if (err.status === 401) {
+            this.authNavigation.handle401(err);
+            return;
+          }
+          this.errorMessage.set(err.error?.message ?? 'Could not mark this notification as read.');
         },
       });
     }

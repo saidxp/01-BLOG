@@ -58,8 +58,8 @@ export class UserPostListComponent implements OnInit {
         loadingSignal.set(false);
       },
       error: (err) => {
-        this.errorMessage.set(err.message);
         loadingSignal.set(false);
+        this.errorMessage.set(err.error?.message ?? 'Could not load this user’s posts.');
       },
     });
   }

@@ -833,20 +833,33 @@ Permanently delete a user.
 
 ---
 
-#### `GET /api/admin/users/reports`
-View all user reports (paginated).
+#### `GET /api/admin/reports`
+View all pending reports (paginated). Single canonical admin report listing endpoint.
 
+**Access:** 🔒 `ROLE_ADMIN`
 **Query Params:** Pageable (default `size=20`)
 
-**Response:** `200 OK` — Paginated `AdminReportDto`
+**Response:** `200 OK` — Paginated `ReportDto`:
+```json
+{
+  "id": 32,
+  "reporterUsername": "alice",
+  "reportedUsername": "bob",
+  "postId": null,
+  "reason": "spam content",
+  "createdAt": "2026-10-25T22:19:24",
+  "status": "PENDING",
+  "type": "USER"
+}
+```
 
 ---
 
-#### `GET /api/admin/reports`
-Alternative endpoint for all reports (via `ReportController`).
+#### `POST /api/admin/reports/resolve/{id}`
+Mark a report as `RESOLVED`.
 
-**Access:** 🔒 `ROLE_ADMIN`  
-**Response:** `200 OK` — Paginated `ReportDto`
+**Access:** 🔒 `ROLE_ADMIN`
+**Responses:** `200 OK` — body `"RESOLVED"` · `404` report not found · `409` already resolved
 
 ---
 

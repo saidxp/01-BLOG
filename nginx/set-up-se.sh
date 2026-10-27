@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-IP="${1:-10.1.13.3}"
+IP="${1:-192.168.11.235}"
 CERT_DIR="$(dirname "$0")/certs"
 
 mkdir -p "$CERT_DIR"
@@ -11,10 +11,12 @@ openssl req -x509 -nodes -days 365 \
     -keyout "$CERT_DIR/localhost.key" \
     -out "$CERT_DIR/localhost.crt" \
     -subj "/CN=$IP" \
-    -addext "subjectAltName=IP:$IP"
-
+    -addext "subjectAltName=IP:$IP,DNS:localhost,IP:127.0.0.1" \
+    -addext "basicConstraints=critical,CA:TRUE" \
+    -addext "keyUsage=critical,digitalSignature,keyCertSign" \
+    -addext "extendedKeyUsage=serverAuth"
+    
+chmod 644 "$CERT_DIR/localhost.crt"
 chmod 600 "$CERT_DIR/localhost.key"
 
-echo "Certificate generated successfully for IP: $IP"
-echo "Certificate: $CERT_DIR/localhost.crt"
-echo "Private key: $CERT_DIR/localhost.key"
+echo "Certificate generated for IP: $IP" 

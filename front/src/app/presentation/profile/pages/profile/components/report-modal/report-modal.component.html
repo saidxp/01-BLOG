@@ -1,16 +1,20 @@
-<button class="button-01 button-01--danger report-trigger" type="button" (click)="open()">Report user</button>
+<button class="button-01 button-01--danger report-trigger" type="button" (click)="open()">
+  {{ isPostReport() ? 'Report post' : 'Report user' }}
+</button>
 
 @if (isOpen()) {
   <div class="modal-backdrop" (click)="close()">
-    <div class="modal-content" role="dialog" aria-modal="true" [attr.aria-label]="'Report ' + username()" (click)="$event.stopPropagation()">
+    <div class="modal-content" role="dialog" aria-modal="true"
+         [attr.aria-label]="isPostReport() ? 'Report post' : 'Report ' + username()"
+         (click)="$event.stopPropagation()">
 
       @if (step() === 'form') {
-        <h3>Report {{ username() }}</h3>
+        <h3>{{ isPostReport() ? 'Report this post' : 'Report ' + username() }}</h3>
         <textarea class="form-control"
           [ngModel]="reason()"
           (ngModelChange)="reason.set($event)"
           rows="4"
-          placeholder="Why are you reporting this user?"
+          [placeholder]="isPostReport() ? 'Why are you reporting this post?' : 'Why are you reporting this user?'"
         ></textarea>
         <div class="modal-actions">
           <button class="button-01 button-01--secondary" type="button" (click)="close()">Cancel</button>
@@ -20,7 +24,11 @@
 
       @if (step() === 'confirm') {
         <h3>Confirm report</h3>
-        <p>Are you sure you want to report <strong>{{ username() }}</strong>?</p>
+        @if (isPostReport()) {
+          <p>Are you sure you want to report this post by <strong>{{ username() }}</strong>?</p>
+        } @else {
+          <p>Are you sure you want to report <strong>{{ username() }}</strong>?</p>
+        }
         <p class="reason-preview">"{{ reason() }}"</p>
         @if (errorMessage()) {
           <p class="error">{{ errorMessage() }}</p>

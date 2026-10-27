@@ -35,8 +35,8 @@ export class ProfileComponent implements OnInit {
                 console.log("State Of Profile ", profile);
             },
             error: (err) => {
-                this.errorMessage.set(err.message);
                 this.isLoading.set(false);
+                this.errorMessage.set(err.error?.message ?? (err.status === 404 ? 'User not found.' : 'Could not load this profile.'));
             },
         });
     }

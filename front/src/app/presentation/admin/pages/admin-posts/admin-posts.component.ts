@@ -5,7 +5,8 @@ import { AdminDeletePostUseCase } from  '../../../../application/admin/use-cases
 import { AdminPost } from '../../../../domain/admin/entity/admin-post.entity';
 import { RouterLink } from '@angular/router';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
-
+import { AuthNavigationService } from '../../../../application/auth/services/auth-navigation.service';
+import { ToastService } from '../../../../application/auth/services/toast.service';
 @Component({
   selector: 'app-admin-posts',
   standalone: true,
@@ -17,10 +18,13 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
 export class AdminPostsComponent implements OnInit {
   private readonly getAdminPostsUseCase = inject(GetAdminPostsUseCase);
   private readonly adminDeletePostUseCase = inject(AdminDeletePostUseCase);
+  private readonly authNavigation = inject(AuthNavigationService);
+  private readonly toastservice = inject(ToastService);
 
   readonly posts = signal<AdminPost[]>([]);
   readonly isLoading = signal(true);
   readonly errorMessage = signal<string | null>(null);
+  readonly actionErrorMessage = signal<string | null>(null);
   readonly pendingDelete = signal<AdminPost | null>(null);
   readonly isDeleteSubmitting = signal(false);
 
@@ -51,8 +55,12 @@ export class AdminPostsComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.errorMessage.set(err.message);
         this.isLoading.set(false);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        this.errorMessage.set(err.error?.message ?? 'Could not load posts.');
       },
     });
   }
@@ -74,18 +82,30 @@ export class AdminPostsComponent implements OnInit {
       : '';
   }
 
-  confirmDeletePost(): void {
+  confirmDeletePost(): void { 
+
     const post = this.pendingDelete();
     if (!post || this.isDeleteSubmitting()) return;
 
+    this.actionErrorMessage.set(null);
     this.isDeleteSubmitting.set(true);
-    this.adminDeletePostUseCase.execute(post.id).subscribe({
+    this.adminDeletePostUseCase.execute(post.id).subscribe({ 
       next: () => {
         this.posts.update((list) => list.filter((p) => p.id !== post.id));
         this.isDeleteSubmitting.set(false);
         this.pendingDelete.set(null);
+        this.toastservice.success("post deleted");
+      }, 
+      error: (err) => {
+        this.isDeleteSubmitting.set(false);
+        this.pendingDelete.set(null);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        this.actionErrorMessage.set(err.error?.message ?? 'Could not delete this post.');
       },
-      error: () => this.isDeleteSubmitting.set(false),
     });
-  }
+  } 
+  // {<!!>}
 }

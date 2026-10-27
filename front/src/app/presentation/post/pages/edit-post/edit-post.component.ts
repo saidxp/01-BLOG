@@ -3,6 +3,8 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GetPostByIdUseCase } from '../../../../application/post/use-cases/get-post-by-id.use-case';
 import { UpdatePostUseCase } from '../../../../application/post/use-cases/update-post.use-case';
+import { AuthNavigationService } from '../../../../application/auth/services/auth-navigation.service';
+import { ToastService } from '../../../../application/auth/services/toast.service'
 
 @Component({
   selector: 'app-edit-post',
@@ -19,12 +21,15 @@ export class EditPostComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly getPostByIdUseCase = inject(GetPostByIdUseCase);
   private readonly updatePostUseCase = inject(UpdatePostUseCase);
+  private readonly authNavigation = inject(AuthNavigationService);
+  private readonly toast = inject(ToastService);
 
   readonly contentTextarea = viewChild.required<ElementRef<HTMLTextAreaElement>>('contentTextarea');
 
   readonly isLoading = signal(true);
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly coverPreviewUrl = signal<string | null>(null);
   selectedFile: File | null = null;
 
   private postId!: number;
@@ -40,11 +45,17 @@ export class EditPostComponent implements OnInit {
     this.getPostByIdUseCase.execute(this.postId).subscribe({
       next: (post) => {
         this.form.patchValue({ title: post.title, content: post.content });
+        this.initialMediaUrl = post.mediaUrl ?? null;
+        this.coverPreviewUrl.set(this.initialMediaUrl);
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.errorMessage.set(err.message);
         this.isLoading.set(false);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        this.errorMessage.set(err.error?.message ?? (err.status === 404 ? 'Post not found.' : 'Could not load this post.'));
       },
     });
   }
@@ -52,7 +63,12 @@ export class EditPostComponent implements OnInit {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.selectedFile = input.files?.[0] ?? null;
+    const current = this.coverPreviewUrl();
+    if (current?.startsWith('blob:')) URL.revokeObjectURL(current);
+    this.coverPreviewUrl.set(this.selectedFile ? URL.createObjectURL(this.selectedFile) : this.initialMediaUrl);
   }
+
+  private initialMediaUrl: string | null = null;
 
   wrapSelection(before: string, after: string = before): void {
     const textarea = this.contentTextarea().nativeElement;
@@ -109,7 +125,11 @@ export class EditPostComponent implements OnInit {
         this.insertAtCursor(snippet);
       },
       error: (err) => {
-        this.errorMessage.set(err.message);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        this.errorMessage.set(err.error?.message ?? 'Could not upload this media.');
       },
     });
   }
@@ -158,10 +178,12 @@ export class EditPostComponent implements OnInit {
 
   submit(): void {
 
+    if (this.isSubmitting()) return;
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
-    }  
+    } // {<!!>} \\ {<!!>}  \\  
     // <<==>> \\ (!)... 
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
@@ -169,11 +191,18 @@ export class EditPostComponent implements OnInit {
     this.updatePostUseCase.execute(this.postId, title, content, this.selectedFile).subscribe({
       next: (id) => {
         this.isSubmitting.set(false);
+        this.toast.success('Post updated!');
         this.router.navigateByUrl(`/post/${id}`);
       },
       error: (err) => {
         this.isSubmitting.set(false);
-        this.errorMessage.set(err.message);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        const message = err.error?.message ?? 'Could not update the post.';
+        this.errorMessage.set(message);
+        this.toast.error(message);
       }, // <<==>> \\ (<!<->!>)
     }); // <<===>>> \\) 
   }

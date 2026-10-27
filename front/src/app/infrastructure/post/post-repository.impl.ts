@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, map, catchError, throwError, tap} from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, map, tap} from 'rxjs';
 import { PostRepository } from '../../domain/post/repositories/post.repository';
 import { toPostEntity } from './mapper/post.mapper';
 import { environment } from '../../../environments/environment.development'; 
@@ -23,10 +23,7 @@ export class PostRepositoryImpl extends PostRepository {
         totalPages: pageDto.totalPages,
         currentPage: pageDto.number,
       })),
-      tap((post)=> console.log('posts shape', post)),
-      catchError((err: HttpErrorResponse) => {
-        return throwError(() => new Error('Failed to load feed.'));
-      })
+      tap((post)=> console.log('posts shape', post))
     );
     // <<==>> \\ (<!!>)
   } 
@@ -45,10 +42,7 @@ export class PostRepositoryImpl extends PostRepository {
         totalPages: pageDto.totalPages,
         currentPage: pageDto.number,
       })),
-      tap((post)=> console.log('posts shape', post)),
-      catchError((err: HttpErrorResponse) => {
-        return throwError(() => new Error('Failed to load feed.'));
-      })
+      tap((post)=> console.log('posts shape', post))
     );
   }
 
@@ -63,20 +57,14 @@ export class PostRepositoryImpl extends PostRepository {
         posts: pageDto.content.map(toPostEntity),
         totalPages: pageDto.totalPages,
         currentPage: pageDto.number,
-      })),
-      catchError((err: HttpErrorResponse) =>{
-         console.error('REAL ERROR:', err);  
-        return throwError(() => new Error('Failed to load posts.'));
-      })
+      }))
     );
   } 
 
   // <<==>> \\ (<!!>) \\ // <<==>> \\   
   override deletePost(id: number): Observable<void> {
     // reuses the EXISTING post-delete endpoint, which already supports admin permission
-    return this.http
-      .delete<void>(`${environment.apiUrl}/api/posts/${id}`, { withCredentials: true })
-      .pipe(catchError(() => throwError(() => new Error('Failed to delete post.'))));
+    return this.http.delete<void>(`${environment.apiUrl}/api/posts/${id}`, { withCredentials: true });
   }
   
 }

@@ -1,88 +1,86 @@
 <section class="article-page">
   <div class="container-xl article-page__container">
     @if (isLoading()) {
-      <div class="article-skeleton" aria-label="Loading post">
-        <div class="skeleton-line skeleton-line--short"></div>
-        <div class="skeleton-line skeleton-line--title"></div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line"></div>
-      </div>
+    <div class="article-skeleton" aria-label="Loading post">
+      <div class="skeleton-line skeleton-line--short"></div>
+      <div class="skeleton-line skeleton-line--title"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+    </div>
     } @else if (errorMessage()) {
-      <div class="state-panel state-panel--error" role="alert">
-        <div class="state-panel__content">
-          <p class="state-panel__title">The post could not be loaded</p>
-          <p class="state-panel__message">{{ errorMessage() }}</p>
-        </div>
+    <div class="state-panel state-panel--error" role="alert">
+      <div class="state-panel__content">
+        <p class="state-panel__title">The post could not be loaded</p>
+        <p class="state-panel__message">{{ errorMessage() }}</p>
       </div>
+    </div>
     } @else if (post(); as p) {
-      <div class="article-layout">
-        <aside class="article-actions" aria-label="Post reactions">
-          <app-like-button
-            class="article-like"
-            [postId]="p.id"
-            [initialLiked]="p.liked"
-            [initialLikeCount]="p.likedCount"
-          />
-          <app-comment-count [commentCount]="p.commentCount" />
-        </aside>
+    <div class="article-layout">
+      <aside class="article-actions" aria-label="Post reactions">
+        <app-like-button class="article-like" [postId]="p.id" [initialLiked]="p.liked"
+          [initialLikeCount]="p.likedCount" />
+        <app-comment-count [commentCount]="p.commentCount" />
+      </aside>
 
-        <div class="article-layout__main">
-          <article class="article-surface">
-        @if (p.mediaUrl && isImageMedia(p.mediaType)) {
+      <div class="article-layout__main">
+        <article class="article-surface">
+          @if (p.mediaUrl && isImageMedia(p.mediaType)) {
           <div class="article-cover">
             <img [src]="p.mediaUrl" [alt]="p.title" />
           </div>
-        } @else if (p.mediaUrl && isVideoMedia(p.mediaType)) {
+          } @else if (p.mediaUrl && isVideoMedia(p.mediaType)) {
           <div class="article-cover article-cover--video">
             <video [src]="p.mediaUrl" controls preload="metadata" playsinline [attr.aria-label]="p.title"></video>
           </div>
-        }
+          }
 
-        <header class="article-header">
-          <p class="article-kicker">Published on 01Blog</p>
-          <h1>{{ p.title }}</h1>
+          <header class="article-header">
+            <p class="article-kicker">Published on 01Blog</p>
+            <h1>{{ p.title }}</h1>
 
-          <div class="article-byline">
-            <span class="avatar-01 avatar-01--md" aria-hidden="true">{{ p.authorUsername.charAt(0).toUpperCase() }}</span>
-            <div class="article-byline__copy">
-              <a [routerLink]="['/profile', p.authorUsername]">{{ p.authorUsername }}</a>
-              <time [attr.datetime]="p.createdAt.toISOString()">{{ p.createdAt | date: 'MMMM d, y' }}</time>
-            </div>
-
-            @if (p.owner) {
-              <div class="owner-actions" aria-label="Post owner actions">
-                <a class="button-01 button-01--secondary" [routerLink]="['/post', p.id, 'edit']">Edit</a>
-                <button class="button-01 button-01--danger" type="button" (click)="showDeleteConfirm.set(true)">Delete</button>
+            <div class="article-byline">
+              <span class="avatar-01 avatar-01--md" aria-hidden="true">{{ p.authorUsername.charAt(0).toUpperCase()
+                }}</span>
+              <div class="article-byline__copy">
+                <a [routerLink]="['/profile', p.authorUsername]">{{ p.authorUsername }}</a>
+                <time [attr.datetime]="p.createdAt.toISOString()">{{ p.createdAt | date: 'MMMM d, y' }}</time>
               </div>
-            }
+
+              <div class="owner-actions" aria-label="Post owner actions">
+                @if (p.owner || isAdmin()) {
+                <button class="button-01 button-01--danger" type="button"
+                  (click)="showDeleteConfirm.set(true)">Delete</button>
+                }
+                @if (p.owner) {
+                <a class="button-01 button-01--secondary" [routerLink]="['/post', p.id, 'edit']">Edit</a>
+                } @else {
+                <app-report-modal class="article-report" [username]="p.authorUsername" [postId]="p.id" />
+                }
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content markdown-body" [innerHTML]="renderedContent()"></div>
+        </article>
+
+        <section class="discussion-section" aria-labelledby="discussion-title">
+          <div class="discussion-section__heading">
+            <p>Discussion</p>
+            <h2 id="discussion-title">Join the conversation</h2>
           </div>
-        </header>
-
-            <div class="article-content markdown-body" [innerHTML]="renderedContent()"></div>
-          </article>
-
-          <section class="discussion-section" aria-labelledby="discussion-title">
-            <div class="discussion-section__heading">
-              <p>Discussion</p>
-              <h2 id="discussion-title">Join the conversation</h2>
-            </div>
-            <div class="discussion-surface">
-              <app-submit-comment [postId]="p.id" (commentAdded)="onCommentAdded($event)" />
-              <app-comment-list [postId]="p.id" />
-            </div>
-          </section>
-        </div>
+          <div class="discussion-surface">
+            <app-submit-comment [postId]="p.id" (commentAdded)="onCommentAdded($event)" />
+            <app-comment-list [postId]="p.id" />
+          </div>
+        </section>
       </div>
+    </div>
 
-      @if (p.owner) {
-        <app-confirm-modal
-          [isOpen]="showDeleteConfirm()"
-          title="Delete post?"
-          message="This post will be permanently deleted."
-          (confirmed)="deletePost(p.id); showDeleteConfirm.set(false)"
-          (cancelled)="showDeleteConfirm.set(false)"
-        />
-      }
+    @if (p.owner|| isAdmin()) {
+    <app-confirm-modal [isOpen]="showDeleteConfirm()" title="Delete post?"
+      message="This post will be permanently deleted." (confirmed)="deletePost(p.id); showDeleteConfirm.set(false)"
+      (cancelled)="showDeleteConfirm.set(false)" />
+    }
     }
   </div>
 </section>

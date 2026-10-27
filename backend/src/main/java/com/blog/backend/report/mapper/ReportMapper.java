@@ -16,7 +16,9 @@ public class ReportMapper {
                 report.getReportedUser().getUsername(),
                 postId,
                 report.getReason(),
-                report.getCreatedAt()
+                report.getCreatedAt(),
+                report.getStatus(),
+                report.getType()
         );
     }
 }

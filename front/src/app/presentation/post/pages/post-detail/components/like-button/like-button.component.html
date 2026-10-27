@@ -3,3 +3,4 @@
   <span>{{ liked() ? 'Liked' : 'Like' }}</span>
   <strong>{{ likeCount() }}</strong>
 </button>
+@if (errorMessage()) { <p class="form-alert" role="alert">{{ errorMessage() }}</p> }

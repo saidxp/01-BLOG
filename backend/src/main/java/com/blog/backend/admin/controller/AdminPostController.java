@@ -18,11 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AdminPostController {
 
     private final AdminService adminService;
-    // @GetMapping
-    // public Page<PostDto> getAllPosts(@PageableDefault(size = 20) Pageable
-    // pageable) {
-    // return adminService.getAllPosts(pageable);
-    // }
+
     @GetMapping
     public ResponseEntity<Page<AdminPostDto>> getAllPosts(@PageableDefault(size = 20) Pageable pageable) {
         Page<AdminPostDto> posts = adminService.getAllPosts(pageable);

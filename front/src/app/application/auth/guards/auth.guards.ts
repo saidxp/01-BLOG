@@ -13,8 +13,7 @@ export const authGuard: CanActivateFn = (_route, state) => {
 
 export const adminGuard: CanActivateFn = (_route, state) => {
 
-  const user = inject(AuthState).currentUser(); // 
-  console.log("hello ==>>>>>>>>>  users", user);  // {<->} 
+  const user = inject(AuthState).currentUser();
   if (!user) {
     return inject(AuthNavigationService).loginUrl(state.url);
   }

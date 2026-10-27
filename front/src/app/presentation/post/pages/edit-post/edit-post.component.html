@@ -35,7 +35,15 @@
       <div class="field-group upload-field">
         <label class="field-label" for="media">Replace cover <span>Optional</span></label>
         <p class="field-hint">Leave this empty to keep the current cover.</p>
-        <input class="field-control file-control" id="media" type="file" accept="image/*" (change)="onFileSelected($event)" />
+        <input class="field-control file-control" id="media" type="file" accept="image/*,image/heic,image/heif,image/avif,image/webp" (change)="onFileSelected($event)" />
+        @if (coverPreviewUrl()) {
+          <div class="cover-preview">
+            <img [src]="coverPreviewUrl()" alt="Cover image preview" />
+            <div class="cover-preview__actions">
+              <span class="field-hint">{{ selectedFile ? selectedFile.name : 'Current cover' }}</span>
+            </div>
+          </div>
+        }
       </div>
       @if (errorMessage()) { <p class="form-alert" role="alert">{{ errorMessage() }}</p> }
       <footer class="author-actions">

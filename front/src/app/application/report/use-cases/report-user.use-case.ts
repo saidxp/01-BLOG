@@ -6,8 +6,8 @@ import { ReportRepository } from '../../../domain/report/repository/report.repos
 export class ReportUserUseCase {
 
   private readonly reportRepository = inject(ReportRepository);
-  execute(username: string, reason: string): Observable<void> {
-    return this.reportRepository.reportUser(username, reason);
+  execute(username: string, reason: string, postid?: number): Observable<void> {
+    return this.reportRepository.reportUser(username, reason, postid);
   }
   
 }

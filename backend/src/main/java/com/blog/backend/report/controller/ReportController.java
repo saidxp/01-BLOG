@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequiredArgsConstructor
 public class ReportController {
@@ -31,9 +32,15 @@ public class ReportController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    // Single source for admin report listing (admin-guarded via /api/admin/** rule)
     @GetMapping("/api/admin/reports")
     public ResponseEntity<Page<ReportDto>> getAllReports(@PageableDefault(size = 20) Pageable pageable) {
         Page<ReportDto> reports = reportService.getAllReports(pageable).map(reportMapper::toDto);
         return ResponseEntity.ok(reports);
+    }
+
+    @PostMapping("/api/admin/reports/resolve/{id}")
+    public ResponseEntity<String> resolveReports(@PathVariable Long id) {
+        return ResponseEntity.ok(reportService.resolve(id));
     }
 }

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, map, catchError, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 import { SubscriptionRepository } from '../../domain/subscription/repository/subscription.repository';
 import { SubscriptionStatus } from '../../domain/subscription/entity/subscription-status.entity';
 import { SubscriptionStatusDto } from './dto/subscription-status.dto';
@@ -17,19 +17,13 @@ export class SubscriptionRepositoryImpl extends SubscriptionRepository {
 
   override subscribe(username: string): Observable<SubscriptionStatus> {
     return this.http.post<SubscriptionStatusDto>(this.url(username), {}, { withCredentials: true }).pipe(
-      map((dto) => new SubscriptionStatus(dto.subscribed, dto.subscriberCount)),
-      catchError((err: HttpErrorResponse) =>
-        throwError(() => new Error(err.error?.message ?? 'Failed to subscribe.'))
-      )
+      map((dto) => new SubscriptionStatus(dto.subscribed, dto.subscriberCount))
     );
   }
   
   override unsubscribe(username: string): Observable<SubscriptionStatus> {
     return this.http.delete<SubscriptionStatusDto>(this.url(username), { withCredentials: true }).pipe(
-      map((dto) => new SubscriptionStatus(dto.subscribed, dto.subscriberCount)),
-      catchError((err: HttpErrorResponse) =>
-        throwError(() => new Error(err.error?.message ?? 'Failed to unsubscribe.'))
-      )
+      map((dto) => new SubscriptionStatus(dto.subscribed, dto.subscriberCount))
      );
   }
 

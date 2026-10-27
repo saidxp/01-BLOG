@@ -27,8 +27,9 @@ export class LoginComponent {
     identifier: ['', [Validators.required, Validators.pattern(/\S/)]],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
-
+  
   submit(): void {
+    if (this.isLoading()) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -49,7 +50,9 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.message);
+        this.errorMessage.set(err.status === 401
+          ? 'Invalid email or password.'
+          : err.error?.message ?? 'Unable to sign in.');
       },
     });
   }

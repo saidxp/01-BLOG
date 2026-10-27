@@ -1,5 +1,5 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
-import { Subject, debounceTime, distinctUntilChanged, filter } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, switchMap, EMPTY } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { AuthState } from '../../../../application/auth/state/auth-state.service';
 import { GetUnreadCountUseCase } from '../../../../application/notification/use-cases/get-unread-count.use-case';
@@ -9,6 +9,7 @@ import { LogoutUseCase } from '../../../../application/auth/use-cases/logout.use
 import { ThemeService } from '../../../../application/them/themstate';
 import { UserSearchResult } from '../../../../domain/profile/entity/user-search-result.entity';
 import { SearchUsersUseCase } from '../../../../application/profile/use-cases/search-users.use-case';
+import { AuthNavigationService } from '../../../../application/auth/services/auth-navigation.service';
 
 @Component({
   selector: 'app-header',
@@ -27,12 +28,14 @@ export class HeaderComponent implements OnInit {
   private readonly webSocketNotificationService = inject(WebSocketNotificationService);
   private readonly logoutUseCase = inject(LogoutUseCase);
   private readonly searchUsersUseCase = inject(SearchUsersUseCase);
+  private readonly authNavigation = inject(AuthNavigationService);
 
 
   private readonly themeService = inject(ThemeService);
 
   isUserMenuOpen = signal(false);
   isMobileMenuOpen = signal(false)
+  readonly logoutErrorMessage = signal<string | null>(null);
 
   // Search Input <<===>> {<!-!>} .
   private searchInput$ = new Subject<string>();
@@ -71,6 +74,9 @@ export class HeaderComponent implements OnInit {
     if (this.currentUser()) {
       this.getUnreadCountUseCase.execute().subscribe({
         next: (count) => this.notificationState.setUnreadCount(count),
+        error: (err) => {
+          if (err.status === 401) this.authNavigation.handle401(err);
+        },
       });
       this.webSocketNotificationService.connect();
     }
@@ -79,17 +85,25 @@ export class HeaderComponent implements OnInit {
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        filter(query => query.length >= 2),
+        switchMap((query) => {
+          if (query.length < 2) {
+            this.searchResults.set([]);
+            this.searchLoading.set(false);
+            return EMPTY;
+          }
+          this.searchLoading.set(true);
+          return this.searchUsersUseCase.execute(query);
+        }),
       )
-      .subscribe((query) => {
-        if (query.length < 2) {
+      .subscribe({
+        next: (users) => {
+          this.searchResults.set(users);
+          this.searchLoading.set(false);
+        },
+        error: () => {
           this.searchResults.set([]);
-          return;
-        }
-        this.searchUsersUseCase.execute(query).subscribe({
-          next: (users) => this.searchResults.set(users),
-          error: () => this.searchResults.set([]),
-        });
+          this.searchLoading.set(false);
+        },
       });
 
   }
@@ -124,9 +138,17 @@ export class HeaderComponent implements OnInit {
 
   logout(): void {
     this.closeMenus();
+    this.logoutErrorMessage.set(null);
 
     this.logoutUseCase.execute().subscribe({
       next: () => this.webSocketNotificationService.disconnect(),
+      error: (err) => {
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        this.logoutErrorMessage.set(err.error?.message ?? 'Could not log out. Please try again.');
+      },
     });
   }
 }

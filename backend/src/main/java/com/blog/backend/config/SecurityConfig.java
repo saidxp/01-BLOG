@@ -28,6 +28,7 @@ public class SecurityConfig {
         private final UserDetailsServiceImpl userDetailsService;
 
         private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final RateLimitFilter rateLimitFilter;
         private final JwtAuthenticationEntryPoint authenticationEntryPoint;
         private final JwtAccessDeniedHandler accessDeniedHandler;
 
@@ -71,6 +72,7 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.GET,"/api/users/**").permitAll()
                                                 .requestMatchers("/media/**").permitAll() 
                                                 .requestMatchers("/ws/**").permitAll() 
+                                                .requestMatchers(HttpMethod.POST, "/api/auth/clear-session").permitAll()
                                                 .requestMatchers(
                                                                 "/api/v3/api-docs/**",
                                                                 "/api/swagger-ui/**",
@@ -85,6 +87,9 @@ public class SecurityConfig {
                                 .addFilterBefore(
                                                 jwtAuthenticationFilter,
                                                 UsernamePasswordAuthenticationFilter.class)
+                                .addFilterAfter(
+                                                rateLimitFilter,
+                                                JwtAuthenticationFilter.class)
                                 .build();
         }
 }

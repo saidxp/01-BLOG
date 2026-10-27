@@ -20,10 +20,10 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-              "webWorkerTsConfig": "tsconfig.worker.json",
+            "webWorkerTsConfig": "tsconfig.worker.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets", 
+              "src/assets",
               "public"
             ],
             "styles": [
@@ -55,7 +55,15 @@
                   "maximumError": "12kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": true
+                },
+                "fonts": false
+              }
             },
             "development": {
               "optimization": false,

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, map, catchError, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 import { PostReadRepository } from '../../domain/post/repositories/post-read.repository';
 import { PostDetail } from '../../domain/post/entity/PostDetail';
 import { PostDetailDto } from './dto/post-detail.dto';
@@ -15,14 +15,7 @@ export class PostReadRepositoryImpl extends PostReadRepository {
   private readonly baseUrl = `${environment.apiUrl}/api/posts`;
   override getPostById(id: number): Observable<PostDetail> { 
     return this.http.get<PostDetailDto>(`${this.baseUrl}/${id}`, { withCredentials: true }).pipe(
-      map(toPostDetailEntity),
-      catchError((err: HttpErrorResponse) => {
-        // <=> \\ (<!!>)
-        if (err.status === 404) {
-          return throwError(() => new Error('Post not found.'));
-        }
-        return throwError(() => new Error('Failed to load post.'));
-      })
+      map(toPostDetailEntity)
     );
   }
   

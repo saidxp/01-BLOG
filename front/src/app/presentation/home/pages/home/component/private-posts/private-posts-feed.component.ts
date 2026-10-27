@@ -2,6 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import {GetFeedPrivateUseCase} from '../../../../../../application/post/use-cases/get-private-feed-use-case';
 import { Post } from '../../../../../../domain/post/entity/post.entity';
 import { PostCardComponent } from '../../../../../shared/components/post-card/post-card.component';
+import { AuthNavigationService } from '../../../../../../application/auth/services/auth-navigation.service';
 
 @Component({
   selector: 'app-private-posts-feed',
@@ -14,6 +15,7 @@ import { PostCardComponent } from '../../../../../shared/components/post-card/po
 export class PrivatePostsFeed implements OnInit {
 
   private readonly getPostsPrivate = inject(GetFeedPrivateUseCase);
+  private readonly authNavigation = inject(AuthNavigationService);
 
   readonly posts = signal<Post[]>([]);
   readonly isLoading = signal(true);
@@ -57,8 +59,12 @@ export class PrivatePostsFeed implements OnInit {
 
       }, 
       error: (err) => {
-        this.errorMessage.set(err.message);
         loadingSignal.set(false);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        this.errorMessage.set(err.error?.message ?? 'Could not load your feed.');
       },
     });
   }

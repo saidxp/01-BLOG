@@ -36,6 +36,7 @@ export class RegisterComponent {
     { validators: passwordsMatchValidator }
   );
   submit(): void {
+    if (this.isLoading()) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -54,7 +55,7 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.message);
+        this.errorMessage.set(err.error?.message ?? 'Unable to create your account.');
       },
     });
   }

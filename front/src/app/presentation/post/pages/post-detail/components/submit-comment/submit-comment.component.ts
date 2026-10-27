@@ -4,6 +4,8 @@ import { AddCommentUseCase } from '../../../../../../application/comments/use-ca
 import { Comment } from '../../../../../../domain/comment/entity/comment.entity';
 import { AuthNavigationService } from '../../../../../../application/auth/services/auth-navigation.service';
 
+import { ToastService } from '../../../../../../application/auth/services/toast.service'
+
 @Component({
   selector: 'app-submit-comment',
   standalone: true,
@@ -16,6 +18,7 @@ export class SubmitCommentComponent {
 
   private readonly addCommentUseCase = inject(AddCommentUseCase); // <<==>> \\
   private readonly authNavigation = inject(AuthNavigationService);
+  private readonly toast = inject(ToastService);
 
   readonly commentAdded = output<Comment>();
   readonly postId = input.required<number>();
@@ -25,6 +28,8 @@ export class SubmitCommentComponent {
   readonly errorMessage = signal<string | null>(null);
 
   submit(): void {
+
+    if (this.isSubmitting()) return;
 
     const content = this.content().trim();
 
@@ -49,8 +54,14 @@ export class SubmitCommentComponent {
       },
 
       error: (err) => {
-        this.errorMessage.set(err.message);
         this.isSubmitting.set(false);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        const message = err.error?.message ?? 'Could not submit your comment.';
+        this.errorMessage.set(message);
+        this.toast.error(message);
       },
 
     });

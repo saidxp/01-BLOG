@@ -331,4 +331,30 @@ public class GlobalExceptionHandler {
                                                 .build());
         }
 
+        @ExceptionHandler(InvalidReportStateException.class)
+        public ResponseEntity<ApiErrorResponse> handleInvalidReportState(
+                        InvalidReportStateException ex) {
+
+                return ResponseEntity
+                                .status(HttpStatus.CONFLICT)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.CONFLICT.value())
+                                                .message(ex.getMessage())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        }
+
+        @ExceptionHandler(ReportNotFoundException.class)
+        public ResponseEntity<ApiErrorResponse> handleReportNotFound(
+                        ReportNotFoundException ex) {
+
+                return ResponseEntity
+                                .status(HttpStatus.NOT_FOUND)
+                                .body(ApiErrorResponse.builder()
+                                                .status(HttpStatus.NOT_FOUND.value())
+                                                .message(ex.getMessage())
+                                                .timestamp(LocalDateTime.now())
+                                                .build());
+        }
+
 }

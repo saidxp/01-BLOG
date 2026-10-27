@@ -43,7 +43,7 @@ public class SubscriptionController {
     public ResponseEntity<List<SubscriptionUserDto>> getSubscribers(@PathVariable String username) {
         return ResponseEntity.ok(subscriptionService.getSubscribers(username));
     }
-    
+        
     @GetMapping("/subscriptions")
     public ResponseEntity<List<SubscriptionUserDto>> getSubscriptions(@PathVariable String username) {
         return ResponseEntity.ok(subscriptionService.getSubscriptions(username));

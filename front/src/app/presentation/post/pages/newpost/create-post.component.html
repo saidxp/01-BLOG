@@ -30,7 +30,16 @@
     <div class="field-group upload-field">
       <label class="field-label" for="media">Cover image <span>Optional</span></label>
       <p class="field-hint">Choose an image that supports the story without distracting from it.</p>
-      <input class="field-control file-control" id="media" type="file" accept="image/*" (change)="onFileSelected($event)" />
+      <input #mediaInput class="field-control file-control" id="media" type="file" accept="image/*,image/heic,image/heif,image/avif,image/webp" (change)="onFileSelected($event)" />
+      @if (coverPreviewUrl()) {
+        <div class="cover-preview">
+          <img [src]="coverPreviewUrl()" alt="Cover image preview" />
+          <div class="cover-preview__actions">
+            <span class="field-hint">{{ selectedFile?.name }}</span>
+            <button class="button-01 button-01--secondary" type="button" (click)="removeCover()">Remove</button>
+          </div>
+        </div>
+      }
     </div>
     @if (errorMessage()) { <p class="form-alert" role="alert">{{ errorMessage() }}</p> }
     <footer class="author-actions">

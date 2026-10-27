@@ -1,7 +1,9 @@
-import { Component, inject, signal, viewChild, ElementRef } from '@angular/core';
+import { Component, inject, signal, viewChild, ElementRef, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CreatePostUseCase } from '../../../../application/post/use-cases/create.post.use-case';
+import { AuthNavigationService } from '../../../../application/auth/services/auth-navigation.service';
+import {ToastService} from '../../../../application/auth/services/toast.service'
 
 @Component({
   selector: 'app-create-post',
@@ -11,16 +13,20 @@ import { CreatePostUseCase } from '../../../../application/post/use-cases/create
   styleUrl: './create-post.component.css',
 })
 
-export class CreatePostComponent {
+export class CreatePostComponent implements OnDestroy {
 
   private readonly fb = inject(FormBuilder);
   private readonly createPostUseCase = inject(CreatePostUseCase);
   private readonly router = inject(Router);
+  private readonly authNavigation = inject(AuthNavigationService);
+  private readonly toast = inject(ToastService);
 
   readonly contentTextarea = viewChild.required<ElementRef<HTMLTextAreaElement>>('contentTextarea');
+  readonly mediaInput = viewChild<ElementRef<HTMLInputElement>>('mediaInput');
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly coverPreviewUrl = signal<string | null>(null);
   selectedFile: File | null = null;
 
   readonly form = this.fb.nonNullable.group({
@@ -31,9 +37,28 @@ export class CreatePostComponent {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.selectedFile = input.files?.[0] ?? null;
+    this.updateCoverPreview();
   }
 
-  // <<============================= Howa (/??\) ===================================>
+  removeCover(): void {
+    this.selectedFile = null;
+    this.coverPreviewUrl.set(null);
+    const ref = this.mediaInput();
+    if (ref) ref.nativeElement.value = '';
+  }
+
+  private updateCoverPreview(): void {
+    const current = this.coverPreviewUrl();
+    if (current?.startsWith('blob:')) URL.revokeObjectURL(current);
+    this.coverPreviewUrl.set(this.selectedFile ? URL.createObjectURL(this.selectedFile) : null);
+  }
+
+  ngOnDestroy(): void {
+    const current = this.coverPreviewUrl();
+    if (current?.startsWith('blob:')) URL.revokeObjectURL(current);
+  }
+
+  // Markdown toolbar helpers
   wrapSelection(before: string, after: string = before): void {
     const textarea = this.contentTextarea().nativeElement;
     const start = textarea.selectionStart;
@@ -137,13 +162,19 @@ export class CreatePostComponent {
       },
 
       error: (err) => {
-        this.errorMessage.set(err.message);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        this.errorMessage.set(err.error?.message ?? 'Could not upload this media.');
       },
 
     });
   }
 
   submit(): void {
+
+    if (this.isSubmitting()) return;
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -155,11 +186,19 @@ export class CreatePostComponent {
     this.createPostUseCase.execute(title, content, this.selectedFile).subscribe({
       next: (id) => {
         this.isSubmitting.set(false);
+        this.toast.success('Post published!');
         this.router.navigateByUrl(`/post/${id}`);
+        
       },
       error: (err) => {
         this.isSubmitting.set(false);
-        this.errorMessage.set(err.message);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        const message = err.error?.message ?? 'Could not publish the post.';
+        this.errorMessage.set(message);
+        this.toast.error(message);
       },
     }); // <<==>>> \\
     // <<==>> \\ (<!>)... 

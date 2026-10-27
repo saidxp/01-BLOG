@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withFetch ,withInterceptors } from '@angular/common/http';
 import { GetCurrentUserUseCase } from './application/auth/use-cases/get-current-user.use-case';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom, of, throwError } from 'rxjs';
 import { routes } from './app.routes';
 import { AuthRepository } from './domain/auth/repositories/auth.repository';
 import { AuthRepositoryImpl } from './infrastructure/auth/auth-repository.impl';
@@ -36,13 +36,14 @@ import { AdminPostRepository } from './domain/admin/repository/admin-post.reposi
 import { AdminPostRepositoryImpl } from './infrastructure/admin/admin-post-repository.impl';
 import { AdminReportRepository } from './domain/admin/repository/admin-report.repository';
 import { AdminReportRepositoryImpl } from './infrastructure/admin/admin-report-repository.impl';
+import { errorInterceptor } from './infrastructure/auth/interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   // <<>> \\ (<!>)
   providers: [
     provideRouter(routes),
     provideClientHydration(), // 
-    provideHttpClient(withFetch(), withInterceptors([cookieForwardingInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([cookieForwardingInterceptor, errorInterceptor])),
     { provide: AuthRepository, useClass: AuthRepositoryImpl},
     { provide: PostRepository, useClass: PostRepositoryImpl}, 
     { provide: PostWriteRepository, useClass: PostWriteRepositoryImpl},
@@ -61,7 +62,9 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: (useCase: GetCurrentUserUseCase) => () =>
-        firstValueFrom(useCase.execute()),
+        firstValueFrom(useCase.execute().pipe(
+          catchError((err) => err.status === 401 ? of(null) : throwError(() => err))
+        )),
       deps: [GetCurrentUserUseCase],
       multi: true,
     },

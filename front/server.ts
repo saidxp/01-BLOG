@@ -8,7 +8,11 @@ import { SERVER_REQUEST } from './src/app/infrastructure/ssr/request.token';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
-  const server = express();
+
+
+    const server = express();
+
+  server.set('trust proxy', 1);
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
   const browserDistFolder = resolve(serverDistFolder, '../browser');
   const indexHtml = join(serverDistFolder, 'index.server.html');
@@ -16,7 +20,7 @@ export function app(): express.Express {
 
   const commonEngine = new CommonEngine({
     // Her i need to add to to this where it's will be runing this server ip <!!>
-    allowedHosts: ['localhost', '127.0.0.1', '192.168.11.225', '10.1.13.3', 'frontend'],
+    allowedHosts: ['localhost', '127.0.0.1', '192.168.11.225', '10.1.13.3', 'frontend', '192.168.11.235', '192.168.11.186']
   });
 
   server.set('view engine', 'html');

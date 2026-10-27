@@ -1,5 +1,6 @@
 <section class="admin-page">
   <header class="admin-page__header"><div><h1>Users</h1><p>Manage access and account status across 01Blog.</p></div></header>
+  @if (actionErrorMessage()) { <p class="form-alert" role="alert">{{ actionErrorMessage() }}</p> }
   @if (isLoading()) {
     <div class="state-panel" role="status"><div class="state-panel__content"><p class="state-panel__title">Loading users</p><p class="state-panel__message">Fetching the latest account records…</p></div></div>
   } @else if (errorMessage()) {

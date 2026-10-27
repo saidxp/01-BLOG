@@ -7,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 import com.blog.backend.exception.UserNotFoundException;
 import com.blog.backend.post.repository.PostRepository;
-import com.blog.backend.report.repository.ReportRepository;
-import com.blog.backend.report.dto.AdminReportDto;
 import com.blog.backend.user.dto.AdminUserDto;
 import com.blog.backend.user.dto.UserDto;
 import com.blog.backend.user.enums.UserStatus;
@@ -25,7 +23,6 @@ public class AdminService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PostRepository postRepository;
-    private final ReportRepository reportRepository;
 
     public Page<AdminUserDto> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable)
@@ -62,7 +59,6 @@ public class AdminService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 
-    // <<===>>> \\ (<!!>) // \\ {<!!>}
     public Page<AdminPostDto> getAllPosts(Pageable pageable) {
         Page<AdminPostDto> posts = postRepository.findAll(pageable)
                 .map(post -> new AdminPostDto(
@@ -72,16 +68,4 @@ public class AdminService {
                         post.getCreatedAt()));
         return posts;
     }
-
-    // Reports ===>> <<====
-    public Page<AdminReportDto> getAllReports(Pageable pageable) {
-        return reportRepository.findAll(pageable)
-                .map(report -> new AdminReportDto(
-                        report.getId(),
-                        report.getReporter().getUsername(),
-                        report.getReportedUser().getUsername(),
-                        report.getReason(),
-                        report.getCreatedAt()));
-    }
-    // <<==>> \\
 }

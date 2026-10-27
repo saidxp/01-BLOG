@@ -1,28 +1,117 @@
 <section class="admin-page">
-  <header class="admin-page__header"><div><h1>Reports</h1><p>Review community reports with the full submitted context.</p></div></header>
-  @if (isLoading()) {
-    <div class="state-panel" role="status"><div class="state-panel__content"><p class="state-panel__title">Loading reports</p><p class="state-panel__message">Fetching moderation reports…</p></div></div>
-  } @else if (errorMessage()) {
-    <div class="state-panel state-panel--error" role="alert"><div class="state-panel__content"><p class="state-panel__title">Could not load reports</p><p class="state-panel__message">{{ errorMessage() }}</p></div></div>
-  } @else if (reports().length === 0) {
-    <div class="state-panel"><div class="state-panel__content"><p class="state-panel__title">No reports</p><p class="state-panel__message">There are no community reports to review.</p></div></div>
-  } @else {
-    <div class="table-responsive admin-table-wrap">
-      <table class="table admin-table reports-table">
-        <thead><tr><th scope="col">ID</th><th scope="col">Reporter</th><th scope="col">Reported user</th><th scope="col">Reason</th><th scope="col">Date</th></tr></thead>
-        <tbody>
-          @for (report of reports(); track report.id) {
-            <tr>
-              <td class="id-cell">#{{ report.id }}</td>
-              <td>{{ report.reporterUsername }}</td>
-              <td><strong>{{ report.reportedUsername }}</strong></td>
-              <td class="reason-cell"><button type="button" (click)="toggleReason(report.id)" [attr.aria-expanded]="expandedReportId() === report.id">@if (expandedReportId() === report.id) { {{ report.reason }} } @else { {{ report.reason | slice: 0:40 }}{{ report.reason.length > 40 ? '…' : '' }} }<span>{{ expandedReportId() === report.id ? 'Show less' : 'Read more' }}</span></button></td>
-              <td class="date-cell">{{ report.createdAt | date: 'MMM d, y' }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
+  <header class="admin-page__header">
+    <div>
+      <h1>Reports</h1>
+      <p>Review community reports with the full submitted context.</p>
     </div>
-    @if (hasMore) { <div class="pagination-bar"><button class="button-01 button-01--secondary" type="button" (click)="loadMore()">Load more reports</button></div> }
+  </header>
+
+  @if (isLoading()) {
+  <div class="state-panel" role="status">
+    <div class="state-panel__content">
+      <p class="state-panel__title">Loading reports</p>
+      <p class="state-panel__message">Fetching moderation reports…</p>
+    </div>
+  </div>
+  } @else if (errorMessage()) {
+  <div class="state-panel state-panel--error" role="alert">
+    <div class="state-panel__content">
+      <p class="state-panel__title">Could not load reports</p>
+      <p class="state-panel__message">{{ errorMessage() }}</p>
+    </div>
+  </div>
+  } @else if (reports().length === 0) {
+  <div class="state-panel">
+    <div class="state-panel__content">
+      <p class="state-panel__title">No reports</p>
+      <p class="state-panel__message">There are no community reports to review.</p>
+    </div>
+  </div>
+  } @else {
+  <div class="table-responsive admin-table-wrap">
+    <table class="table admin-table reports-table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Reporter</th>
+          <th scope="col">Reported user</th>
+          <th scope="col">Type</th>
+          <th scope="col">Reason</th>
+          <th scope="col">Date</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (report of reports(); track report.id) {
+        <tr>
+          <td class="id-cell">#{{ report.id }}</td>
+          <td>{{ report.reporterUsername }}</td>
+          <td><strong>{{ report.reportedUsername }}</strong></td>
+
+          <td class="type-cell">
+            @if (report.type === 'POST') {
+            @if (report.postId) {
+            Post #{{ report.postId }}
+            } @else {
+            Deleted post
+            }
+            } @else {
+            User
+            }
+          </td>
+
+          <td class="reason-cell">
+            <button type="button" class="button-01 button-01--secondary action-button" (click)="openReason(report)"
+              [attr.aria-label]="'View reason for report #' + report.id">
+              View
+            </button>
+          </td>
+
+          <td class="date-cell">{{ report.createdAt | date: 'MMM d, y' }}</td>
+
+          <td>
+            <div class="admin-table__actions">
+              @if (report.postId) {
+              <a class="button-01 button-01--secondary action-button" [routerLink]="['/post', report.postId]">View</a>
+              } @else {
+              <a class="button-01 button-01--secondary action-button"
+                [routerLink]="['/profile', report.reportedUsername]">View user</a>
+              }
+              @if (report.status === 'PENDING') {
+              <button class="button-01 button-01--primary action-button" type="button"
+                (click)="requestResolveReport(report)">
+                {{ report.type == 'POST' ? 'Resolve post report' : 'Resolve user report' }}
+              </button>
+              } @else {
+              <button class="button-01 button-01--secondary action-button" type="button" disabled>
+                ✓ Resolved
+              </button>
+              }
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (hasMore) {
+  <div class="pagination-bar">
+    <button class="button-01 button-01--secondary" type="button" (click)="loadMore()" [disabled]="isLoading()">Load more reports</button>
+  </div>
+  }
   }
 </section>
+
+<app-confirm-modal [isOpen]="pendingResolve() !== null" title="Resolve report?" [message]="resolveConfirmationMessage()"
+  (confirmed)="confirmResolveReport()" (cancelled)="cancelResolveReport()" />
+
+@if (reasonReport(); as r) {
+<div class="reason-overlay" (click)="closeReason()">
+  <div class="reason-dialog" role="dialog" aria-modal="true" aria-label="Report reason"
+    (click)="$event.stopPropagation()">
+    <button type="button" class="reason-dialog__close" aria-label="Close" (click)="closeReason()">✕</button>
+    <p class="reason-dialog__text">{{ r.reason }}</p>
+  </div>
+</div>
+}

@@ -7,4 +7,4 @@
 .modal-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-2); }
 .modal-confirm { border-color: var(--color-danger); background: var(--color-danger); color: var(--color-surface); }
 .modal-confirm:hover { border-color: #ad2424; background: #ad2424; }
-@media (max-width: 575.98px) { .modal-backdrop { align-items: end; padding: var(--space-3); } .modal-content { width: 100%; } .modal-actions { flex-direction: column-reverse; } .modal-actions .button-01 { width: 100%; } }
+@media (max-width: 575.98px) { .modal-backdrop { align-items: center; padding: var(--space-3); } .modal-content { width: 100%; } .modal-actions { flex-direction: column-reverse; } .modal-actions .button-01 { width: 100%; } }

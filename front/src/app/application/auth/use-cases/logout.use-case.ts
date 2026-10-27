@@ -14,10 +14,12 @@ export class LogoutUseCase {
 
   execute(): Observable<void> {
     return this.authRepository.logout().pipe(
+
       tap(() => {
         this.authState.clearUser(); // {<->} \\ {<??>} 
         // this.webSocketNotificationService.disconnect(); check
       })
+      
     );
   } // <<===>> \\ {<-km 0->}
 }

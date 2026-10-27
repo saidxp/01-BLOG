@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blog.backend.admin.service.AdminService;
-import com.blog.backend.report.dto.AdminReportDto;
 import com.blog.backend.user.dto.AdminUserDto;
  
 
@@ -44,12 +43,5 @@ public class AdminController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         adminService.deleteUser(id);
-    }
-
-    // <<==>> \\ (<!!>)
-    @GetMapping("/reports")
-    public ResponseEntity<Page<AdminReportDto>> getAllReports(@PageableDefault(size = 20) Pageable pageable) {
-        Page<AdminReportDto> reports = adminService.getAllReports(pageable);
-        return ResponseEntity.ok(reports);
     }
 }

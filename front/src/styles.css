@@ -705,7 +705,10 @@ img.avatar-01 {
     min-height: 12rem;
   }
 }
-
+.post-report .report-trigger {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+}
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

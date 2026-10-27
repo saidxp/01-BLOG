@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map, catchError, of, throwError } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { NotificationRepository, PagedNotifications } from '../../domain/notification/repository/notification.repository';
 import { NotificationDto, NotificationPageDto } from './dto/notification.dto';
 import { toNotificationEntity } from './mapper/notification.mapper';
@@ -12,9 +12,7 @@ export class NotificationRepositoryImpl extends NotificationRepository {
   private readonly baseUrl = `${environment.apiUrl}/api/notifications`;
 
   override getUnreadCount(): Observable<number> {
-    return this.http
-      .get<number>(`${this.baseUrl}/unread-count`, { withCredentials: true })
-      .pipe(catchError(() => of(0)));
+    return this.http.get<number>(`${this.baseUrl}/unread-count`, { withCredentials: true });
   }
 
   override getNotifications(page: number): Observable<PagedNotifications> {
@@ -29,15 +27,12 @@ export class NotificationRepositoryImpl extends NotificationRepository {
           notifications: pageDto.content.map(toNotificationEntity),
           totalPages: pageDto.totalPages,
           currentPage: pageDto.number,
-        })),
-        catchError(() => throwError(() => new Error('Failed to load notifications.')))
+        }))
       );
   }
 
   override markAsRead(id: number): Observable<void> {
-    return this.http
-      .patch<void>(`${this.baseUrl}/${id}/read`, {}, { withCredentials: true })
-      .pipe(catchError(() => throwError(() => new Error('Failed to mark as read.'))));
+    return this.http.patch<void>(`${this.baseUrl}/${id}/read`, {}, { withCredentials: true });
   }
   
 }

@@ -6,6 +6,8 @@ import { DeleteUserUseCase } from '../../../../application/admin/use-cases/users
 import { AdminUser } from '../../../../domain/admin/entity/admin-user.entity';
 import { UserStatus } from '../../../../enum/UserStatus';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { AuthNavigationService } from '../../../../application/auth/services/auth-navigation.service';
+import { ToastService } from '../../../../application/auth/services/toast.service' 
 
 type PendingUserAction = {
   kind: 'toggle-ban' | 'delete';
@@ -24,10 +26,13 @@ export class AdminUsersComponent implements OnInit {
   private readonly getAdminUsersUseCase = inject(GetAdminUsersUseCase);
   private readonly toggleUserBanUseCase = inject(ToggleUserBanUseCase);
   private readonly deleteUserUseCase = inject(DeleteUserUseCase);
+  private readonly authNavigation = inject(AuthNavigationService);
+  private readonly toast = inject(ToastService);
 
   readonly users = signal<AdminUser[]>([]);
   readonly isLoading = signal(true);
   readonly errorMessage = signal<string | null>(null);
+  readonly actionErrorMessage = signal<string | null>(null);
   readonly pendingAction = signal<PendingUserAction | null>(null);
   readonly isActionSubmitting = signal(false);
 
@@ -59,8 +64,12 @@ export class AdminUsersComponent implements OnInit {
       }, 
       
       error: (err) => {
-        this.errorMessage.set(err.message);
         this.isLoading.set(false);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        this.errorMessage.set(err.error?.message ?? 'Could not load users.');
       },
     });
   }
@@ -112,24 +121,48 @@ export class AdminUsersComponent implements OnInit {
 
   private toggleBan(user: AdminUser): void {
     const isBanned = user.status === UserStatus.BANNED;
+    this.actionErrorMessage.set(null);
     this.isActionSubmitting.set(true);
     this.toggleUserBanUseCase.execute(user.id, isBanned).subscribe({
       next: (updatedUser) => {
         this.users.update((list) => list.map((u) => (u.id === updatedUser.id ? updatedUser : u)));
         this.finishPendingAction();
+        this.toast.success(isBanned ? 'User unbanned.' : 'User banned.');
       },
-      error: () => this.isActionSubmitting.set(false),
+      error: (err) => {
+        this.isActionSubmitting.set(false);
+        this.pendingAction.set(null);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        const message = err.error?.message ?? 'Could not update this user.';
+        this.actionErrorMessage.set(message);
+        this.toast.error(message);
+      },
     });
   } 
 
   private deleteUser(user: AdminUser): void {
+    this.actionErrorMessage.set(null);
     this.isActionSubmitting.set(true);
     this.deleteUserUseCase.execute(user.id).subscribe({
       next: () => {
         this.users.update((list) => list.filter((u) => u.id !== user.id));
         this.finishPendingAction();
+        this.toast.success('User deleted.');
       },
-      error: () => this.isActionSubmitting.set(false),
+      error: (err) => {
+        this.isActionSubmitting.set(false);
+        this.pendingAction.set(null);
+        if (err.status === 401) {
+          this.authNavigation.handle401(err);
+          return;
+        }
+        const message = err.error?.message ?? 'Could not delete this user.';
+        this.actionErrorMessage.set(message);
+        this.toast.error(message);
+      },
     });
   }
 

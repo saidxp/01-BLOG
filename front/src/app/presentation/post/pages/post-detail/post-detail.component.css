@@ -7,8 +7,9 @@
 }
 
 .article-page__container {
-  max-width: 65.25rem;
-  padding-inline: var(--space-4);
+  width: min(94vw, 65.25rem);
+  max-width: none;
+  margin-inline: auto;
 }
 
 .article-layout {
@@ -68,8 +69,8 @@
 }
 
 .article-header {
-  max-width: 46rem;
-  margin-inline: auto;
+  width: 100svw;
+  max-width: none;
   padding: var(--space-10) var(--space-8) var(--space-8);
 }
 
@@ -125,20 +126,24 @@
   font-size: 0.75rem;
 }
 
-.owner-actions {
+/* Report button reuses the owner-actions layout */
+.owner-actions,
+.article-report {
   display: flex;
   gap: var(--space-2);
   margin-left: auto;
 }
 
 .article-content {
-  max-width: 42rem;
-  margin-inline: auto;
+  width: 100%;
+  max-width: none;
   padding: var(--space-2) var(--space-8) var(--space-10);
 }
 
 .discussion-section {
-  max-width: 48rem;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
   margin: var(--space-10) auto 0;
 }
 
@@ -163,6 +168,8 @@
 }
 
 .discussion-surface {
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding: var(--space-6);
   border: var(--border-subtle);
   border-radius: var(--radius-xl);
@@ -180,7 +187,9 @@
     flex-wrap: wrap;
   }
 
-  .owner-actions {
+  /* Same mobile layout for owner actions and report */
+  .owner-actions,
+  .article-report {
     width: 100%;
     margin: var(--space-2) 0 0;
   }
@@ -188,7 +197,8 @@
 
 @media (max-width: 991.98px) {
   .article-page__container {
-    max-width: 58rem;
+    width: min(94vw, 58rem);
+    max-width: none;
   }
 
   .article-layout {
@@ -227,6 +237,7 @@
   }
 
   .article-page__container {
+    width: 100%;
     padding-inline: 0;
   }
 
@@ -257,6 +268,12 @@
 
   .owner-actions .button-01 {
     flex: 1;
+  }
+
+  /* Full-width report button on small screens */
+  .article-report ::ng-deep .report-trigger {
+    flex: 1;
+    width: 100%;
   }
 
   .discussion-section {

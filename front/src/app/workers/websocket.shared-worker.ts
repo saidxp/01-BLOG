@@ -14,11 +14,11 @@ let client: Client | null = null;
 let connecting = false;
 
 async function connectWebSocket(): Promise<void> {
-
     if (client?.active || connecting) {
         return;
     }
 
+    console.log('[SockJS DEBUG]', `${environment.apiUrl}/ws`, self.location.origin);
     connecting = true;
 
     try {
@@ -30,12 +30,14 @@ async function connectWebSocket(): Promise<void> {
         client = new Client({
 
             webSocketFactory: () =>
+
+                
                 new SockJS(
                     `${environment.apiUrl}/ws`,
                     undefined,
                     { withCredentials: true } as any
                 ),
-
+                
             onConnect: () => {
 
                 console.log('[SharedWorker] ===== CONNECTED =====');

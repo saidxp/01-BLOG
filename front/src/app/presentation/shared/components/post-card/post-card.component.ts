@@ -1,9 +1,9 @@
-import { Component, input } from '@angular/core';
+import { Component, input, viewChild } from '@angular/core';
 import { Post } from '../../../../domain/post/entity/post.entity';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MediaType } from '../../../../enum/MediaType';
-
+import { ReportModalComponent } from '../../../profile/pages/profile/components/report-modal/report-modal.component';
 
 @Component({
   selector: 'app-post-card',
@@ -15,6 +15,7 @@ import { MediaType } from '../../../../enum/MediaType';
 
 // <<==>> \\ (<!<->!>).
 export class PostCardComponent {
+
   readonly post = input.required<Post>();
 
   isImageMedia(): boolean {

@@ -130,15 +130,24 @@ public class PostService {
     // <<>> delete And Update (!!)
     @Transactional
     public Post updatePost(User currentUser, Long postId, String newTitle, String newContent, MultipartFile mediaFile) {
+         // Protected against invalid title and content
+        if (newTitle == null ||     newTitle.isBlank() ||newTitle.length() > 200) {
+            throw new IllegalArgumentException("Invalid title");
+        }
+
+        if (newContent == null || newContent.isBlank() || newContent.length() > 50_000) {
+            throw new IllegalArgumentException("Invalid content");
+        }
+        
+        // <<==>> \\ {<<!!>>}
+       
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
 
         if (!post.getUser().getId().equals(currentUser.getId())) {
             throw new NotPostOwnerException("You are not allowed to edit this post");
         }
-        post.setTitle(newTitle);
-        post.setContent(newContent);
-        if (mediaFile != null && !mediaFile.isEmpty()) {
+         if (mediaFile != null && !mediaFile.isEmpty()) {
             if (post.getMediaUrl() != null) {
                 mediaStorageService.delete(post.getMediaUrl());
             }
@@ -152,6 +161,8 @@ public class PostService {
             post.setMediaUrl(mediaUrl);
             post.setMediaType(mediaType);
         }
+        post.setTitle(newTitle);
+        post.setContent(newContent);
         Post updatedPost = postRepository.save(post);
         mediaUploadService.confirmUploadsUsedIn(updatedPost, newContent);
         return updatedPost;

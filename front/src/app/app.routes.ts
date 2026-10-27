@@ -89,6 +89,24 @@ export const routes: Routes = [
   },  // <<==>> \\ {(<|<->|>)} 
 
   {
+    path: 'forbidden',
+    loadComponent: () =>
+      import('./presentation/shared/components/forbidden/forbidden.component')
+        .then((m) => m.ForbiddenComponent),
+  },
+  {
+    path: 'server-error',
+    loadComponent: () =>
+      import('./presentation/shared/components/server-error/server-error.component')
+        .then((m) => m.ServerErrorComponent),
+  },
+  {
+    path: 'no-network',
+    loadComponent: () =>
+      import('./presentation/shared/components/no-network/no-network.component')
+        .then((m) => m.NoNetworkComponent),
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./presentation/shared/components/notfound/not-found.component')

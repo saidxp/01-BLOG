@@ -126,6 +126,8 @@
     </button>
   </div>
 
+  @if (logoutErrorMessage()) { <p class="form-alert" role="alert">{{ logoutErrorMessage() }}</p> }
+
   @if (isMobileMenuOpen()) {
   <nav id="mobile-navigation" class="mobile-navigation" aria-label="Mobile navigation">
     <div class="container-xl mobile-navigation__inner">

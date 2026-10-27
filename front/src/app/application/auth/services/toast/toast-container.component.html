@@ -1,0 +1,8 @@
+<div class="app-toasts" aria-live="polite">
+  @for (t of toastService.toasts(); track t.id) {
+    <div [class]="'app-toast app-toast--' + t.type" role="status">
+      <span class="app-toast__message">{{ t.message }}</span>
+      <button type="button" class="app-toast__close" (click)="toastService.dismiss(t.id)" aria-label="Close">×</button>
+    </div>
+  }
+</div>
