@@ -18,6 +18,45 @@
   </aside>
 
   <main class="admin-content">
+    <section class="admin-overview" aria-label="System overview">
+      <h2 class="admin-overview__title">Overview</h2>
+
+      <p class="admin-overview__loading" ngIf*="isLoading">Loading system data…</p>
+
+      <div class="admin-overview__grid" *ngIf="!isLoading">
+      <ng-container *ngIf="stats() as s">
+        <div class="stat-card">
+          <span class="stat-card__value">{{ s.totalUsers }}</span>
+          <span class="stat-card__label">Total users</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value">{{ s.totalPosts }}</span>
+          <span class="stat-card__label">Total posts</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value">{{ s.pendingReports }}</span>
+          <span class="stat-card__label">Pending reports</span>
+        </div>
+
+        <div class="stat-card stat-card--wide">
+          <span class="stat-card__label">🥇 Most reported user</span>
+          <span class="stat-card__value" *ngIf="s.mostReportedUser as u">{{ u.username }} <em>({{ u.count }})</em></span>
+          <span class="stat-card__empty" *ngIf="!s.mostReportedUser">No reports yet</span>
+        </div>
+        <div class="stat-card stat-card--wide">
+          <span class="stat-card__label">❤️ Most liked post</span>
+          <span class="stat-card__value" *ngIf="s.mostLikedPost as p">{{ p.title }} <em>({{ p.count }} likes)</em></span>
+          <span class="stat-card__empty" *ngIf="!s.mostLikedPost">No likes yet</span>
+        </div>
+        <div class="stat-card stat-card--wide">
+          <span class="stat-card__label">💬 Most commented post</span>
+          <span class="stat-card__value" *ngIf="s.mostCommentedPost as p">{{ p.title }} <em>({{ p.count }} comments)</em></span>
+          <span class="stat-card__empty" *ngIf="!s.mostCommentedPost">No comments yet</span>
+        </div>
+      </ng-container>
+      </div>
+    </section>
+
     <router-outlet />
   </main>
 </div>

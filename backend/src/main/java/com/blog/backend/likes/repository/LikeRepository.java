@@ -4,6 +4,7 @@ package com.blog.backend.likes.repository;
 import com.blog.backend.likes.model.Like;
 import com.blog.backend.post.model.Post;
 import com.blog.backend.user.model.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,5 +25,9 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
         GROUP BY l.post.id
     """)
     List<Object[]> countLikesByPostIds(@Param("postIds") List<Long> postIds);
+
+    // [postId, likeCount] ordered most-liked first (use Pageable to take the top N)
+    @Query("SELECT l.post.id, COUNT(l) FROM Like l GROUP BY l.post.id ORDER BY COUNT(l) DESC")
+    List<Object[]> findTopLikedPostIds(Pageable pageable);
     // <<==>> \\ (<!!>)
 }

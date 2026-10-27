@@ -36,6 +36,8 @@ import { AdminPostRepository } from './domain/admin/repository/admin-post.reposi
 import { AdminPostRepositoryImpl } from './infrastructure/admin/admin-post-repository.impl';
 import { AdminReportRepository } from './domain/admin/repository/admin-report.repository';
 import { AdminReportRepositoryImpl } from './infrastructure/admin/admin-report-repository.impl';
+import { AdminStatsRepository } from './domain/admin/repository/admin-stats.repository';
+import { AdminStatsRepositoryImpl } from './infrastructure/admin/admin-stats-repository.impl';
 import { errorInterceptor } from './infrastructure/auth/interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -59,6 +61,7 @@ export const appConfig: ApplicationConfig = {
     { provide: AdminUserRepository, useClass: AdminUserRepositoryImpl},
     { provide: AdminPostRepository, useClass: AdminPostRepositoryImpl},
     { provide: AdminReportRepository, useClass: AdminReportRepositoryImpl },
+    { provide: AdminStatsRepository, useClass: AdminStatsRepositoryImpl },
     {
       provide: APP_INITIALIZER,
       useFactory: (useCase: GetCurrentUserUseCase) => () =>

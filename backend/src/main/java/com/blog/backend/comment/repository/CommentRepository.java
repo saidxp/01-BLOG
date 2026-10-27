@@ -25,4 +25,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         GROUP BY c.post.id
     """)
     List<Object[]> countCommentsByPostIds(@Param("postIds") List<Long> postIds);
+
+    // [postId, commentCount] ordered most-commented first (use Pageable to take the top N)
+    @Query("SELECT c.post.id, COUNT(c) FROM Comment c GROUP BY c.post.id ORDER BY COUNT(c) DESC")
+    List<Object[]> findTopCommentedPostIds(Pageable pageable);
 }

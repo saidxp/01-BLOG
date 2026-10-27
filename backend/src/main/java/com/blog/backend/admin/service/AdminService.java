@@ -4,9 +4,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import java.util.List;
 
+import com.blog.backend.admin.dto.AdminStatsDto;
+import com.blog.backend.comment.repository.CommentRepository;
 import com.blog.backend.exception.UserNotFoundException;
+import com.blog.backend.likes.repository.LikeRepository;
+import com.blog.backend.post.model.Post;
 import com.blog.backend.post.repository.PostRepository;
+import com.blog.backend.report.enums.ReportStatus;
+import com.blog.backend.report.repository.ReportRepository;
 import com.blog.backend.user.dto.AdminUserDto;
 import com.blog.backend.user.dto.UserDto;
 import com.blog.backend.user.enums.UserStatus;
@@ -23,6 +31,9 @@ public class AdminService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PostRepository postRepository;
+    private final LikeRepository likeRepository;
+    private final CommentRepository commentRepository;
+    private final ReportRepository reportRepository;
 
     public Page<AdminUserDto> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable)
@@ -67,5 +78,37 @@ public class AdminService {
                         post.getUser().getUsername(),
                         post.getCreatedAt()));
         return posts;
+    }
+
+    /** Simple system overview for the admin dashboard. */
+    public AdminStatsDto getStats() {
+        long totalUsers = userRepository.count();
+        long totalPosts = postRepository.count();
+        long pendingReports = reportRepository.countByStatus(ReportStatus.PENDING);
+
+        AdminStatsDto.TopUser mostReportedUser = reportRepository
+                .findTopReportedUsers(PageRequest.of(0, 1)).stream()
+                .findFirst()
+                .map(row -> new AdminStatsDto.TopUser(
+                        ((User) row[0]).getUsername(),
+                        ((Number) row[1]).longValue()))
+                .orElse(null);
+
+        AdminStatsDto.TopPost mostLikedPost =
+                topPostById(likeRepository.findTopLikedPostIds(PageRequest.of(0, 1)));
+        AdminStatsDto.TopPost mostCommentedPost =
+                topPostById(commentRepository.findTopCommentedPostIds(PageRequest.of(0, 1)));
+
+        return new AdminStatsDto(totalUsers, totalPosts, pendingReports,
+                mostReportedUser, mostLikedPost, mostCommentedPost);
+    }
+
+    private AdminStatsDto.TopPost topPostById(List<Object[]> rows) {
+        return rows.stream().findFirst().map(row -> {
+            Long postId = ((Number) row[0]).longValue();
+            long count = ((Number) row[1]).longValue();
+            String title = postRepository.findById(postId).map(Post::getTitle).orElse("(deleted post)");
+            return new AdminStatsDto.TopPost(postId, title, count);
+        }).orElse(null);
     }
 }
