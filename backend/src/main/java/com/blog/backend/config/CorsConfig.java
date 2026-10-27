@@ -25,10 +25,13 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins(
-                                // Local development origins (ng serve / node SSR) stay fixed.
-                                "http://localhost:4000",
-                                "http://localhost:4200",
+                        // Patterns (not exact origins) so any localhost port is allowed for
+                        // direct local access, mirroring WebSocketConfig. publicOrigin stays exact.
+                        .allowedOriginPatterns(
+                                // Local development / direct-localhost access (any port).
+                                "http://localhost:*",
+                                "https://localhost:*",
+                                // The public origin from .env (APP_HOST/APP_PORT).
                                 publicOrigin
                         )
                         .allowedMethods(
