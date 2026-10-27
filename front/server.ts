@@ -6,21 +6,22 @@ import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 import { SERVER_REQUEST } from './src/app/infrastructure/ssr/request.token';
 
-// The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
 
-
-    const server = express();
+  const server = express();
 
   server.set('trust proxy', 1);
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
   const browserDistFolder = resolve(serverDistFolder, '../browser');
   const indexHtml = join(serverDistFolder, 'index.server.html');
-
+  
+  // Single source of truth: the public host comes from .env (APP_HOST).
+  // Dev/docker-internal hosts stay allowed; add the machine's IP via APP_HOST instead of editing here.
+  const allowedHosts: string[] = ['localhost', '127.0.0.1', 'frontend', process.env['APP_HOST']]
+    .filter((host): host is string => Boolean(host));
 
   const commonEngine = new CommonEngine({
-    // Her i need to add to to this where it's will be runing this server ip <!!>
-    allowedHosts: ['localhost', '127.0.0.1', '192.168.11.225', '10.1.13.3', 'frontend', '192.168.11.235', '192.168.11.186']
+    allowedHosts
   });
 
   server.set('view engine', 'html');

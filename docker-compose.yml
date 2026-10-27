@@ -56,6 +56,9 @@ services:
       BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-ChangeMe123!}
       # Enable with: SPRING_PROFILES_ACTIVE=prod (forces Secure cookies + no show-sql)
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-}
+      # Public host/port (single source of truth for CORS + WebSocket allowed origin)
+      APP_HOST: ${APP_HOST:-localhost}
+      APP_PORT: ${APP_PORT:-8443}
     restart: unless-stopped
   frontend:
     build:
@@ -67,6 +70,12 @@ services:
       - app-net
     expose: 
       - "4000" 
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      # Public host (single source of truth for SSR allowedHosts in server.ts)
+      APP_HOST: ${APP_HOST:-localhost}
+      APP_PORT: ${APP_PORT:-8443}
     restart: unless-stopped 
 volumes:
   postgres_data:

@@ -1,5 +1,6 @@
 package com.blog.backend.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -13,6 +14,14 @@ import com.blog.backend.websocket.*;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private final WebSocketAuthChannelInterceptor authChannelInterceptor;
+
+    // Single source of truth: allowed WebSocket origin is built from .env (APP_HOST / APP_PORT).
+    // Fixes the "socket works on one device but not another" problem — no more frozen IPs here.
+    @Value("${app.host:localhost}")
+    private String appHost;
+
+    @Value("${app.public-port:8443}")
+    private int appPort;
 
     public WebSocketConfig(WebSocketAuthChannelInterceptor authChannelInterceptor) {
         this.authChannelInterceptor = authChannelInterceptor;
@@ -28,12 +37,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:4200", "http://localhost:4000", "https://192.168.11.186:8443", "https://192.168.11.235:8443").withSockJS();
+                .setAllowedOriginPatterns(
+                        // Local development origins (any localhost port).
+                        "http://localhost:*",
+                        "https://localhost:*",
+                        // The public origin users reach, e.g. https://192.168.11.235:8443
+                        "https://" + appHost + ":" + appPort
+                ).withSockJS();
     }
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(authChannelInterceptor);
-    } // <<==>> \\ {<!-!>}  
-    
+    }
 }

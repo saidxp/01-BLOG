@@ -24,6 +24,10 @@ server:
   forward-headers-strategy: framework  
 app:
   base-url: http://localhost:8080
+  # Public host/port users reach the app on — single source of truth (from .env APP_HOST/APP_PORT).
+  # CORS + WebSocket build their allowed origin from these; no hardcoded IPs in code.
+  host: ${APP_HOST:localhost}
+  public-port: ${APP_PORT:8443}
   # Auth cookie Secure flag: false for local HTTP, overridden to true in the prod profile
   cookie:
     secure: ${COOKIE_SECURE:false}
