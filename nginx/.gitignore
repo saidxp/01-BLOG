@@ -1,3 +1,4 @@
 
 # Local HTTPS certificates
-nginx/certs/
+# (patterns are relative to this file's dir = nginx/, so use 'certs/', not 'nginx/certs/')
+certs/
