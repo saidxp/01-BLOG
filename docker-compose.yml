@@ -12,7 +12,7 @@ services:
     ports:
       - "1337:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/// short-circuit with 403 so no action can be performed with this token.data
+      - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped 
   nginx: 
     image: nginx:alpine
@@ -52,6 +52,8 @@ services:
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
       # Comma-separated usernames auto-promoted to ADMIN on startup
       BOOTSTRAP_ADMIN_USERNAMES: ${BOOTSTRAP_ADMIN_USERNAMES:-}
+      # Seed password used only when the runner must CREATE a missing admin (default: ChangeMe123!)
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-ChangeMe123!}
       # Enable with: SPRING_PROFILES_ACTIVE=prod (forces Secure cookies + no show-sql)
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-}
     restart: unless-stopped

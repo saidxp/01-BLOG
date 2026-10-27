@@ -29,6 +29,8 @@ app:
     secure: ${COOKIE_SECURE:false}
   # Comma-separated usernames promoted to ADMIN at startup (empty disables bootstrapping)
   bootstrap-admin-usernames: ${BOOTSTRAP_ADMIN_USERNAMES:}
+  # Seed password used only when the runner has to CREATE a missing admin (change after first login)
+  bootstrap-admin-password: ${BOOTSTRAP_ADMIN_PASSWORD:ChangeMe123!}
   # Layer 2 rate limiting (Bucket4j): one global box per user/IP + one door box per matched rule
   ratelimit:
     enabled: true
