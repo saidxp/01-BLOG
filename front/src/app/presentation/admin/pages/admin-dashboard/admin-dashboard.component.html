@@ -1,10 +1,7 @@
 <section class="admin-overview">
-  <h2 class="admin-overview__title">Overview</h2>
-
   @if (isLoading()) {
     <p class="admin-overview__loading">Loading system data…</p>
   } @else if (stats(); as s) {
-    <!-- Count cards -->
     <div class="row g-3 mb-4">
       <div class="col-6 col-md-4 col-lg-3">
         <div class="card h-100 border-0 shadow-sm">
@@ -32,18 +29,19 @@
       </div>
     </div>
 
-    <!-- Highlight cards (each links to the relevant entity) -->
     <div class="row g-3">
       <div class="col-12 col-md-6 col-lg-4">
         <div class="card h-100 border-0 shadow-sm position-relative">
           <div class="card-body">
-            <div class="text-uppercase small text-secondary mb-2">🥇 Most reported user</div>
+            <div class="admin-overview__label">
+              <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                <line x1="4" y1="22" x2="4" y2="15" />
+              </svg>
+              <span>Most reported user</span>
+            </div>
             @if (s.mostReportedUser; as u) {
-              <a
-                [routerLink]="['/profile', u.username]"
-                class="stretched-link fw-semibold text-decoration-none"
-                >{{ u.username }} <span class="text-secondary">({{ u.count }})</span></a
-              >
+              <a [routerLink]="['/profile', u.username]" class="stretched-link fw-semibold text-decoration-none">{{ u.username }} <span class="text-secondary">({{ u.count }})</span></a>
             } @else {
               <div class="fst-italic text-secondary">No reports yet</div>
             }
@@ -54,13 +52,14 @@
       <div class="col-12 col-md-6 col-lg-4">
         <div class="card h-100 border-0 shadow-sm position-relative">
           <div class="card-body">
-            <div class="text-uppercase small text-secondary mb-2">❤️ Most liked post</div>
+            <div class="admin-overview__label">
+              <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+              </svg>
+              <span>Most liked post</span>
+            </div>
             @if (s.mostLikedPost; as p) {
-              <a
-                [routerLink]="['/post', p.id]"
-                class="stretched-link fw-semibold text-decoration-none"
-                >{{ p.title }} <span class="text-secondary">({{ p.count }} likes)</span></a
-              >
+              <a [routerLink]="['/post', p.id]" class="stretched-link fw-semibold text-decoration-none">{{ truncate(p.title) }} <span class="text-secondary">({{ p.count }} likes)</span></a>
             } @else {
               <div class="fst-italic text-secondary">No likes yet</div>
             }
@@ -71,13 +70,14 @@
       <div class="col-12 col-md-6 col-lg-4">
         <div class="card h-100 border-0 shadow-sm position-relative">
           <div class="card-body">
-            <div class="text-uppercase small text-secondary mb-2">💬 Most commented post</div>
+            <div class="admin-overview__label">
+              <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+              </svg>
+              <span>Most commented post</span>
+            </div>
             @if (s.mostCommentedPost; as p) {
-              <a
-                [routerLink]="['/post', p.id]"
-                class="stretched-link fw-semibold text-decoration-none"
-                >{{ p.title }} <span class="text-secondary">({{ p.count }} comments)</span></a
-              >
+              <a [routerLink]="['/post', p.id]" class="stretched-link fw-semibold text-decoration-none">{{ truncate(p.title) }} <span class="text-secondary">({{ p.count }} comments)</span></a>
             } @else {
               <div class="fst-italic text-secondary">No comments yet</div>
             }

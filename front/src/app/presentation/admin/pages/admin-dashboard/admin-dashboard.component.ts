@@ -37,4 +37,9 @@ export class AdminDashboardComponent implements OnInit {
       },
     });
   }
+
+  /** Show at most the first 7 characters of a title, with a ".." suffix when truncated. */
+  truncate(value: string): string {
+    return value.length > 7 ? value.slice(0, 7) + '..' : value;
+  }
 }
