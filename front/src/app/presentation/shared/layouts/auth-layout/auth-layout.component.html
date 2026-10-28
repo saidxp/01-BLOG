@@ -1,4 +1,71 @@
 <main class="auth-layout">
+  <svg class="auth-network" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="netStroke" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+        <stop offset="0" class="net-grad-start" />
+        <stop offset="1" class="net-grad-end" />
+      </linearGradient>
+      <path id="routeA" d="M300 70 L360 300 L870 430 L980 540 L1130 690" />
+      <path id="routeB" d="M930 220 L760 120 L520 180 L360 300 L170 300 L70 560" />
+    </defs>
+
+    <g class="net-lines">
+      <line class="net-line" x1="90" y1="120" x2="300" y2="70" />
+      <line class="net-line" x1="90" y1="120" x2="170" y2="300" />
+      <line class="net-line" x1="300" y1="70" x2="360" y2="300" />
+      <line class="net-line" x1="170" y1="300" x2="360" y2="300" />
+      <line class="net-line" x1="170" y1="300" x2="70" y2="560" />
+      <line class="net-line" x1="70" y1="560" x2="300" y2="650" />
+      <line class="net-line" x1="300" y1="650" x2="470" y2="520" />
+      <line class="net-line" x1="470" y1="520" x2="360" y2="300" />
+      <line class="net-line" x1="300" y1="70" x2="520" y2="180" />
+      <line class="net-line" x1="520" y1="180" x2="760" y2="120" />
+      <line class="net-line" x1="520" y1="180" x2="360" y2="300" />
+      <line class="net-line" x1="760" y1="120" x2="1120" y2="110" />
+      <line class="net-line" x1="1120" y1="110" x2="930" y2="220" />
+      <line class="net-line" x1="930" y1="220" x2="760" y2="120" />
+      <line class="net-line" x1="930" y1="220" x2="870" y2="430" />
+      <line class="net-line" x1="1140" y1="360" x2="870" y2="430" />
+      <line class="net-line" x1="1120" y1="110" x2="1140" y2="360" />
+      <line class="net-line" x1="870" y1="430" x2="980" y2="540" />
+      <line class="net-line" x1="980" y1="540" x2="1130" y2="690" />
+      <line class="net-line" x1="980" y1="540" x2="780" y2="650" />
+      <line class="net-line" x1="780" y1="650" x2="870" y2="430" />
+      <line class="net-line" x1="360" y1="300" x2="870" y2="430" />
+      <line class="net-line" x1="470" y1="520" x2="780" y2="650" />
+    </g>
+
+    <g class="net-nodes">
+      <circle class="net-node net-node--pulse" cx="90" cy="120" r="3.5" style="animation-delay:0s" />
+      <circle class="net-node net-node--pulse" cx="300" cy="70" r="3.5" style="animation-delay:0.4s" />
+      <circle class="net-node net-node--pulse" cx="170" cy="300" r="3.5" style="animation-delay:1.1s" />
+      <circle class="net-node net-node--pulse" cx="70" cy="560" r="3.5" style="animation-delay:0.7s" />
+      <circle class="net-node net-node--pulse" cx="300" cy="650" r="3.5" style="animation-delay:1.6s" />
+      <circle class="net-node net-node--pulse" cx="470" cy="520" r="3.5" style="animation-delay:2.2s" />
+      <circle class="net-node net-node--pulse" cx="520" cy="180" r="3.5" style="animation-delay:0.9s" />
+      <circle class="net-node net-node--pulse" cx="360" cy="300" r="4" style="animation-delay:1.4s" />
+      <circle class="net-node net-node--pulse" cx="1120" cy="110" r="3.5" style="animation-delay:0.3s" />
+      <circle class="net-node net-node--pulse" cx="930" cy="220" r="3.5" style="animation-delay:1.9s" />
+      <circle class="net-node net-node--pulse" cx="1140" cy="360" r="3.5" style="animation-delay:2.6s" />
+      <circle class="net-node net-node--pulse" cx="980" cy="540" r="3.5" style="animation-delay:1.2s" />
+      <circle class="net-node net-node--pulse" cx="1130" cy="690" r="3.5" style="animation-delay:0.6s" />
+      <circle class="net-node net-node--pulse" cx="780" cy="650" r="3.5" style="animation-delay:2.0s" />
+      <circle class="net-node net-node--pulse" cx="870" cy="430" r="4" style="animation-delay:1.7s" />
+      <circle class="net-node net-node--pulse" cx="760" cy="120" r="3.5" style="animation-delay:0.2s" />
+    </g>
+
+    <circle class="net-packet" r="4">
+      <animateMotion dur="9s" repeatCount="indefinite">
+        <mpath href="#routeA" />
+      </animateMotion>
+    </circle>
+    <circle class="net-packet" r="4">
+      <animateMotion dur="12s" begin="-4s" repeatCount="indefinite">
+        <mpath href="#routeB" />
+      </animateMotion>
+    </circle>
+  </svg>
+
   <div class="auth-layout__content container-sm">
     <router-outlet />
   </div>

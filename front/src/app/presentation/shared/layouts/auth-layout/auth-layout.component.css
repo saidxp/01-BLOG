@@ -3,15 +3,76 @@
 }
 
 .auth-layout {
+  position: relative;
+  overflow: hidden;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: clamp(var(--space-6), 6vw, var(--space-16)) var(--space-4);
-  background: var(--color-background);
+  background-color: var(--color-background);
+  background-image:
+    radial-gradient(45rem 45rem at 8% -10%, color-mix(in srgb, var(--color-primary) 34%, transparent), transparent 60%),
+    radial-gradient(40rem 40rem at 102% 2%, color-mix(in srgb, var(--color-info) 26%, transparent), transparent 55%),
+    radial-gradient(42rem 42rem at 50% 122%, color-mix(in srgb, var(--color-primary) 22%, transparent), transparent 60%),
+    linear-gradient(160deg, color-mix(in srgb, var(--color-surface) 70%, var(--color-background)), var(--color-background));
+  background-attachment: fixed;
 }
 
 .auth-layout__content {
   width: 100%;
-  max-width: 30rem;
+  max-width: 36rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Decorative network / constellation background layer */
+.auth-network {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.net-grad-start { stop-color: var(--color-primary); }
+.net-grad-end { stop-color: var(--color-info); }
+
+.net-line {
+  fill: none;
+  stroke: url(#netStroke);
+  stroke-width: 1;
+  stroke-dasharray: 5 9;
+  animation: net-flow 7s linear infinite;
+}
+
+@keyframes net-flow {
+  to { stroke-dashoffset: -140; }
+}
+
+.net-node {
+  fill: var(--color-primary);
+  opacity: 0.7;
+}
+
+.net-node--pulse {
+  animation: net-pulse 3.2s ease-in-out infinite;
+}
+
+@keyframes net-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+.net-packet {
+  fill: var(--color-info);
+  filter: drop-shadow(0 0 5px var(--color-info));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .net-line,
+  .net-node--pulse { animation: none; }
+  .net-packet { display: none; }
 }
