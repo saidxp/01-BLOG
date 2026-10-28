@@ -34,6 +34,10 @@ public class ReportService {
             throw new IllegalArgumentException("Report reason must not be empty");
         }
 
+        if (reason.trim().length() > 500) {
+            throw new IllegalArgumentException("Report reason must not exceed 500 characters");
+        }
+
         User reportedUser = userRepository.findByUsername(reportedUsername)
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + reportedUsername));
 

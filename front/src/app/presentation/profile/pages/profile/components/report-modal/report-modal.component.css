@@ -46,12 +46,15 @@
   margin-top: var(--space-5);
 }
 
-.reason-preview {
-  padding: var(--space-3);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-subtle);
-  color: var(--color-foreground) !important;
-  font-style: italic;
+.char-count {
+  margin: var(--space-1) 0 0;
+  font-size: 0.75rem;
+  text-align: right;
+  color: var(--color-muted-foreground);
+}
+
+.char-count--limit {
+  color: var(--color-danger);
 }
 
 .error {

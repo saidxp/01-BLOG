@@ -14,8 +14,10 @@
           [ngModel]="reason()"
           (ngModelChange)="reason.set($event)"
           rows="4"
+          maxlength="500"
           [placeholder]="isPostReport() ? 'Why are you reporting this post?' : 'Why are you reporting this user?'"
         ></textarea>
+        <p class="char-count" [class.char-count--limit]="reason().length >= 500">{{ reason().length }}/500</p>
         <div class="modal-actions">
           <button class="button-01 button-01--secondary" type="button" (click)="close()">Cancel</button>
           <button class="button-01 button-01--primary" type="button" (click)="goToConfirm()" [disabled]="!reason().trim()">Next</button>
@@ -29,7 +31,6 @@
         } @else {
           <p>Are you sure you want to report <strong>{{ username() }}</strong>?</p>
         }
-        <p class="reason-preview">"{{ reason() }}"</p>
         @if (errorMessage()) {
           <p class="error">{{ errorMessage() }}</p>
         }
