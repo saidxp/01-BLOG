@@ -27,12 +27,23 @@ export class ProfileComponent implements OnInit {
     readonly isEditing = signal(false);
 
     ngOnInit(): void {
-        const username = this.route.snapshot.paramMap.get('username')!;
+        // React to :username changes: Angular reuses this component when only the
+        // route param changes, so a snapshot read would never load the new profile.
+        this.route.paramMap.subscribe((params) => {
+            const username = params.get('username');
+            if (!username) return;
+            this.loadProfile(username);
+        });
+    }
+
+    private loadProfile(username: string): void {
+        this.isLoading.set(true);
+        this.errorMessage.set(null);
+        this.profile.set(null);
         this.getUserProfileUseCase.execute(username).subscribe({
             next: (profile) => {
                 this.profile.set(profile);
                 this.isLoading.set(false);
-                console.log("State Of Profile ", profile);
             },
             error: (err) => {
                 this.isLoading.set(false);
@@ -40,10 +51,8 @@ export class ProfileComponent implements OnInit {
             },
         });
     }
-    
     onProfileSaved(updatedProfile: UserProfile): void {
         this.profile.set(updatedProfile);
         this.isEditing.set(false);
-    } 
-
+    } // {<=>} \\ {<=>}
 }
