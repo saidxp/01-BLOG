@@ -1,3 +1,23 @@
 .id-cell { color: var(--color-muted-foreground); font-family: var(--font-mono); font-size: 0.8rem; }
 .email-cell { max-width: 20rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .action-button { min-height: 2.25rem; padding-inline: var(--space-3); font-size: 0.8rem; }
+
+/* Prev/Next pagination controls */
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.pagination-bar button {
+  min-width: 2.5rem;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.pagination-bar__info {
+  color: var(--color-muted-foreground);
+  font-size: 0.9rem;
+}

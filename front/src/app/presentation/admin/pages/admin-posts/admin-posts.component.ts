@@ -28,30 +28,41 @@ export class AdminPostsComponent implements OnInit {
   readonly pendingDelete = signal<AdminPost | null>(null);
   readonly isDeleteSubmitting = signal(false);
 
-  private currentPage = 0;
-  private totalPages = 1;
+  readonly currentPage = signal(0);
+  readonly totalPages = signal(1);
+
+  get hasPrevious(): boolean {
+    return this.currentPage() > 0;
+  }
+
+  get hasNext(): boolean {
+    return this.currentPage() + 1 < this.totalPages();
+  }
 
   ngOnInit(): void {
     this.loadPosts(0);
   }
 
-  loadMore(): void {
-    if (this.currentPage + 1 < this.totalPages) {
-      this.loadPosts(this.currentPage + 1);
-    }
+  previousPage(): void {
+    this.goToPage(this.currentPage() - 1);
   }
 
-  get hasMore(): boolean {
-    return this.currentPage + 1 < this.totalPages;
+  nextPage(): void {
+    this.goToPage(this.currentPage() + 1);
+  }
+
+  private goToPage(page: number): void {
+    if (this.isLoading() || page < 0 || page >= this.totalPages()) return;
+    this.loadPosts(page);
   }
 
   private loadPosts(page: number): void {
     this.isLoading.set(true);
     this.getAdminPostsUseCase.execute(page).subscribe({
       next: (result) => {
-        this.currentPage = result.currentPage;
-        this.totalPages = result.totalPages;
-        this.posts.set(page === 0 ? result.posts : [...this.posts(), ...result.posts]);
+        this.currentPage.set(result.currentPage);
+        this.totalPages.set(result.totalPages);
+        this.posts.set(result.posts);
         this.isLoading.set(false);
       },
       error: (err) => {

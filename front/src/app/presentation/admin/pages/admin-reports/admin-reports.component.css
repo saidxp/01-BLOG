@@ -30,6 +30,26 @@
    flex-wrap: nowrap;
   gap: var(--space-2);
 }
+
+/* Prev/Next pagination controls */
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.pagination-bar button {
+  min-width: 2.5rem;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.pagination-bar__info {
+  color: var(--color-muted-foreground);
+  font-size: 0.9rem;
+}
 modal-backdrop {
   position: fixed;
   inset: 0;

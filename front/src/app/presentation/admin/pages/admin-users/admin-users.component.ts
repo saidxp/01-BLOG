@@ -36,33 +36,44 @@ export class AdminUsersComponent implements OnInit {
   readonly pendingAction = signal<PendingUserAction | null>(null);
   readonly isActionSubmitting = signal(false);
 
-  private currentPage = 0;
-  private totalPages = 1;
+  readonly currentPage = signal(0);
+  readonly totalPages = signal(1);
+
+  get hasPrevious(): boolean {
+    return this.currentPage() > 0;
+  }
+
+  get hasNext(): boolean {
+    return this.currentPage() + 1 < this.totalPages();
+  }
 
   ngOnInit(): void {
     this.loadUsers(0);
   }
 
-  loadMore(): void {
-    if (this.currentPage + 1 < this.totalPages) {
-      this.loadUsers(this.currentPage + 1);
-    }
+  previousPage(): void {
+    this.goToPage(this.currentPage() - 1);
   }
 
-  get hasMore(): boolean {
-    return this.currentPage + 1 < this.totalPages;
+  nextPage(): void {
+    this.goToPage(this.currentPage() + 1);
+  }
+
+  private goToPage(page: number): void {
+    if (this.isLoading() || page < 0 || page >= this.totalPages()) return;
+    this.loadUsers(page);
   }
 
   private loadUsers(page: number): void {
     this.isLoading.set(true);
     this.getAdminUsersUseCase.execute(page).subscribe({
       next: (result) => {
-        this.currentPage = result.currentPage;
-        this.totalPages = result.totalPages;
-        this.users.set(page === 0 ? result.users : [...this.users(), ...result.users]);
+        this.currentPage.set(result.currentPage);
+        this.totalPages.set(result.totalPages);
+        this.users.set(result.users);
         this.isLoading.set(false);
-      }, 
-      
+      },
+
       error: (err) => {
         this.isLoading.set(false);
         if (err.status === 401) {

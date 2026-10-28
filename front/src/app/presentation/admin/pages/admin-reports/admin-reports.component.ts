@@ -59,22 +59,32 @@ closeReason(): void {
     return r ? `Post #${r.postId} by ${r.reportedUsername} will be permanently deleted.` : '';
   });
 
-  private currentPage = 0;
-  private totalPages = 1;
+  readonly currentPage = signal(0);
+  readonly totalPages = signal(1);
+
+  get hasPrevious(): boolean {
+    return this.currentPage() > 0;
+  }
+
+  get hasNext(): boolean {
+    return this.currentPage() + 1 < this.totalPages();
+  }
 
   ngOnInit(): void {
     this.loadReports(0);
   }
 
-  loadMore(): void {
-    if (this.isLoading()) return;
-    if (this.currentPage + 1 < this.totalPages) {
-      this.loadReports(this.currentPage + 1);
-    }
+  previousPage(): void {
+    this.goToPage(this.currentPage() - 1);
   }
 
-  get hasMore(): boolean {
-    return this.currentPage + 1 < this.totalPages;
+  nextPage(): void {
+    this.goToPage(this.currentPage() + 1);
+  }
+
+  private goToPage(page: number): void {
+    if (this.isLoading() || page < 0 || page >= this.totalPages()) return;
+    this.loadReports(page);
   }
 
   toggleReason(id: number): void {
@@ -163,10 +173,9 @@ closeReason(): void {
     this.isLoading.set(true);
     this.getAdminReportsUseCase.execute(page).subscribe({
       next: (result) => {
-        console.log("REPORST'S ===>{}", result);
-        this.currentPage = result.currentPage;
-        this.totalPages = result.totalPages;
-        this.reports.set(page === 0 ? result.reports : [...this.reports(), ...result.reports]);
+        this.currentPage.set(result.currentPage);
+        this.totalPages.set(result.totalPages);
+        this.reports.set(result.reports);
         this.isLoading.set(false);
       },
       error: (err) => {
