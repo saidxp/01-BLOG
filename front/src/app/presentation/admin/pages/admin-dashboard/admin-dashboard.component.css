@@ -1,5 +1,11 @@
 /* Admin overview (system stats dashboard shown on the /admin landing) */
 /* Cards use Bootstrap utility classes; only label + icon layout lives here. */
+
+/* Opaque white cards so the wave background never bleeds through the stats */
+.card {
+  background-color: #ffffff;
+}
+
 .admin-overview {
   margin-bottom: var(--space-5);
 }
