@@ -1,0 +1,18 @@
+/* Admin overview (system stats dashboard shown on the /admin landing) */
+/* Cards themselves use Bootstrap utility classes; only layout-level bits here. */
+.admin-overview {
+  margin-bottom: var(--space-5);
+}
+
+.admin-overview__title {
+  margin: 0 0 var(--space-4);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-foreground);
+}
+
+.admin-overview__loading {
+  color: var(--color-muted-foreground);
+  font-size: 0.9rem;
+}

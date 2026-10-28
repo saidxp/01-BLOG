@@ -1,0 +1,89 @@
+<section class="admin-overview">
+  <h2 class="admin-overview__title">Overview</h2>
+
+  @if (isLoading()) {
+    <p class="admin-overview__loading">Loading system data…</p>
+  } @else if (stats(); as s) {
+    <!-- Count cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="fs-2 fw-bold text-primary">{{ s.totalUsers }}</div>
+            <div class="text-uppercase small text-secondary">Total users</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="fs-2 fw-bold text-primary">{{ s.totalPosts }}</div>
+            <div class="text-uppercase small text-secondary">Total posts</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="fs-2 fw-bold text-primary">{{ s.pendingReports }}</div>
+            <div class="text-uppercase small text-secondary">Pending reports</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Highlight cards (each links to the relevant entity) -->
+    <div class="row g-3">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm position-relative">
+          <div class="card-body">
+            <div class="text-uppercase small text-secondary mb-2">🥇 Most reported user</div>
+            @if (s.mostReportedUser; as u) {
+              <a
+                [routerLink]="['/profile', u.username]"
+                class="stretched-link fw-semibold text-decoration-none"
+                >{{ u.username }} <span class="text-secondary">({{ u.count }})</span></a
+              >
+            } @else {
+              <div class="fst-italic text-secondary">No reports yet</div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm position-relative">
+          <div class="card-body">
+            <div class="text-uppercase small text-secondary mb-2">❤️ Most liked post</div>
+            @if (s.mostLikedPost; as p) {
+              <a
+                [routerLink]="['/post', p.id]"
+                class="stretched-link fw-semibold text-decoration-none"
+                >{{ p.title }} <span class="text-secondary">({{ p.count }} likes)</span></a
+              >
+            } @else {
+              <div class="fst-italic text-secondary">No likes yet</div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm position-relative">
+          <div class="card-body">
+            <div class="text-uppercase small text-secondary mb-2">💬 Most commented post</div>
+            @if (s.mostCommentedPost; as p) {
+              <a
+                [routerLink]="['/post', p.id]"
+                class="stretched-link fw-semibold text-decoration-none"
+                >{{ p.title }} <span class="text-secondary">({{ p.count }} comments)</span></a
+              >
+            } @else {
+              <div class="fst-italic text-secondary">No comments yet</div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</section>
