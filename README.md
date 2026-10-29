@@ -1,7 +1,7 @@
 # 01-BLOG
 
 
-> Engineered with **Clean Architecture**, **Angular Universal (SSR)**, **Spring Boot 3**, **Spring Security 6 (JWT access token in HttpOnly Cookies)**, **PostgreSQL**, **STOMP/WebSocket Real-Time Notifications**, and a **Dockerized Nginx Gateway**.
+> Engineered with **Clean Architecture**, **Angular Universal (SSR)**, **Spring Boot 4**, **Spring Security (JWT access token in HttpOnly Cookies)**, **PostgreSQL**, **STOMP/WebSocket Real-Time Notifications**, and a **Dockerized Nginx Gateway**.
 
 ---
 
@@ -12,8 +12,8 @@ This repository contains exhaustive, software-engineer-grade specifications for 
 | Document | Scope & Highlights | Link |
 |---|---|---|
 | 🖥️ **Frontend Architecture** | Angular 22+, Clean Architecture (Domain / Application / Infrastructure / Presentation), Signals Reactive State, SharedWorker STOMP WebSocket, SSR Cookie Forwarding, Auth Guards | [FRONTEND_ARCHITECTURE.md](./FRONTEND_ARCHITECTURE.md) |
-| ⚙️ **Backend & API Reference** | Spring Boot 3 MVC, Spring Security 6 filter chains, Stateless JWT in HttpOnly Cookies, Dual-layer CORS, JPA/Hibernate schemas, Full REST API Catalog & STOMP Broker | [BACKEND_API_DOCUMENTATION.md](./BACKEND_API_DOCUMENTATION.md) |
-| 📖 **Interactive API Docs (Swagger UI)** | Live interactive REST API testing interface, schema inspector & OpenAPI 3.0 specification | [http://localhost/api/swagger-ui.html](http://localhost/api/swagger-ui.html) |
+| ⚙️ **Backend & API Reference** | Spring Boot 4 MVC, Spring Security filter chains, Stateless JWT in HttpOnly Cookies, Dual-layer CORS, JPA/Hibernate schemas, Full REST API Catalog & STOMP Broker | [BACKEND_API_DOCUMENTATION.md](./BACKEND_API_DOCUMENTATION.md) |
+| 📖 **Interactive API Docs (Swagger UI)** | Live interactive REST API testing interface, schema inspector & OpenAPI 3.0 specification | [http://localhost:1998/api/swagger-ui.html](http://localhost:1998/api/swagger-ui.html) |
 | 🗄️ **Database & JPA Schema** | PostgreSQL 15 relational ERD, 8 JPA Entities (`User`, `Post`, `Comment`, `Like`, `Subscription`, `Notification`, `MediaUpload`, `Report`), constraints & fetch strategies | [Section Below](#🗄️-database-architecture--entity-relationships-jpa-schema) |
 | 📦 **Infrastructure & Compose** | Multi-container Docker setup, Nginx reverse proxy routing, persistent PostgreSQL volume | [docker-compose.yml](./docker-compose.yml) |
 
@@ -278,7 +278,7 @@ The following data flow diagram traces the lifecycle of user actions across the 
 
 sequenceDiagram
     actor User as User Browser
-    participant App as Next.js (80)
+    participant App as Nginx Gateway
     participant SSR as Angular SSR (:4000)
     participant Spring as Spring Boot (:8080)
     participant DB as PostgreSQL (:5432)
@@ -324,12 +324,12 @@ sequenceDiagram
 * **Domain Layer**: Pure entities (`User`, `Post`, `Comment`) and repository interfaces (`AuthRepository`). Zero external dependencies.
 * **Application Layer**: Business use cases (`LoginUseCase`, `GetFeedUseCase`) and signal-based state stores (`AuthStateService`, `NotificationStateService`).
 * **Infrastructure Layer**: Concrete implementations (`AuthRepositoryImpl`), HTTP interceptors forwarding JWT cookies during SSR and CSR, and WebSocket client services.
-* **Presentation Layer**: Standalone components, reactive forms, signal computed selectors, and Tailwind/Vanilla CSS styling.
+* **Presentation Layer**: Standalone components, reactive forms, signal computed selectors, Bootstrap 5.3 + CSS design-token styling.
 * **SharedWorker Real-Time Optimization**: A single background Web Worker manages the STOMP/SockJS connection across all browser tabs, eliminating duplicated socket connections and syncing unread counts across all active tabs instantly.
 
-### 2. Backend: Secure Spring Boot 3 Engine
+### 2. Backend: Secure Spring Boot 4 Engine
 * **Stateless Authentication with HttpOnly Cookies**: A signed JWT access token is stored exclusively in an `HttpOnly`, `SameSite=Lax` cookie (cookie name: `jwt`, 1-hour expiry) to protect against XSS and token-theft attacks. The `Secure` flag is enabled automatically under the `prod` Spring profile (or via `COOKIE_SECURE=true`).
-* **Spring Security 6 Filter Chain**: Custom `JwtAuthenticationFilter` intercepts requests, extracts cookies, resolves claims, and sets the authenticated `SecurityContextHolder`.
+* **Spring Security Filter Chain**: Custom `JwtAuthenticationFilter` intercepts requests, extracts cookies, resolves claims, and sets the authenticated `SecurityContextHolder`.
 * **Layered Onion Architecture**: Controller (`@RestController`) $\to$ Service (`@Service`, `@Transactional`) $\to$ Repository (`JpaRepository`) $\to$ Database Entities.
 * **STOMP In-Memory Message Broker**: Dispatches user-targeted events (`SimpMessagingTemplate.convertAndSendToUser`) for likes, comments, and mentions.
 * **Media Storage**: Configurable static media uploads served through protected path handlers.
@@ -383,8 +383,8 @@ Frontend:
   └── Web SharedWorkers (Cross-tab connection pooling)
 
 Backend:
-  ├── Java 17+ / Spring Boot 3.x
-  ├── Spring Security 6 (Stateless JWT Filter)
+  ├── Java 17+ / Spring Boot 4.x
+  ├── Spring Security (Stateless JWT Filter)
   ├── Spring Data JPA / Hibernate 6
   ├── Spring WebSocket & STOMP Messaging
   ├── PostgreSQL 15 (Relational persistence)
@@ -411,6 +411,8 @@ DevOps & Infrastructure:
 |---|---|---|
 | `JWT_SECRET` | ✅ | HMAC signing key for access tokens (≥ 256-bit recommended) |
 | `JWT_EXPIRATION` | ✅ | Access-token lifetime in ms (e.g. `3600000`) |
+| `APP_HOST` | ✅ | Public host (LAN IP or domain) users browse to — single source of truth for CORS, WebSocket origins and SSR. On a new machine change only this and regenerate the certificate |
+| `APP_PORT` | ❌ | Public HTTPS port exposed by Nginx (default `8443`) |
 | `POSTGRES_DB` / `POSTGRES_USER` / `POSTGRES_PASSWORD` | ❌ | Database credentials (defaults keep local dev working; override in production) |
 | `COOKIE_SECURE` | ❌ | Set to `true` when serving over HTTPS so the auth cookie carries the `Secure` flag |
 | `BOOTSTRAP_ADMIN_USERNAMES` | ❌ | Comma-separated usernames auto-promoted to `ROLE_ADMIN` at backend startup |
@@ -425,15 +427,24 @@ From the project root:
 git clone https://github.com/saidxp/01-BLOG.git
 cd 01-BLOG
 
+# 1) Point the platform at this machine: edit .env and set APP_HOST to your LAN IP or domain
+#    (single source of truth — CORS, WebSocket and SSR all read it)
+
+# 2) Generate the self-signed TLS certificate for that host (first run, or after any IP change)
+bash nginx/set-up-se.sh <YOUR_IP>
+
 # Start all micro-services (Nginx, Angular SSR, Spring Boot, PostgreSQL)
 docker compose up --build -d
+
+# Open the platform (accept the self-signed certificate once)
+# https://<YOUR_IP>:8443
 ```
 
 ### 2. Verified Service Ports
 
 | Service | Container Name | Internal Port | Exposed Port |
 |---|---|---|---|
-| **Nginx (Ingress Gateway)** | `blog-nginx` | `80` | `http://localhost:80` |
+| **Nginx (Ingress Gateway)** | `blog-nginx` | `80` / `443` | `http://localhost:1998` (redirects to HTTPS) · `https://localhost:8443` |
 | **Angular SSR Frontend** | `blog-frontend` | `4000` | Routed through Nginx `/` |
 | **Spring Boot Backend** | `blog-backend` | `8080` | Routed through Nginx `/api/` |
 | **PostgreSQL Database** | `blog-postgres` | `5432` | Internal bridge network |
@@ -444,9 +455,9 @@ Once the backend container is running, the interactive Swagger UI and OpenAPI do
 
 | Interface | URL | Description |
 |---|---|---|
-| 🌐 **Swagger UI (via Nginx Gateway)** | [http://localhost/api/swagger-ui.html](http://localhost/api/swagger-ui.html) | Interactive web UI to execute & test all REST endpoints |
+| 🌐 **Swagger UI (via Nginx Gateway)** | [http://localhost:1998/api/swagger-ui.html](http://localhost:1998/api/swagger-ui.html) | Interactive web UI to execute & test all REST endpoints |
 | ⚙️ **Swagger UI (Direct Backend)** | [http://localhost:8080/api/swagger-ui.html](http://localhost:8080/api/swagger-ui.html) | Direct connection to Tomcat port 8080 |
-| 📄 **OpenAPI Specification (JSON)** | [http://localhost/api/v3/api-docs](http://localhost/api/v3/api-docs) | Raw OpenAPI 3 JSON definition |
+| 📄 **OpenAPI Specification (JSON)** | [http://localhost:1998/api/v3/api-docs](http://localhost:1998/api/v3/api-docs) | Raw OpenAPI 3 JSON definition |
 
 ---
 ### 4. Docker Map 
