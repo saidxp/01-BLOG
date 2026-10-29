@@ -8,12 +8,16 @@
         <div class="skeleton-line"></div>
       </div>
     } @else if (errorMessage()) {
-      <div class="state-panel state-panel--error" role="alert">
-        <div class="state-panel__content">
-          <p class="state-panel__title">The profile could not be loaded</p>
-          <p class="state-panel__message">{{ errorMessage() }}</p>
+      @if (isNotFound()) {
+        <app-not-found heading="User not found" description="This member doesn't exist — the account may have been removed." />
+      } @else {
+        <div class="state-panel state-panel--error" role="alert">
+          <div class="state-panel__content">
+            <p class="state-panel__title">The profile could not be loaded</p>
+            <p class="state-panel__message">{{ errorMessage() }}</p>
+          </div>
         </div>
-      </div>
+      }
     } @else if (!profile()) {
       <div class="state-panel">
         <div class="state-panel__content">

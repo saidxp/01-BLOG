@@ -7,11 +7,12 @@ import { SubscribeButtonComponent } from './components/subscribe-button/subscrib
 import { UserPostListComponent } from './components/user-post-list/user-post-list.component';
 import { ReportModalComponent } from './components/report-modal/report-modal.component'
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+import { NotFoundComponent } from '../../../shared/components/notfound/not-found.component';
 
 @Component({
     selector: 'app-profile',
     standalone: true,
-    imports: [CommonModule, SubscribeButtonComponent, UserPostListComponent, ReportModalComponent, EditProfileComponent],
+    imports: [CommonModule, SubscribeButtonComponent, UserPostListComponent, ReportModalComponent, EditProfileComponent, NotFoundComponent],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.css',
 })
@@ -24,6 +25,7 @@ export class ProfileComponent implements OnInit {
     readonly profile = signal<UserProfile | null>(null);
     readonly isLoading = signal(true);
     readonly errorMessage = signal<string | null>(null);
+    readonly isNotFound = signal(false);
     readonly isEditing = signal(false);
 
     ngOnInit(): void {
@@ -39,6 +41,7 @@ export class ProfileComponent implements OnInit {
     private loadProfile(username: string): void {
         this.isLoading.set(true);
         this.errorMessage.set(null);
+        this.isNotFound.set(false);
         this.profile.set(null);
         this.getUserProfileUseCase.execute(username).subscribe({
             next: (profile) => {
@@ -47,7 +50,13 @@ export class ProfileComponent implements OnInit {
             },
             error: (err) => {
                 this.isLoading.set(false);
-                this.errorMessage.set(err.error?.message ?? (err.status === 404 ? 'User not found.' : 'Could not load this profile.'));
+                if (err.status === 404) {
+                    // Show the friendly 404 view instead of the raw backend message.
+                    this.isNotFound.set(true);
+                    this.errorMessage.set('User not found.');
+                    return;
+                }
+                this.errorMessage.set(err.error?.message ?? 'Could not load this profile.');
             },
         });
     }

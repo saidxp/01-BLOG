@@ -18,6 +18,7 @@ import { AuthNavigationService } from '../../../../application/auth/services/aut
 import { CommonModule } from '@angular/common';
 import { MediaType } from '../../../../enum/MediaType';
 import { ReportModalComponent } from '../../../profile/pages/profile/components/report-modal/report-modal.component';
+import { NotFoundComponent } from '../../../shared/components/notfound/not-found.component';
 import{AuthState} from '../../../../application/auth/state/auth-state.service'
 import { ToastService } from '../../../../application/auth/services/toast.service'
 import { Role} from '../../../../enum/Role'
@@ -44,7 +45,7 @@ DOMPurify.addHook('uponSanitizeElement', (node, data) => {
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, SubmitCommentComponent, CommentListComponent, LikeButtonComponent, CommentCountComponent, ConfirmModalComponent, ReportModalComponent],
+  imports: [CommonModule, RouterLink, SubmitCommentComponent, CommentListComponent, LikeButtonComponent, CommentCountComponent, ConfirmModalComponent, ReportModalComponent, NotFoundComponent],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css',
 })
@@ -74,6 +75,7 @@ export class PostDetailComponent implements OnInit {
   readonly renderedContent = signal<SafeHtml | null>(null);
   readonly isLoading = signal(true);
   readonly errorMessage = signal<string | null>(null);
+  readonly isNotFound = signal(false);
 
   // <<==>>> \\\
   readonly showDeleteConfirm = signal(false);
@@ -104,13 +106,18 @@ export class PostDetailComponent implements OnInit {
         this.isLoading.set(false); // <<==>> \\
       },
       error: (err) => {
-        console.log("hjkhkjhkjh")
         if (err.status === 401) {
           this._authNavigation.handle401(err);
           return;
         }
         this.isLoading.set(false);
-        this.errorMessage.set(err.error?.message ?? (err.status === 404 ? 'Post not found.' : 'Could not load this post.'));
+        if (err.status === 404) {
+          // Show the friendly 404 view instead of the raw backend message.
+          this.isNotFound.set(true);
+          this.errorMessage.set('Post not found.');
+          return;
+        }
+        this.errorMessage.set(err.error?.message ?? 'Could not load this post.');
       },
     });
   }

@@ -8,12 +8,16 @@
       <div class="skeleton-line"></div>
     </div>
     } @else if (errorMessage()) {
+    @if (isNotFound()) {
+    <app-not-found heading="Post not found" description="This post doesn't exist — it may have been deleted by its author." />
+    } @else {
     <div class="state-panel state-panel--error" role="alert">
       <div class="state-panel__content">
         <p class="state-panel__title">The post could not be loaded</p>
         <p class="state-panel__message">{{ errorMessage() }}</p>
       </div>
     </div>
+    }
     } @else if (post(); as p) {
     <div class="article-layout">
       <aside class="article-actions" aria-label="Post reactions">
