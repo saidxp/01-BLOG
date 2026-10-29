@@ -68,9 +68,36 @@
 html.dark {
   color-scheme: dark;
 
-  --color-background: #121212;
-  --color-foreground: #ffffff;
-  --color-surface: #1c1c1c;
+  /* Full professional dark palette: every semantic token is re-mapped,
+     not just the three page colors — borders, chips, muted text and
+     alerts all adapt so nothing stays light-mode white on a dark page. */
+  --color-background: #101216;
+  --color-foreground: #e7e9ee;
+  --color-surface: #1a1d23;
+  --color-surface-subtle: #14171c;
+  --color-primary: #848fff;
+  --color-primary-hover: #9da6ff;
+  --color-primary-active: #6b78f0;
+  --color-primary-soft: #232a45;
+  --color-muted: #262a31;
+  --color-muted-foreground: #9aa3b2;
+  --color-border: #2a2e36;
+  --color-border-strong: #3b414c;
+  --color-focus: #848fff;
+  --color-success: #6abf7b;
+  --color-success-soft: #1b2b1f;
+  --color-warning: #f0b352;
+  --color-warning-soft: #2c2517;
+  --color-danger: #ef7b7b;
+  --color-danger-soft: #2e1d1f;
+  --color-info: #6cb2f1;
+  --color-info-soft: #182838;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 12px 30px rgb(0 0 0 / 45%), 0 3px 8px rgb(0 0 0 / 30%);
+  --focus-ring: 0 0 0 3px rgb(132 143 255 / 35%);
+
+  --bs-primary-rgb: 132, 143, 255;
 } 
 
 *,
@@ -95,6 +122,8 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Gentle cross-fade when the theme is toggled */
+  transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 button,
