@@ -1,9 +1,10 @@
 /* Admin overview (system stats dashboard shown on the /admin landing) */
 /* Cards use Bootstrap utility classes; only label + icon layout lives here. */
 
-/* Opaque white cards so the wave background never bleeds through the stats */
+/* Opaque cards so the wave background never bleeds through the stats.
+   Token-based (white in light mode, dark surface in dark mode). */
 .card {
-  background-color: #ffffff;
+  background-color: var(--color-surface);
 }
 
 .admin-overview {

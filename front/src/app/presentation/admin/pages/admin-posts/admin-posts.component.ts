@@ -89,7 +89,7 @@ export class AdminPostsComponent implements OnInit {
   deleteConfirmationMessage(): string {
     const post = this.pendingDelete();
     return post
-      ? `The post "${post.title}" will be permanently deleted. This action cannot be undone.`
+      ? 'This post will be permanently deleted. This action cannot be undone.'
       : '';
   }
 

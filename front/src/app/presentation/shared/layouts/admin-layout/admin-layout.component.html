@@ -31,8 +31,9 @@
       <a routerLink="/admin/reports" routerLinkActive="active">Reports</a>
     </nav>
 
-    <a routerLink="/" class="back-link">Back to site</a>
+    <a routerLink="/" class="back-link"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><title>go-back</title><path fill="currentColor" fill-rule="evenodd" d="m2.87 7.75l1.97 1.97a.75.75 0 1 1-1.06 1.06L.53 7.53L0 7l.53-.53l3.25-3.25a.75.75 0 0 1 1.06 1.06L2.87 6.25h9.88a3.25 3.25 0 0 1 0 6.5h-2a.75.75 0 0 1 0-1.5h2a1.75 1.75 0 1 0 0-3.5z" clip-rule="evenodd"/></svg> Back to site</a>
     <button class="back-link logout-button" type="button" (click)="logout()" [disabled]="isLoggingOut()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><title>sign-out</title><g fill="none"><path fill="currentColor" d="M10.26 7.42c0-1.51 0-2.26.43-2.8c.43-.55 1.16-.73 2.62-1.09l2.12-.52c2.28-.56 3.42-.84 4.19-.23c.76.6.76 1.77.76 4.12v10.49c0 2.23 0 3.34-.72 3.94s-1.82.4-4 0l-2.13-.4c-1.56-.3-2.34-.44-2.8-1c-.47-.55-.47-1.35-.47-2.94z" opacity=".2"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m6.04 8.34l-.83.83c-1.34 1.33-2 2-2 2.83s.66 1.5 2 2.83l.83.83M14.43 12H3.68m6.58-5.65v-.2a3 3 0 0 1 2.54-2.88l1.56-.3c2.25-.44 3.37-.66 4.23-.28a3 3 0 0 1 1.26 1.04c.53.77.53 1.92.53 4.2v8.44c0 2.19 0 3.28-.5 4.04a3 3 0 0 1-1.2 1.04c-.82.39-1.9.24-4.07-.07l-1.37-.2l-.73-.12a3 3 0 0 1-2.23-2.57c-.02-.17-.02-.36-.02-.74"/></g></svg>
       {{ isLoggingOut() ? 'Signing out…' : 'Log out' }}
     </button>
   </aside>
