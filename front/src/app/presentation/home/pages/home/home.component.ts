@@ -25,6 +25,9 @@ import { PrivatePostsFeed } from './component/private-posts/private-posts-feed.c
 export class HomeComponent {
   private readonly authState = inject(AuthState);
   readonly currentUser = this.authState.currentUser;
-  readonly showPrivatePosts = signal(false);
+  // Brief wants logged-in users to LAND on their subscribed feed ("Following").
+  // Guests are unaffected: the template only renders the private feed when
+  // showPrivatePosts() && currentUser(), so 'true' here still shows Explore for them.
+  readonly showPrivatePosts = signal(true);
 }
 

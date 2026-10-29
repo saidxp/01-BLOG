@@ -25,20 +25,20 @@
             <button
               type="button"
               role="tab"
-              [attr.aria-selected]="!showPrivatePosts()"
-              [class.active]="!showPrivatePosts()"
-              (click)="showPrivatePosts.set(false)"
-            >
-              Explore
-            </button>
-            <button
-              type="button"
-              role="tab"
               [attr.aria-selected]="showPrivatePosts()"
               [class.active]="showPrivatePosts()"
               (click)="showPrivatePosts.set(true)"
             >
               Following
+            </button>
+            <button
+              type="button"
+              role="tab"
+              [attr.aria-selected]="!showPrivatePosts()"
+              [class.active]="!showPrivatePosts()"
+              (click)="showPrivatePosts.set(false)"
+            >
+              Explore
             </button>
           </div>
         </header>
