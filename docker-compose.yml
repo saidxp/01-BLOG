@@ -23,8 +23,21 @@ services:
     networks:
       - app-net
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      # Mounted as a TEMPLATE: the official nginx entrypoint runs envsubst on it at
+      # startup and writes the result to /etc/nginx/conf.d/default.conf. The only
+      # substituted variable is NGINX_RESOLVER_IP (exported by the command below).
+      - ./nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
       - ./nginx/certs:/etc/nginx/certs:ro
+    # Runtime-agnostic DNS: read the container's first nameserver (Docker embedded DNS
+    # 127.0.0.11, Podman aardvark-dns, anything else) and hand it to the template.
+    # $$$$-doubled signs are compose escapes so the shell receives plain $ at runtime.
+    command:
+      - sh
+      - -c
+      - |-
+        IP=$$(awk '/^nameserver/{print $$2; exit}' /etc/resolv.conf)
+        export NGINX_RESOLVER_IP=$${IP:-127.0.0.11}
+        exec /docker-entrypoint.sh nginx -g 'daemon off;'
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
