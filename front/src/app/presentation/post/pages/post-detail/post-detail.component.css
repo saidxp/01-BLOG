@@ -69,7 +69,7 @@
 }
 
 .article-header {
-  width: 100svw;
+  width: 100%;
   max-width: none;
   padding: var(--space-10) var(--space-8) var(--space-8);
 }
