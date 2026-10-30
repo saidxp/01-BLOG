@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-IP="${1:-192.168.11.235}"
+IP="${1:-10.127.118.156}"
 CERT_DIR="$(dirname "$0")/certs"
 
 mkdir -p "$CERT_DIR"
