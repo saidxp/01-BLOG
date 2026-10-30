@@ -23,9 +23,6 @@ This repository contains exhaustive, software-engineer-grade specifications for 
 
 The following system architecture diagram illustrates how client requests and real-time streams interface with the **Nginx** ingress router, fanning out across the **Angular SSR Server** (port 4000), the **Spring Boot REST/WebSocket Backend** (port 8080), and the **PostgreSQL** relational database (port 5432):
 
-<details>
-<summary>📈 Click to expand the End-to-End System Architecture diagram</summary>
-
 ```mermaid
 flowchart LR
     subgraph CLIENT["CLIENT / BROWSER"]
@@ -123,13 +120,8 @@ flowchart LR
     class PG,TABLES database
 ```
 
-</details>
-
 ### Architectural Overview & Port Mapping
 The following diagram illustrates how incoming traffic traverses from client devices through **Nginx**, fanning out to the **Angular SSR Server**, **Spring Boot REST/WebSocket API**, and persistent storage:
-
-<details>
-<summary>🌐 Click to expand the Port Mapping & Traffic Flow diagram</summary>
 
 ```mermaid
 flowchart TB
@@ -166,13 +158,8 @@ flowchart TB
     class DB database
 ```
 
-</details>
-
 ### 🗄️ PostgreSQL Database Schema & Entity Relationships
 The following diagram illustrates the complete relational database schema and table relationships (`users`, `posts`, `comments`, `likes`, `subscriptions`, `notifications`, `media_uploads`, `reports`, and `flyway_schema_history`):
-
-<details>
-<summary>🗄️ Click to expand the ER diagram (all tables & relationships)</summary>
 
 ```mermaid
 erDiagram
@@ -279,16 +266,11 @@ erDiagram
     POSTS o|--o{ MEDIA_UPLOADS : attached_media
 ```
 
-</details>
-
 ---
 
 ## 🔄 Sequence Diagram: Request & Real-time Flow
 
 The following data flow diagram traces the lifecycle of user actions across the platform—highlighting initial Server-Side Rendering (SSR) page delivery, browser hydration, cross-tab SharedWorker STOMP WebSocket synchronization, and authenticated REST interactions:
-
-<details>
-<summary>🔄 Click to expand the Request & Real-time Flow sequence diagram</summary>
 
 ```mermaid
 sequenceDiagram
@@ -329,8 +311,6 @@ sequenceDiagram
 
     Note over User,WS: All tabs receive notifications in real time
 ```
-
-</details>
 
 ---
 
@@ -477,9 +457,6 @@ Once the backend container is running, the interactive Swagger UI and OpenAPI do
 
 ---
 ### 4. Docker Map
-<details>
-<summary>🐳 Click to expand the Docker Compose topology diagram</summary>
-
 ```mermaid
 flowchart TB
     B["Browser"]
@@ -509,8 +486,6 @@ flowchart TB
     B -->|"HTTP :1998"| N
     B -->|"HTTPS :8443"| N
 ```
-
-</details>
 
 ## 👥 Authors & Presentation Credit
 Developed and architected by Said Oubaaisse .  
