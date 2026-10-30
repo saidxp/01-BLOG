@@ -17,6 +17,7 @@ import com.blog.backend.report.enums.ReportStatus;
 import com.blog.backend.report.repository.ReportRepository;
 import com.blog.backend.user.dto.AdminUserDto;
 import com.blog.backend.user.dto.UserDto;
+import com.blog.backend.user.enums.Role;
 import com.blog.backend.user.enums.UserStatus;
 import com.blog.backend.user.mapper.UserMapper;
 import com.blog.backend.user.model.User;
@@ -36,7 +37,8 @@ public class AdminService {
     private final ReportRepository reportRepository;
 
     public Page<AdminUserDto> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable)
+        // Admins are intentionally excluded from the manageable list.
+        return userRepository.findByRoleNot(Role.ADMIN, pageable)
                 .map((user) -> userMapper.toAdminUserDto(user));
     }
 
