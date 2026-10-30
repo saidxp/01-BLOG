@@ -36,6 +36,7 @@
         <label class="field-label" for="media">Replace cover <span>Optional</span></label>
         <p class="field-hint">Leave this empty to keep the current cover.</p>
         <input class="field-control file-control" id="media" type="file" accept="image/*,image/heic,image/heif,image/avif,image/webp" (change)="onFileSelected($event)" />
+        @if (coverError()) { <p class="field-error-01" role="alert">{{ coverError() }}</p> }
         @if (coverPreviewUrl()) {
           <div class="cover-preview">
             <img [src]="coverPreviewUrl()" alt="Cover image preview" />

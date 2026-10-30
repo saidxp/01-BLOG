@@ -26,6 +26,7 @@ export class CreatePostComponent implements OnDestroy {
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly coverError = signal<string | null>(null);
   readonly coverPreviewUrl = signal<string | null>(null);
   selectedFile: File | null = null;
 
@@ -36,12 +37,26 @@ export class CreatePostComponent implements OnDestroy {
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.selectedFile = input.files?.[0] ?? null;
+    const file = input.files?.[0] ?? null;
+
+    // Cover must be an image (the backend only accepts IMAGE for covers).
+    // Invalid pick: show no preview, clear the selection, tell the user why.
+    if (file && !file.type.startsWith('image/')) {
+      this.coverError.set('Cover image must be an image file (JPG, PNG, WebP, HEIC, AVIF…).');
+      this.selectedFile = null;
+      this.coverPreviewUrl.set(null);
+      input.value = '';
+      return;
+    }
+
+    this.coverError.set(null);
+    this.selectedFile = file;
     this.updateCoverPreview();
   }
 
   removeCover(): void {
     this.selectedFile = null;
+    this.coverError.set(null);
     this.coverPreviewUrl.set(null);
     const ref = this.mediaInput();
     if (ref) ref.nativeElement.value = '';

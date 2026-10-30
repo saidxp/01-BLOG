@@ -31,6 +31,7 @@
       <label class="field-label" for="media">Cover image <span>Optional</span></label>
       <p class="field-hint">Choose an image that supports the story without distracting from it.</p>
       <input #mediaInput class="field-control file-control" id="media" type="file" accept="image/*,image/heic,image/heif,image/avif,image/webp" (change)="onFileSelected($event)" />
+      @if (coverError()) { <p class="field-error-01" role="alert">{{ coverError() }}</p> }
       @if (coverPreviewUrl()) {
         <div class="cover-preview">
           <img [src]="coverPreviewUrl()" alt="Cover image preview" />

@@ -47,8 +47,8 @@ export class EditProfileComponent implements OnInit {
     this.errorMessage.set(null);
 
     const { bio } = this.form.getRawValue();
-
-    this.updateProfileUseCase.execute(bio, this.selectedAvatar).subscribe({
+    // Trim leading/trailing whitespace so a "bio" of only spaces saves as empty.
+    this.updateProfileUseCase.execute(bio.trim(), this.selectedAvatar).subscribe({
       next: (updatedProfile) => { 
         // <<==>> \\ <!> \\ {<!-!>}
         this.isSubmitting.set(false);

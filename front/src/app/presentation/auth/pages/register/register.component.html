@@ -21,7 +21,7 @@
         [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
       />
       @if (form.controls.name.touched && form.controls.name.invalid) {
-        <p class="field-error-01">Enter your username (at least between 3 and 20 characters).</p>
+        <p class="field-error-01">Username must be 3 to 20 characters.</p>
       }
     </div>
 
@@ -54,7 +54,7 @@
           [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid"
         />
         @if (form.controls.password.touched && form.controls.password.invalid) {
-          <p class="field-error-01">Password must be at least 8 characters.</p>
+          <p class="field-error-01">Use at least 8 characters.</p>
         }
       </div>
 

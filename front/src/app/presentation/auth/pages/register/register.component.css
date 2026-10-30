@@ -15,6 +15,25 @@
 .auth-card__header > p:last-child { margin: var(--space-3) 0 0; color: var(--color-muted-foreground); }
 .auth-form { display: grid; gap: var(--space-5); }
 
+/* Stop the form from jumping while typing: every field-group reserves a fixed
+   error slot under its input, and the message is rendered INSIDE that slot
+   (absolute = it never changes the layout height, not even inside .field-row,
+   where one column's error used to stretch the whole row and move everything). */
+.auth-form .field-group {
+  position: relative;
+  padding-bottom: 1.3rem; /* the reserved slot = one line of .field-error-01 */
+}
+.auth-form .field-error-01 {
+  position: absolute;
+  left: 0;
+  /* For an ABSOLUTE child, top:100% resolves against the PADDING box — that lands
+     one slot BELOW the reserved area (next to the button). Subtracting the reserved
+     padding puts the message exactly under the input, inside its own slot. */
+  top: calc(100% - 1.3rem);
+  width: 100%;
+  line-height: 1.3rem;
+}
+
 .field-row {
   display: grid;
   grid-template-columns: 1fr;

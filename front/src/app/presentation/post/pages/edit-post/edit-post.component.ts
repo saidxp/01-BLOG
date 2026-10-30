@@ -30,6 +30,7 @@ export class EditPostComponent implements OnInit {
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly coverPreviewUrl = signal<string | null>(null);
+  readonly coverError = signal<string | null>(null);
   selectedFile: File | null = null;
 
   private postId!: number;
@@ -62,7 +63,19 @@ export class EditPostComponent implements OnInit {
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.selectedFile = input.files?.[0] ?? null;
+    const file = input.files?.[0] ?? null;
+
+    // Cover must be an image (the backend only accepts IMAGE for covers).
+    // Invalid pick: keep the current preview, clear the selection, tell the user why.
+    if (file && !file.type.startsWith('image/')) {
+      this.coverError.set('Cover image must be an image file (JPG, PNG, WebP, HEIC, AVIF…).');
+      this.selectedFile = null;
+      input.value = '';
+      return;
+    }
+
+    this.coverError.set(null);
+    this.selectedFile = file;
     const current = this.coverPreviewUrl();
     if (current?.startsWith('blob:')) URL.revokeObjectURL(current);
     this.coverPreviewUrl.set(this.selectedFile ? URL.createObjectURL(this.selectedFile) : this.initialMediaUrl);
