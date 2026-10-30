@@ -48,8 +48,6 @@ export class PrivatePostsFeed implements OnInit {
         this.currentPage = result.currentPage;
         this.totalPages = result.totalPages;
 
-        console.log("the posts %d",result);
-
         if (append) {
           this.posts.update((existing) => [...existing, ...result.posts]);
         } else {

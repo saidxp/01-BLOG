@@ -48,7 +48,6 @@ export class SubmitCommentComponent {
     ).subscribe({
       next: (comment) => {
         this.content.set('');
-        console.log("it's gooo ..."); 
         this.commentAdded.emit(comment);
         this.isSubmitting.set(false);
       },

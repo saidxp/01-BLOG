@@ -92,8 +92,6 @@ export class WebSocketNotificationService {
 
   connect(): void {
 
-    console.log('WebSocketNotificationService: connect() called');
-
     if (typeof window === 'undefined') {
       return;
     }
@@ -104,14 +102,10 @@ export class WebSocketNotificationService {
     );
 
     this.worker.port.onmessage = (event) => {
-      console.log('[Angular] Message from SharedWorker:', event.data.type);
-
-
 
       /// Her Is to refrech them :
       if (event.data?.type === 'REFRESH') {
 
-      console.log("it's mode how are you doing <!!!!> <!!>")
         // logout all the client !!!
        //this.router.navigateByUrl('/#logout');
        // {<>}
@@ -126,14 +120,12 @@ export class WebSocketNotificationService {
 
       const dto = JSON.parse(event.data.data);
 
-      console.log('[Angular] Notification DTO:', dto);
       const notification = toNotificationEntity(dto);
       this.notificationState.addNotification(notification); // {<!>} 
 
     };
 
     this.worker.port.start();
-    console.log('[Angular] Connected to SharedWorker'); // {}
   }
 
   // Deconnect It From It <!> \\ {} \\ 

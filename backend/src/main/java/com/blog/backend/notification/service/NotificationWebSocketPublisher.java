@@ -13,13 +13,10 @@ public class NotificationWebSocketPublisher {
     private final SimpMessagingTemplate messagingTemplate;
 
     public void sendTestMessage(String username, NotificationDto Notification) {
-        System.out.println("===== WS PUBLISHER =====");
-        System.out.println("Sending to username: " + username);
         messagingTemplate.convertAndSendToUser(
             username,
             "/queue/notifications",
             Notification
         );
-        System.out.println("===== WS MESSAGE SENT TO BROKER =====");
     }
 }

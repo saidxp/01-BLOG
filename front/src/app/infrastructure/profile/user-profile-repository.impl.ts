@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { UserProfileRepository } from '../../domain/profile/repository/user-profile.repository';
 import { UserProfile } from '../../domain/profile/entity/user-profile.entity';
 import { UserProfileDto } from './dto/user-profile.dto';
@@ -18,14 +18,12 @@ export class UserProfileRepositoryImpl extends UserProfileRepository {
   override getProfile(username: string): Observable<UserProfile> {
     return this.http
       .get<UserProfileDto>(`${environment.apiUrl}/api/users/${username}`, { withCredentials: true })
-      .pipe(tap(post => { console.log("The Post It's Come Her", post) }), map(toUserProfileEntity));
+      .pipe(map(toUserProfileEntity));
   }
   // <<==>> \\ 
   override updateProfile(bio: string, avatar: File | null): Observable<UserProfile> {
 
     const formData = new FormData();
-
-    console.log('Updating profile with bio:', bio, 'and avatar:', avatar); // <<==>> \\ {<!-!>}
 
     formData.append('bio', bio);
 

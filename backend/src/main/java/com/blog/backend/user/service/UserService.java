@@ -49,7 +49,6 @@ public class UserService {
         if (currentUser == null) {
             return false;
         }
-        System.out.println("currentUser id: " + currentUser.getId() + ", targetUser id: " + targetUser.getId());
         return currentUser.getId().equals(targetUser.getId());
     }
 

@@ -50,7 +50,6 @@ export class RegisterComponent {
     this.registerUseCase.execute(name, email, password).subscribe({
       next: (user) => {
         this.isLoading.set(false);
-        console.log(user); //
         this.router.navigateByUrl('/');
       },
       error: (err) => {

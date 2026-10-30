@@ -4,7 +4,7 @@ import { User } from '../../domain/auth/entities/user.entity';
 import { UserDto } from './dto/user.dto';
 import { toUserEntity } from './mappers/user.mapper';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, map, catchError, throwError, of, tap } from 'rxjs';
+import { Observable, map, catchError, throwError, of } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 
 @Injectable()
@@ -18,10 +18,9 @@ export class AuthRepositoryImpl extends AuthRepository {
   // <<==>> \\ <<==>> // (!!) \\ (!).  
   override getCurrentUser(): Observable<User | null> {
     return this.http.get<UserDto>(`${this.baseUrl1}/me`, { withCredentials: true }).pipe(
-      tap((user) => console.log('Curent User ', user)),
       map(toUserEntity),
       catchError((err: HttpErrorResponse) => {
-        console.log('[getCurrentUser] FAILED - status:', err.status, 'message:', err.error?.message || err.message);
+        // 401 simply means "guest" — resolve to null, everything else bubbles up.
         return err.status === 401 ? of(null) : throwError(() => err);
       })
     );

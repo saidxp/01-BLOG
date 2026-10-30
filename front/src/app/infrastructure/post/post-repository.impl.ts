@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map, tap} from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { PostRepository } from '../../domain/post/repositories/post.repository';
 import { toPostEntity } from './mapper/post.mapper';
 import { environment } from '../../../environments/environment.development'; 
@@ -22,8 +22,7 @@ export class PostRepositoryImpl extends PostRepository {
         posts: pageDto.content.map(toPostEntity),
         totalPages: pageDto.totalPages,
         currentPage: pageDto.number,
-      })),
-      tap((post)=> console.log('posts shape', post))
+      }))
     );
     // <<==>> \\ (<!!>)
   } 
@@ -31,7 +30,6 @@ export class PostRepositoryImpl extends PostRepository {
   // get subsc feed {}
   override getSubscriptionfeed(page: number): Observable<PagedPosts> { 
 
-    console.log()
     const params = new HttpParams().set('page', page).set('size', 10); 
 
     const base = `${environment.apiUrl}/api/feed/following`;
@@ -41,14 +39,12 @@ export class PostRepositoryImpl extends PostRepository {
         posts: pageDto.content.map(toPostEntity),
         totalPages: pageDto.totalPages,
         currentPage: pageDto.number,
-      })),
-      tap((post)=> console.log('posts shape', post))
+      }))
     );
   }
 
   override getPostsByUsername(username: string, page: number): Observable<PagedPosts> { 
     // <<==>> \\ (<!<->!>) \\ (<<!<->!>>) \\ (<!!>)
-    console.log("Hello World Im Her If You Want", username , page)
   const params = new HttpParams().set('page', page).set('size', 10);
   return this.http  
     .get<PostPageDto>(`${environment.apiUrl}/api/users/${username}/posts`, { params, withCredentials: true })

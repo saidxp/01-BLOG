@@ -18,7 +18,6 @@ async function connectWebSocket(): Promise<void> {
         return;
     }
 
-    console.log('[SockJS DEBUG]', `${environment.apiUrl}/ws`, self.location.origin);
     connecting = true;
 
     try {
@@ -40,27 +39,11 @@ async function connectWebSocket(): Promise<void> {
                 
             onConnect: () => {
 
-                console.log('[SharedWorker] ===== CONNECTED =====');
-
                 const destination = '/user/queue/notifications';
 
-                console.log(
-                    '[SharedWorker] Subscribing to:',
-                    destination
-                );
-
-                const subscription = client!.subscribe(
+                client!.subscribe(
                     destination,
                     (message) => {
-
-                        console.log(
-                            '[SharedWorker] ===== MESSAGE RECEIVED ====='
-                        );
-
-                        console.log(
-                            '[SharedWorker] Message body:',
-                            message.body
-                        );
 
                         for (const port of ports) {
 
@@ -71,15 +54,6 @@ async function connectWebSocket(): Promise<void> {
 
                         }
                     }
-                );
-
-                console.log(
-                    '[SharedWorker] ===== SUBSCRIPTION CREATED ====='
-                );
-
-                console.log(
-                    '[SharedWorker] Subscription id:',
-                    subscription.id
                 );
             },
 
@@ -123,15 +97,10 @@ workerContext.onconnect = (event: MessageEvent) => {
 
     port.start();
 
-    console.log(
-        '[SharedWorker] Port connected'
-    );
-
     port.onmessage = (event) => {
 
         // <<==>> \\ {<!-!>} <!> 
         if (event.data?.type === 'DISCONNECT') {
-            console.log('[SharedWorker] Disconnect requested');
 
             
 
