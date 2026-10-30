@@ -26,6 +26,8 @@ public class JwtService {
 
                 return Jwts.builder()
                                 .subject(userDetails.getUsername())
+                                // uid claim: the filter resolves the user by database id from now on
+                                .claim("uid", userDetails.getUser().getId())
                                 .issuedAt(new Date())
                                 .expiration(
                                                 new Date(
@@ -54,6 +56,20 @@ public class JwtService {
                                 .parseSignedClaims(token)
                                 .getPayload()
                                 .getSubject();
+        }
+
+        // Extract the "uid" claim (database id). Returns null for tokens issued
+        // before the uid claim existed, so old sessions keep working.
+        public Long extractUserId(String token) {
+
+                Object uid = Jwts.parser()
+                                .verifyWith(getSigningKey())
+                                .build()
+                                .parseSignedClaims(token)
+                                .getPayload()
+                                .get("uid");
+
+                return uid == null ? null : Long.valueOf(uid.toString());
         }
 
         // Extract Jwt From Header (!!).

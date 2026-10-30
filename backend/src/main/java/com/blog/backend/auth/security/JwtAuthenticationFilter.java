@@ -55,9 +55,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         
         String username;
+        Long tokenUserId;
 
         try {
             username = jwtService.extractUsername(token);
+            tokenUserId = jwtService.extractUserId(token);
 
         } catch (JwtException e) {
 
@@ -74,7 +76,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (username != null
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                // Prefer the database id from the "uid" claim; fall back to the
+                // username lookup for tokens issued before the claim existed.
+                UserDetails userDetails = tokenUserId != null
+                        ? userDetailsService.loadUserById(tokenUserId)
+                        : userDetailsService.loadUserByUsername(username);
                 // <<===>> \\ <<==>> \\ (!<->!)....
 
                 if (!userDetails.isAccountNonLocked() || !userDetails.isEnabled()) {

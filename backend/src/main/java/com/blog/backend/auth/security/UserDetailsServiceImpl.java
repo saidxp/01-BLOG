@@ -28,4 +28,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new CustomUserDetails(user);
     }
+
+    // Id-based lookup used by the JWT filter when the token carries the "uid" claim.
+    public UserDetails loadUserById(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+
+        return new CustomUserDetails(user);
+    }
 }
