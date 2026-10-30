@@ -13,7 +13,7 @@ This repository contains exhaustive, software-engineer-grade specifications for 
 |---|---|---|
 | 🖥️ **Frontend Architecture** | Angular 22+, Clean Architecture (Domain / Application / Infrastructure / Presentation), Signals Reactive State, SharedWorker STOMP WebSocket, SSR Cookie Forwarding, Auth Guards | [FRONTEND_ARCHITECTURE.md](./FRONTEND_ARCHITECTURE.md) |
 | ⚙️ **Backend & API Reference** | Spring Boot 4 MVC, Spring Security filter chains, Stateless JWT in HttpOnly Cookies, Dual-layer CORS, JPA/Hibernate schemas, Full REST API Catalog & STOMP Broker | [BACKEND_API_DOCUMENTATION.md](./BACKEND_API_DOCUMENTATION.md) |
-| 📖 **Interactive API Docs (Swagger UI)** | Live interactive REST API testing interface, schema inspector & OpenAPI 3.0 specification | [http://localhost:1998/api/swagger-ui.html](http://localhost:1998/api/swagger-ui.html) |
+| 📖 **Interactive API Docs (Swagger UI)** | Live interactive REST API testing interface, schema inspector & OpenAPI 3.0 specification | [https://localhost:8443/api/swagger-ui.html](https://localhost:8443/api/swagger-ui.html) |
 | 🗄️ **Database & JPA Schema** | PostgreSQL 15 relational ERD, 8 JPA Entities (`User`, `Post`, `Comment`, `Like`, `Subscription`, `Notification`, `MediaUpload`, `Report`), constraints & fetch strategies | [Section Below](#🗄️-database-architecture--entity-relationships-jpa-schema) |
 | 📦 **Infrastructure & Compose** | Multi-container Docker setup, Nginx reverse proxy routing, persistent PostgreSQL volume | [docker-compose.yml](./docker-compose.yml) |
 
@@ -23,8 +23,10 @@ This repository contains exhaustive, software-engineer-grade specifications for 
 
 The following system architecture diagram illustrates how client requests and real-time streams interface with the **Nginx** ingress router, fanning out across the **Angular SSR Server** (port 4000), the **Spring Boot REST/WebSocket Backend** (port 8080), and the **PostgreSQL** relational database (port 5432):
 
-```mermaid 
+<details>
+<summary>📈 Click to expand the End-to-End System Architecture diagram</summary>
 
+```mermaid
 flowchart LR
     subgraph CLIENT["CLIENT / BROWSER"]
         direction TB
@@ -121,8 +123,13 @@ flowchart LR
     class PG,TABLES database
 ```
 
+</details>
+
 ### Architectural Overview & Port Mapping
 The following diagram illustrates how incoming traffic traverses from client devices through **Nginx**, fanning out to the **Angular SSR Server**, **Spring Boot REST/WebSocket API**, and persistent storage:
+
+<details>
+<summary>🌐 Click to expand the Port Mapping & Traffic Flow diagram</summary>
 
 ```mermaid
 flowchart TB
@@ -157,14 +164,17 @@ flowchart TB
     class N gateway
     class F,API app
     class DB database
-
 ```
+
+</details>
 
 ### 🗄️ PostgreSQL Database Schema & Entity Relationships
 The following diagram illustrates the complete relational database schema and table relationships (`users`, `posts`, `comments`, `likes`, `subscriptions`, `notifications`, `media_uploads`, `reports`, and `flyway_schema_history`):
 
-```mermaid
+<details>
+<summary>🗄️ Click to expand the ER diagram (all tables & relationships)</summary>
 
+```mermaid
 erDiagram
     USERS {
         BIGINT id PK
@@ -268,14 +278,19 @@ erDiagram
     USERS ||--o{ MEDIA_UPLOADS : uploader
     POSTS o|--o{ MEDIA_UPLOADS : attached_media
 ```
+
+</details>
+
 ---
 
 ## 🔄 Sequence Diagram: Request & Real-time Flow
 
 The following data flow diagram traces the lifecycle of user actions across the platform—highlighting initial Server-Side Rendering (SSR) page delivery, browser hydration, cross-tab SharedWorker STOMP WebSocket synchronization, and authenticated REST interactions:
 
-```mermaid
+<details>
+<summary>🔄 Click to expand the Request & Real-time Flow sequence diagram</summary>
 
+```mermaid
 sequenceDiagram
     actor User as User Browser
     participant App as Nginx Gateway
@@ -313,8 +328,9 @@ sequenceDiagram
     WS-->>User: Broadcast to all open tabs via MessagePort
 
     Note over User,WS: All tabs receive notifications in real time
-
 ```
+
+</details>
 
 ---
 
@@ -335,7 +351,7 @@ sequenceDiagram
 * **Media Storage**: Configurable static media uploads served through protected path handlers.
 
 ### 3. Gateway & Reverse Proxy (Nginx)
-* Single point of ingress on port **80**.
+* Single point of ingress: **HTTPS on `8443`** (TLS) with plain HTTP on **`1998`** answering only a `301` redirect to HTTPS.
 * Routes root traffic (`/`) to the Angular Universal Node.js engine at `http://frontend:4000`.
 * Routes backend endpoints (`/api/`) and media uploads (`/media/`) to `http://backend:8080`.
 * Preserves original request metadata with `Host`, `X-Real-IP`, and `X-Forwarded-For` headers.
@@ -347,11 +363,11 @@ sequenceDiagram
 The persistent storage layer is built upon PostgreSQL 15, managed directly through **Jakarta Persistence (JPA)**, **Hibernate 6**, and versioned via **Flyway** migrations.
 
 ### Physical PostgreSQL Database Schema
-The following diagram illustrates the physical tables, column data types, foreign keys, and indexes present in the PostgreSQL `blogdb` database:
+The physical layout is captured by the collapsible ER diagram above; the mapping of that schema onto the JPA entities follows below:
 
 ---
 
-### 2. JPA Entities & Relational Cardinality
+### 1. JPA Entities & Relational Cardinality
 
 | Entity / Table | Primary Key | Foreign Keys & Relationships | Key Constraints & Indexes |
 |---|---|---|---|
@@ -364,7 +380,7 @@ The following diagram illustrates the physical tables, column data types, foreig
 | **`media_uploads`** (`MediaUpload.java`) | `id` (BIGINT) | `uploaded_by` $\to$ `users.id`<br>`post_id` $\to$ `posts.id` (Nullable) | Tracks pre-upload lifecycle (`is_confirmed`), linked to post upon publication |
 | **`reports`** (`Report.java`) | `id` (BIGINT) | `reporter_id` $\to$ `users.id`<br>`reported_user_id` $\to$ `users.id`<br>`post_id` $\to$ `posts.id` (Nullable) | Moderation audit log detailing violation reports on users and specific posts |
 
-### 3. JPA Data Access & Performance Optimizations
+### 2. JPA Data Access & Performance Optimizations
 * **Lazy Loading by Default (`FetchType.LAZY`)**: Every `@ManyToOne` relationship uses `FetchType.LAZY` to avoid accidental `EAGER` joins and prevent $N+1$ query cascades across the persistence layer.
 * **Composite Unique Constraints**: Database-level uniqueness (`likes(user_id, post_id)` and `subscriptions(subscriber_id, subscribed_to_id)`) prevents race-condition duplications.
 * **Audit Lifecycle Hooks**: Entity creation and mutation timestamps are automated through `@PrePersist` and `@PreUpdate` lifecycle callbacks.
@@ -455,14 +471,16 @@ Once the backend container is running, the interactive Swagger UI and OpenAPI do
 
 | Interface | URL | Description |
 |---|---|---|
-| 🌐 **Swagger UI (via Nginx Gateway)** | [http://localhost:1998/api/swagger-ui.html](http://localhost:1998/api/swagger-ui.html) | Interactive web UI to execute & test all REST endpoints |
-| ⚙️ **Swagger UI (Direct Backend)** | [http://localhost:8080/api/swagger-ui.html](http://localhost:8080/api/swagger-ui.html) | Direct connection to Tomcat port 8080 |
-| 📄 **OpenAPI Specification (JSON)** | [http://localhost:1998/api/v3/api-docs](http://localhost:1998/api/v3/api-docs) | Raw OpenAPI 3 JSON definition |
+| 🌐 **Swagger UI (via Nginx Gateway)** | [https://localhost:8443/api/swagger-ui.html](https://localhost:8443/api/swagger-ui.html) | Interactive web UI to execute & test all REST endpoints |
+| ⚙️ **Swagger UI (Direct Backend)** | [http://localhost:8080/api/swagger-ui.html](http://localhost:8080/api/swagger-ui.html) | Only when the backend runs locally outside Docker (port 8080 is not published by Compose) |
+| 📄 **OpenAPI Specification (JSON)** | [https://localhost:8443/api/v3/api-docs](https://localhost:8443/api/v3/api-docs) | Raw OpenAPI 3 JSON definition |
 
 ---
-### 4. Docker Map 
-```mermaid
+### 4. Docker Map
+<details>
+<summary>🐳 Click to expand the Docker Compose topology diagram</summary>
 
+```mermaid
 flowchart TB
     B["Browser"]
 
@@ -491,6 +509,9 @@ flowchart TB
     B -->|"HTTP :1998"| N
     B -->|"HTTPS :8443"| N
 ```
+
+</details>
+
 ## 👥 Authors & Presentation Credit
 Developed and architected by Said Oubaaisse .  
 For technical inquiries or architecture walkthroughs, consult the [Backend Documentation](./BACKEND_API_DOCUMENTATION.md) and [Frontend Architecture](./FRONTEND_ARCHITECTURE.md).
